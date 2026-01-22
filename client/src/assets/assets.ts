@@ -5,6 +5,7 @@ import logoIconDark from './logo-icon-dark.svg'
 import search from './search.svg'
 import cart from './shopping-cart.svg'
 import arrowRight from './arrow-small-right.svg'
+import menu from './menu.svg'
 
 export const assets = {
     logoDark,
@@ -13,7 +14,8 @@ export const assets = {
     logoIconLight,
     cart,
     search,
-    arrowRight
+    arrowRight,
+    menu
 }
 
 export const products = [
