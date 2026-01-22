@@ -1,37 +1,22 @@
-import React, { useState } from "react";
-import { products as initialProducts } from "../assets/assets";
+import { useState } from "react";
+import { dummyProducts } from "../assets/assets";
 import Card from "./Card";
 import Title from "./Title";
-
-// 1. Define an interface for the Product type
-interface Product {
-  id: number;
-  image: string;
-  title: string;
-  description: string;
-  price: number;
-}
+import type { Product } from "../types/product";
 
 const FeaturedProducts = () => {
   // 2. Initialize state using the Interface and the imported data
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<Product[]>(dummyProducts);
 
   return (
-    <div className="w-full items-center flex flex-col justify-center">
-      <Title
-        title="Featured Products"
-        subTitle="Preferred choice ofPreferred choice of"
-      />
-      <div className="flex flex-wrap justify-center gap-6 max-w-7xl px-6">
-        {products.slice(0, 4).map((product) => (
-          <Card
-            description={product.description}
-            image={product.image}
-            price={product.price}
-            title={product.title}
-            key={product.id}
-          />
-        ))}
+    <div className="w-full flex justify-center">
+      <div className="max-w-7xl w-full px-6">
+        <Title title="Featured Products" />
+        <div className="flex flex-wrap items-start justify-start gap-6">
+          {products.slice(0, 4).map((product) => (
+            <Card product={product} key={product._id} />
+          ))}
+        </div>
       </div>
     </div>
   );

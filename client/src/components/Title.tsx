@@ -1,16 +1,12 @@
-import React from "react";
 
 interface Title {
   title: string;
-  subTitle: string;
 }
-const Title = ({ title, subTitle }: Title) => {
-  return (
-    <div className="flex flex-col items-center justify-center my-10">
-      <h1 className="text-primary font-medium text-3xl">{title}</h1>
-      <p className="text-sm text-secondary">{subTitle}</p>
-    </div>
-  );
-};
+const Title = ({ title }: { title: string }) => (
+  <div className="my-10 inline-block">
+    <h1 className="text-xl font-medium text-primary text-left">{title}</h1>
+    <div className="mt-1 h-1 w-[70%] rounded-full bg-secondary transition-all duration-100"></div>
+  </div>
+);
 
 export default Title;

@@ -11,11 +11,11 @@ const Navbar = () => {
 
       {/* Desktop Menu */}
       <div className="hidden sm:flex items-center gap-8">
-        <a href="#">Home</a>
-        <a href="#">Products</a>
-        <a href="#">Shops</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/shops">Shops</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
 
         <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
           <input
