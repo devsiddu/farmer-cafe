@@ -10,6 +10,7 @@ import starFilled from './star-fill.svg'
 import star from './star.svg'
 import location from './map-pin.svg'
 import store from './store.svg'
+import phone from './phone.svg'
 
 export const assets = {
     logoDark,
@@ -23,7 +24,8 @@ export const assets = {
     star,
     starFilled,
     store,
-    location
+    location,
+    phone,
 }
 
 export const dummyProducts = [
@@ -37,6 +39,7 @@ export const dummyProducts = [
         shop: {
             shopName: "Test Shop",
             location: "Gokak Bustand",
+            phone: 1234567890,
         },
         images: [
             "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage.png",
@@ -57,6 +60,7 @@ export const dummyProducts = [
         shop: {
             shopName: "Runner's World",
             location: "Belagavi",
+            phone: 1234567890,
         },
         images: [
             "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage2.png",
@@ -77,6 +81,7 @@ export const dummyProducts = [
         shop: {
             shopName: "Urban Store",
             location: "Hubballi",
+            phone: 1234567890,
         },
         images: [
             "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage3.png",
@@ -97,6 +102,7 @@ export const dummyProducts = [
         shop: {
             shopName: "FitZone",
             location: "Dharwad",
+            phone: 1234567890,
         },
         images: [
             "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png",
@@ -117,6 +123,7 @@ export const dummyProducts = [
         shop: {
             shopName: "NB Official Store",
             location: "Bengaluru",
+            phone: 1234567890,
         },
         images: [
             "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage.png",
