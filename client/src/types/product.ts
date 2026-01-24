@@ -6,6 +6,7 @@ export interface Product {
   price: number;
   rating: number;
   shop: {
+    shopId: string;
     shopName: string;
     location: string;
     phone: number;

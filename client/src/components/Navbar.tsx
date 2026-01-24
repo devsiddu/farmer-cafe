@@ -5,7 +5,7 @@ const Navbar = () => {
   const [open, setOpen] = React.useState(false);
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
-      <a href="https://prebuiltui.com">
+      <a href="/">
         <img src={assets.logoLight} alt="logo" width={157}  />
       </a>
 
@@ -51,11 +51,11 @@ const Navbar = () => {
       <div
         className={`${open ? "flex" : "hidden"} absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}
       >
-        <a href="#" className="block">Home</a>
-        <a href="#" className="block">Products</a>
-        <a href="#" className="block">Shops</a>
-        <a href="#" className="block">About</a>
-        <a href="#" className="block">Contact</a>
+        <a href="/" className="block">Home</a>
+        <a href="/products" className="block">Products</a>
+        <a href="/shops" className="block">Shops</a>
+        <a href="/about" className="block">About</a>
+        <a href="/contact" className="block">Contact</a>
         <button className="cursor-pointer px-6 py-2 mt-2 bg-secondary hover:bg-primary transition text-white rounded-full text-sm">
           Login
         </button>

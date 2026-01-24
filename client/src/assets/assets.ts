@@ -11,6 +11,7 @@ import star from './star.svg'
 import location from './map-pin.svg'
 import store from './store.svg'
 import phone from './phone.svg'
+import shop from './shops.png'
 
 export const assets = {
     logoDark,
@@ -26,6 +27,7 @@ export const assets = {
     store,
     location,
     phone,
+    shop,
 }
 
 export const dummyProducts = [
@@ -37,6 +39,7 @@ export const dummyProducts = [
         rating: 4.5,
         quantity: 4,
         shop: {
+            shopId: '1',
             shopName: "Test Shop",
             location: "Gokak Bustand",
             phone: 1234567890,
@@ -58,6 +61,7 @@ export const dummyProducts = [
         quantity: 0,
         rating: 4.7,
         shop: {
+            shopId: '1',
             shopName: "Runner's World",
             location: "Belagavi",
             phone: 1234567890,
@@ -79,6 +83,7 @@ export const dummyProducts = [
         quantity: 20,
         rating: 4.2,
         shop: {
+            shopId: '1',
             shopName: "Urban Store",
             location: "Hubballi",
             phone: 1234567890,
@@ -100,6 +105,7 @@ export const dummyProducts = [
         quantity: 101,
         rating: 4.0,
         shop: {
+            shopId: '1',
             shopName: "FitZone",
             location: "Dharwad",
             phone: 1234567890,
@@ -121,6 +127,7 @@ export const dummyProducts = [
         quantity: 10,
         rating: 4.6,
         shop: {
+            shopId: '1',
             shopName: "NB Official Store",
             location: "Bengaluru",
             phone: 1234567890,
@@ -133,5 +140,107 @@ export const dummyProducts = [
         ],
         description:
             "Premium running shoes with plush cushioning and breathable mesh upper.",
+    },
+];
+
+export const dummyShops = [
+    {
+        shopId: '1',
+        shopName: "Urban Sports Hub",
+        ownerName: "Ramesh Patil",
+        location: "Gokak",
+        rating: 4.6,
+        isOpen: true,
+        phone: "+91 98765 43210",
+    },
+    {
+        shopId: '2',
+        shopName: "Runner's World",
+        ownerName: "Suresh Kulkarni",
+        image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png",
+        location: "Belagavi",
+        rating: 4.4,
+        isOpen: true,
+        phone: "+91 91234 56789",
+    },
+    {
+        shopId: '3',
+        shopName: "FitZone Store",
+        ownerName: "Mahesh Naik",
+        image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png",
+        location: "Hubballi",
+        rating: 4.2,
+        isOpen: false,
+        phone: "+91 99887 66554",
+    },
+    {
+        shopId: '4',
+        shopName: "Active Life",
+        ownerName: "Prakash Desai",
+        image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png",
+        location: "Dharwad",
+        rating: 4.1,
+        isOpen: true,
+        phone: "+91 90123 45678",
+    },
+    {
+        shopId: '5',
+        shopName: "Sneaker Point",
+        ownerName: "Amit Shah",
+        image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png",
+        location: "Bengaluru",
+        rating: 4.8,
+        isOpen: true,
+        phone: "+91 98700 11223",
+    },
+    {
+        shopId: '6',
+        shopName: "Gym Pro Shop",
+        ownerName: "Naveen Kumar",
+        image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png",
+        location: "Mysuru",
+        rating: 4.3,
+        isOpen: false,
+        phone: "+91 93456 77889",
+    },
+    {
+        shopId: '7',
+        shopName: "Outdoor Adventures",
+        ownerName: "Vikram Rao",
+        image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png",
+        location: "Shivamogga",
+        rating: 4.5,
+        isOpen: true,
+        phone: "+91 98876 55443",
+    },
+    {
+        shopId: '8',
+        shopName: "Elite Sports Store",
+        ownerName: "Kiran Joshi",
+        image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png",
+        location: "Davangere",
+        rating: 4.0,
+        isOpen: true,
+        phone: "+91 97654 33221",
+    },
+    {
+        shopId: '9',
+        shopName: "PowerFit Supplies",
+        ownerName: "Rohit Mehta",
+        image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png",
+        location: "Ballari",
+        rating: 4.7,
+        isOpen: false,
+        phone: "+91 98989 12345",
+    },
+    {
+        shopId: '10',
+        shopName: "Daily Active Store",
+        ownerName: "Sunil Hegde",
+        image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage4.png",
+        location: "Udupi",
+        rating: 4.2,
+        isOpen: true,
+        phone: "+91 95544 66778",
     },
 ];
