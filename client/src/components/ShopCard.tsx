@@ -3,55 +3,77 @@ import type { Shop } from "../types/shop";
 
 interface ShopCardProps {
   shop: Shop;
-  onView?: (shopId: string) => void; // optional callback
+  onView?: (shopId: string) => void;
 }
 
 const ShopCard = ({ shop, onView }: ShopCardProps) => {
   return (
-    <div className="w-72 bg-white  shadow-md flex flex-col transition hover:shadow-lg">
-      {/* Image */}
-      <img src={shop.image ? shop.image : assets.shop} alt="" className=" w-90 object-cover" />
-      <div className=" p-4 ">
-        {/* Header */}
-        <div className="flex items-start justify-between">
-          <h3 className="text-lg font-semibold text-primary line-clamp-1">
-            {shop.shopName}
-          </h3>
+    <div className="group w-72 bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+      {/* Image Container */}
+      <div className="relative overflow-hidden h-44">
+        <img
+          src={shop.image ? shop.image : assets.shop}
+          alt={shop.shopName}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-          <span
-            className={`text-xs px-2 py-1 rounded-full ${
-              shop.isOpen
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
+        {/* Status badge — floated over image */}
+        <span
+          className={`absolute top-3 right-3 text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm border ${shop.isOpen
+              ? "bg-green-50/80 border-green-200 text-green-700"
+              : "bg-red-50/80 border-red-200 text-red-600"
             }`}
-          >
-            {shop.isOpen ? "Open" : "Closed"}
-          </span>
+        >
+          <span
+            className={`inline-block w-1.5 h-1.5 rounded-full mr-1.5 mb-px align-middle ${shop.isOpen ? "bg-green-500 animate-pulse" : "bg-red-400"
+              }`}
+          />
+          {shop.isOpen ? "Open" : "Closed"}
+        </span>
+
+        {/* Rating chip — bottom-left of image */}
+        <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-white/90 backdrop-blur-sm text-xs font-bold text-amber-500 px-2.5 py-1 rounded-full shadow">
+          ★ <span className="text-gray-700">{shop.rating}</span>
         </div>
+      </div>
 
-        {/* Body */}
-        <p className="text-sm text-gray-500 mt-1">Owner: {shop.ownerName}</p>
+      {/* Card Body */}
+      <div className="flex flex-col flex-1 p-4 gap-1">
+        {/* Shop name */}
+        <h3 className="text-base font-bold text-primary leading-tight line-clamp-1 tracking-tight">
+          {shop.shopName}
+        </h3>
 
-        <p className="text-sm text-gray-600 mt-1">📍 {shop.location}</p>
-
-        <p className="text-sm mt-2">
-          ⭐ Rating: <span className="font-medium">{shop.rating}</span>
+        {/* Owner */}
+        <p className="text-xs text-gray-400 font-medium uppercase tracking-widest">
+          {shop.ownerName}
         </p>
 
-        {/* Footer */}
-        <div className="mt-auto pt-4 flex gap-2">
+        {/* Divider */}
+        <div className="my-2 h-px bg-gray-100" />
+
+        {/* Location */}
+        <div className="flex items-start gap-1.5 text-sm text-gray-500">
+          <span className="mt-0.5 shrink-0 text-primary opacity-70">📍</span>
+          <span className="line-clamp-1">{shop.location}</span>
+        </div>
+
+        {/* Footer Buttons */}
+        <div className="mt-4 flex gap-2">
           <a
             href={`tel:${shop.phone}`}
-            className="flex-1 text-center py-2 bg-light text-secondary  hover:bg-light/80 transition"
+            className="flex-1 text-center py-2.5 rounded-xl text-sm font-semibold bg-light text-secondary border border-secondary/20 hover:bg-secondary hover:text-white transition-all duration-200"
           >
-            Call
+            📞 Call
           </a>
 
           <button
             onClick={() => onView?.(shop.shopId)}
-            className="flex-1 py-2 bg-primary text-white  hover:bg-primary/90 transition"
+            className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-primary text-white hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30 transition-all duration-200 active:scale-95"
           >
-            View
+            View Shop →
           </button>
         </div>
       </div>

@@ -1,13 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { dummyProducts } from "../assets/assets";
 import Card from "./Card";
 import Title from "./Title";
-import type { Product } from "../types/product";
+import type { Product } from "../types";
+// import type { Product } from "../types/product";
 
 const FeaturedProducts = () => {
   // 2. Initialize state using the Interface and the imported data
-  const [products, setProducts] = useState<Product[]>(dummyProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  const fetchProducts = async () => {
+    setLoading(true);
+    setProducts(dummyProducts);
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchProducts();
+  }, [])
+  if (loading) {
+    return (
+      <div>
+        <p>Loading</p>
+      </div>
+    )
+  }
   return (
     <div className="w-full flex justify-center">
       <div className="max-w-7xl w-full px-6">

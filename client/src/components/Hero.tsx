@@ -25,7 +25,7 @@ const Hero = () => {
           </p>
           <div className="flex flex-col md:flex-row items-center mt-8 gap-3">
             <button
-              className="bg-secondary text-white px-6 pr-2.5 py-2.5 rounded-full text-sm font-medium flex items-center space-x-2 hover:bg-primary transition cursor-pointer"
+              className="bg-primary text-white px-6 pr-2.5 py-2.5 rounded-full text-sm font-medium flex items-center space-x-2 transition cursor-pointer"
               type="button"
             >
               <span>Read Success Stories</span>
