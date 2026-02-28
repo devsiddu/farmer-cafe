@@ -5,46 +5,70 @@ import { assets } from "../assets/assets";
 interface cardProps {
   product: Product;
 }
+
 const Card = ({ product }: cardProps) => {
   const navigate = useNavigate();
+
   return (
-    <>
-      <div className="flex flex-col bg-white shadow-md w-72 ">
+    <div className="group w-72 bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+      {/* Image */}
+      <div
+        className="relative h-48 overflow-hidden cursor-pointer"
+        onClick={() => navigate(`/product/${product._id}`)}
+      >
         <img
-          onClick={() => navigate(`/product/${product._id}`)}
-          className="w-72 h-48 object-cover cursor-pointer"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           src={product.images.at(1)}
-          alt="image"
+          alt={product.name}
         />
-        <div className="p-4 text-sm">
-          <p className="text-secondary">₹ {product.price}</p>
-          <p className="text-primary line-clamp-1 font-medium my-1.5">
-            {product.name}
-          </p>
-          <div className="flex items-center justify-between">
-            <p className="text-ternary inline-flex gap-2">
-              <img src={assets.store} alt="store" width={15} />
-              {product.shop.shopName}
-            </p>
-            <p className="text-ternary inline-flex gap-2">
-              <img src={assets.location} alt="store" width={15} />
-              {product.shop.location}
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-2 mt-3">
-            <button className="bg-light text-slate-600 py-2 cursor-pointer">
-              Add to cart
-            </button>
-            <button
-              onClick={() => navigate(`/product/${product._id}`)}
-              className="bg-primary text-white py-2 cursor-pointer"
-            >
-              View Details
-            </button>
-          </div>
+        {/* Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+
+        {/* Price badge */}
+        <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm text-secondary text-sm font-bold px-3 py-1 rounded-full shadow">
+          ₹ {product.price}
         </div>
       </div>
-    </>
+
+      {/* Body */}
+      <div className="flex flex-col flex-1 p-4 gap-2">
+        {/* Product name */}
+        <h3
+          className="text-primary font-bold text-base leading-snug line-clamp-1 cursor-pointer hover:underline underline-offset-2"
+          onClick={() => navigate(`/product/${product._id}`)}
+        >
+          {product.name}
+        </h3>
+
+        {/* Divider */}
+        <div className="h-px bg-gray-100" />
+
+        {/* Shop & Location */}
+        <div className="flex flex-col gap-1.5 text-xs text-gray-500">
+          <div className="flex items-center gap-1.5">
+            <img src={assets.store} alt="store" width={13} className="opacity-60 shrink-0" />
+            <span className="line-clamp-1 font-medium">{product.shop.shopName}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <img src={assets.location} alt="location" width={13} className="opacity-60 shrink-0" />
+            <span className="line-clamp-1">{product.shop.location}</span>
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div className="grid grid-cols-2 gap-2 mt-2">
+          <button className="py-2.5 rounded-xl text-sm font-semibold bg-light text-secondary border border-secondary/20 hover:bg-secondary hover:text-white transition-all duration-200 active:scale-95">
+            🛒 Cart
+          </button>
+          <button
+            onClick={() => navigate(`/product/${product._id}`)}
+            className="py-2.5 rounded-xl text-sm font-semibold bg-primary text-white hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30 transition-all duration-200 active:scale-95"
+          >
+            View →
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

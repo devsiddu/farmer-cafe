@@ -11,92 +11,81 @@ const ShopDetails = () => {
   const products = dummyProducts.filter((p: Product) => p.shop.shopId === id);
 
   if (!shop) {
-    return <div className="text-center mt-20 text-red-500">Shop not found</div>;
+    return (
+      <div className="text-center mt-20 text-red-500">Shop not found</div>
+    );
   }
 
   return (
-    <>
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
-          {/* Avatar */}
-          <img
-            src={shop.image ? shop.image : assets.shop}
-            alt={shop.shopName}
-            className="w-24 h-24 rounded-full bg-gray-100"
-          />
+    <div className="max-w-6xl mx-auto px-6 py-10">
+      {/* Header Card */}
+      <div className="flex flex-col md:flex-row gap-6 items-start md:items-center bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <img
+          src={shop.image ? shop.image : assets.shop}
+          alt={shop.shopName}
+          className="w-20 h-20 rounded-xl object-cover bg-gray-100"
+        />
 
-          {/* Info */}
-          <div className="flex-1">
-            <h1 className="text-2xl font-semibold text-primary">
-              {shop.shopName}
-            </h1>
-
-            <p className="text-gray-500 mt-1">Owner: {shop.ownerName}</p>
-
-            <div className="flex flex-wrap gap-3 mt-2">
-              <span className="text-sm bg-gray-100 px-3 py-1 rounded">
-                📍 {shop.location}
-              </span>
-              <span
-                className={`text-sm px-3 py-1 rounded ${
-                  shop.isOpen
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
+        <div className="flex-1">
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1 className="text-2xl font-bold text-primary">{shop.shopName}</h1>
+            <span
+              className={`text-xs font-medium px-2.5 py-1 rounded-full border ${shop.isOpen
+                  ? "bg-green-50 text-green-600 border-green-200"
+                  : "bg-red-50 text-red-500 border-red-200"
                 }`}
-              >
-                {shop.isOpen ? "Open Now" : "Closed"}
-              </span>
-            </div>
+            >
+              {shop.isOpen ? "Open" : "Closed"}
+            </span>
+          </div>
+
+          <p className="text-sm text-gray-400 mt-1">{shop.ownerName}</p>
+
+          <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-500">
+            <span>📍 {shop.location}</span>
+            <span>★ {shop.rating}</span>
+            <a href={`tel:${shop.phone}`} className="text-primary hover:underline">
+              📞 {shop.phone}
+            </a>
           </div>
         </div>
 
-        {/* Divider */}
-        <hr className="my-8" />
-
-        {/* Details Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left */}
-          <div>
-            <h2 className="text-lg font-medium mb-4">Shop Information</h2>
-
-            <p className="text-gray-600 mb-2">
-              ⭐ Rating: <strong>{shop.rating}</strong>
-            </p>
-
-            <p className="text-gray-600 mb-2">
-              📞 Phone:{" "}
-              <a href={`tel:${shop.phone}`} className="text-primary">
-                {shop.phone}
-              </a>
-            </p>
-          </div>
-
-          {/* Right */}
-          <div>
-            <h2 className="text-lg font-medium mb-4">Actions</h2>
-
-            <div className="flex gap-4">
-              <a
-                href={`tel:${shop.phone}`}
-                className="flex-1 text-center py-3 bg-light text-secondary hover:bg-light/80 transition"
-              >
-                Call Shop
-              </a>
-
-              <button className="flex-1 py-3 bg-primary text-white hover:bg-primary/90 transition">
-                View Products
-              </button>
-            </div>
-          </div>
+        {/* Actions */}
+        <div className="flex gap-3 shrink-0">
+          <a
+            href={`tel:${shop.phone}`}
+            className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-light text-secondary border border-secondary/20 hover:bg-secondary hover:text-white transition-all duration-200"
+          >
+            Call
+          </a>
+          <button className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-primary text-white hover:bg-primary/90 transition-all duration-200 active:scale-95">
+            View All
+          </button>
         </div>
       </div>
-      <div className="flex flex-wrap items-start justify-center gap-3 ">
-        {products.map((product) => (
-          <Card product={product} key={product._id} />
-        ))}
+
+      {/* Products Section */}
+      <div className="mt-8">
+        <div className="flex items-center gap-2 mb-5">
+          <h2 className="text-lg font-semibold text-gray-700">Products</h2>
+          <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
+            {products.length}
+          </span>
+        </div>
+
+        {products.length > 0 ? (
+          <div className="flex flex-wrap justify-center md:justify-start gap-5">
+            {products.map((product) => (
+              <Card product={product} key={product._id} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-400 py-16 text-sm">
+            No products listed for this shop yet.
+          </p>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 
