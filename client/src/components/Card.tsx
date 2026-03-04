@@ -56,13 +56,11 @@ const Card = ({ product }: cardProps) => {
         </div>
 
         {/* Buttons */}
-        <div className="grid grid-cols-2 gap-2 mt-2">
-          <button className="py-2.5 rounded-xl text-sm font-semibold bg-light text-secondary border border-secondary/20 hover:bg-secondary hover:text-white transition-all duration-200 active:scale-95">
-            🛒 Cart
-          </button>
+        <div className="mt-2">
+
           <button
             onClick={() => navigate(`/product/${product._id}`)}
-            className="py-2.5 rounded-xl text-sm font-semibold bg-primary text-white hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30 transition-all duration-200 active:scale-95"
+            className="py-2.5 rounded-xl text-sm font-semibold bg-primary text-white hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30 transition-all duration-200 active:scale-95 w-full"
           >
             View →
           </button>

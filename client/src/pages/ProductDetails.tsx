@@ -1,16 +1,108 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { assets, dummyProducts } from "../assets/assets";
 import type { Product } from "../types/product";
+import { useCart } from "../context/CartContext";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { addToCart, cartItems } = useCart();
+
   const [qty, setQty] = useState<number>(1);
   const [selectQty, setSelectQty] = useState(false);
+  const [cartQtyModal, setCartQtyModal] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+
   const product = dummyProducts.find((item: Product) => item._id === Number(id));
   const [thumbnail, setThumbnail] = React.useState(product?.images[0]);
   const maxQty = product?.quantity ?? 0;
   const outOfStock = product?.quantity === 0;
+
+  // How many already in cart for this product
+  const inCartQty = cartItems.find((i) => i.product._id === product?._id)?.qty ?? 0;
+
+  const handleConfirmBookNow = () => {
+    setSelectQty(false);
+    navigate("/booking-confirmation", {
+      state: { product, qty },
+    });
+  };
+
+  const handleConfirmAddToCart = () => {
+    if (!product) return;
+    addToCart(product, qty);
+    setCartQtyModal(false);
+    setQty(1);
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
+
+  const QtyModal = ({
+    onConfirm,
+    onCancel,
+    confirmLabel,
+    confirmStyle,
+  }: {
+    onConfirm: () => void;
+    onCancel: () => void;
+    confirmLabel: string;
+    confirmStyle?: string;
+  }) => (
+    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/20 z-50">
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-[340px] flex flex-col items-center">
+        <h2 className="text-lg font-bold text-gray-800">Select Quantity</h2>
+        <p className="text-xs text-gray-400 mt-1">Available: {maxQty} units</p>
+
+        <div className="flex items-center gap-6 mt-6">
+          <button
+            disabled={qty <= 1}
+            onClick={() => setQty((prev) => Math.max(1, prev - 1))}
+            className={`w-9 h-9 rounded-full text-xl font-medium flex items-center justify-center transition ${qty <= 1
+                ? "bg-gray-100 text-gray-300 cursor-not-allowed"
+                : "bg-light text-secondary hover:bg-secondary hover:text-white cursor-pointer"
+              }`}
+          >
+            −
+          </button>
+          <span className="text-2xl font-bold text-gray-800 w-8 text-center">{qty}</span>
+          <button
+            disabled={qty >= maxQty - inCartQty}
+            onClick={() => setQty((prev) => Math.min(maxQty - inCartQty, prev + 1))}
+            className={`w-9 h-9 rounded-full text-xl font-medium flex items-center justify-center transition ${qty >= maxQty - inCartQty
+                ? "bg-gray-100 text-gray-300 cursor-not-allowed"
+                : "bg-light text-secondary hover:bg-secondary hover:text-white cursor-pointer"
+              }`}
+          >
+            +
+          </button>
+        </div>
+
+        {inCartQty > 0 && (
+          <p className="text-xs text-amber-500 mt-3">{inCartQty} already in cart</p>
+        )}
+
+        <div className="flex gap-3 mt-8 w-full">
+          <button
+            onClick={onCancel}
+            className="flex-1 py-2.5 rounded-xl text-sm font-semibold border border-gray-200 text-gray-500 hover:bg-gray-50 transition"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={qty < 1 || qty > maxQty}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition active:scale-95 ${qty < 1 || qty > maxQty
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : confirmStyle ?? "bg-primary text-white hover:bg-primary/90 cursor-pointer"
+              }`}
+          >
+            {confirmLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     product && (
@@ -26,7 +118,6 @@ const ProductDetails = () => {
         <div className="flex flex-col md:flex-row gap-10">
           {/* Images */}
           <div className="flex gap-3">
-            {/* Thumbnails */}
             <div className="flex flex-col gap-2">
               {product.images.map((image, index) => (
                 <div
@@ -41,14 +132,8 @@ const ProductDetails = () => {
                 </div>
               ))}
             </div>
-
-            {/* Main image */}
             <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm w-80 h-96 bg-gray-50">
-              <img
-                src={thumbnail}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
+              <img src={thumbnail} alt={product.name} className="w-full h-full object-cover" />
             </div>
           </div>
 
@@ -56,7 +141,6 @@ const ProductDetails = () => {
           <div className="flex-1">
             <h1 className="text-2xl font-bold text-gray-800">{product.name}</h1>
 
-            {/* Stars */}
             <div className="flex items-center gap-1 mt-2">
               {Array(5).fill("").map((_, i) =>
                 product.rating > i ? (
@@ -68,7 +152,6 @@ const ProductDetails = () => {
               <span className="text-xs text-gray-400 ml-1">({product.rating})</span>
             </div>
 
-            {/* Price */}
             <div className="mt-4">
               <p className="text-2xl font-bold text-primary">₹{product.price}</p>
               <p className="text-xs text-gray-400 mt-0.5">Inclusive of all taxes</p>
@@ -76,7 +159,6 @@ const ProductDetails = () => {
 
             <div className="h-px bg-gray-100 my-4" />
 
-            {/* Stock */}
             <p className="text-sm text-gray-600">
               Availability:{" "}
               {outOfStock ? (
@@ -86,7 +168,12 @@ const ProductDetails = () => {
               )}
             </p>
 
-            {/* Description */}
+            {inCartQty > 0 && (
+              <p className="text-xs text-primary font-medium mt-1">
+                🛒 {inCartQty} unit{inCartQty > 1 ? "s" : ""} already in your cart
+              </p>
+            )}
+
             <div className="mt-4">
               <p className="text-sm font-semibold text-gray-700 mb-1">About this product</p>
               <p className="text-sm text-gray-500 leading-relaxed">{product.description}</p>
@@ -94,7 +181,6 @@ const ProductDetails = () => {
 
             <div className="h-px bg-gray-100 my-4" />
 
-            {/* Shop info */}
             <div className="bg-gray-50 rounded-xl p-4 flex flex-wrap gap-4 text-sm">
               <div className="flex items-center gap-2 text-secondary">
                 <img src={assets.store} width={14} alt="" />
@@ -110,84 +196,70 @@ const ProductDetails = () => {
               </div>
             </div>
 
-            {/* Buttons */}
+            {/* Action Buttons */}
             <div className="flex gap-3 mt-6">
+              {/* Add to Cart */}
               <button
-                disabled={outOfStock}
-                className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 ${outOfStock
-                    ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
-                    : "bg-light text-secondary border-secondary/20 hover:bg-secondary hover:text-white"
+                disabled={outOfStock || inCartQty >= maxQty}
+                onClick={() => {
+                  setQty(1);
+                  setCartQtyModal(true);
+                }}
+                className={`flex-1 py-3 rounded-xl text-sm font-semibold border-2 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 ${outOfStock || inCartQty >= maxQty
+                    ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
+                    : addedToCart
+                      ? "border-green-400 text-green-600 bg-green-50 cursor-pointer"
+                      : "border-primary text-primary hover:bg-primary/5 cursor-pointer"
                   }`}
               >
-                Add to Cart
+                {addedToCart ? "✓ Added!" : "🛒 Add to Cart"}
               </button>
+
+              {/* Book Now */}
               <button
                 disabled={outOfStock}
-                onClick={() => !outOfStock && setSelectQty(true)}
+                onClick={() => {
+                  setQty(1);
+                  setSelectQty(true);
+                }}
                 className={`flex-1 py-3 rounded-xl text-sm font-semibold transition-all duration-200 active:scale-95 ${outOfStock
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-primary text-white hover:bg-primary/90"
+                    : "bg-primary text-white hover:bg-primary/90 cursor-pointer"
                   }`}
               >
                 Book Now
               </button>
             </div>
+
+            {/* View Cart shortcut */}
+            {inCartQty > 0 && (
+              <button
+                onClick={() => navigate("/cart")}
+                className="w-full mt-2 py-2 rounded-xl text-xs font-semibold text-primary border border-primary/20 hover:bg-primary/5 transition"
+              >
+                View Cart ({inCartQty} item{inCartQty > 1 ? "s" : ""}) →
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Quantity Modal */}
+        {/* Book Now Modal */}
         {selectQty && (
-          <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/20 z-50">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-[340px] flex flex-col items-center">
-              <h2 className="text-lg font-bold text-gray-800">Select Quantity</h2>
-              <p className="text-xs text-gray-400 mt-1">Available: {maxQty} units</p>
+          <QtyModal
+            onConfirm={handleConfirmBookNow}
+            onCancel={() => setSelectQty(false)}
+            confirmLabel="Confirm"
+          />
+        )}
 
-              <div className="flex items-center gap-6 mt-6">
-                <button
-                  disabled={qty <= 1}
-                  onClick={() => setQty((prev) => Math.max(1, prev - 1))}
-                  className={`w-9 h-9 rounded-full text-xl font-medium flex items-center justify-center transition ${qty <= 1
-                      ? "bg-gray-100 text-gray-300 cursor-not-allowed"
-                      : "bg-light text-secondary hover:bg-secondary hover:text-white cursor-pointer"
-                    }`}
-                >
-                  −
-                </button>
-
-                <span className="text-2xl font-bold text-gray-800 w-8 text-center">{qty}</span>
-
-                <button
-                  disabled={qty >= maxQty}
-                  onClick={() => setQty((prev) => Math.min(maxQty, prev + 1))}
-                  className={`w-9 h-9 rounded-full text-xl font-medium flex items-center justify-center transition ${qty >= maxQty
-                      ? "bg-gray-100 text-gray-300 cursor-not-allowed"
-                      : "bg-light text-secondary hover:bg-secondary hover:text-white cursor-pointer"
-                    }`}
-                >
-                  +
-                </button>
-              </div>
-
-              <div className="flex gap-3 mt-8 w-full">
-                <button
-                  onClick={() => setSelectQty(false)}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-semibold border border-gray-200 text-gray-500 hover:bg-gray-50 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => setSelectQty(false)}
-                  disabled={qty < 1 || qty > maxQty}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition active:scale-95 ${qty < 1 || qty > maxQty
-                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                      : "bg-primary text-white hover:bg-primary/90"
-                    }`}
-                >
-                  Confirm
-                </button>
-              </div>
-            </div>
-          </div>
+        {/* Add to Cart Modal */}
+        {cartQtyModal && (
+          <QtyModal
+            onConfirm={handleConfirmAddToCart}
+            onCancel={() => setCartQtyModal(false)}
+            confirmLabel="Add to Cart"
+            confirmStyle="bg-secondary text-white hover:bg-secondary/90 cursor-pointer"
+          />
         )}
       </div>
     )
