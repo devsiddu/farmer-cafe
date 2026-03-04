@@ -1,78 +1,127 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 
+const slides = [
+  {
+    image:
+      "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1470&auto=format&fit=crop",
+    title: "Fresh Fertilizers at Your Doorstep",
+    subtitle:
+      "Browse a wide range of fertilizers from trusted local shops near you.",
+    cta: "Explore Products",
+    href: "/products",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1470&auto=format&fit=crop",
+    title: "Find the Best Price Near You",
+    subtitle:
+      "Compare products from multiple shops and book at the lowest price.",
+    cta: "Browse Shops",
+    href: "/shops",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=1470&auto=format&fit=crop",
+    title: "Book Before It Runs Out",
+    subtitle:
+      "Reserve farming materials instantly — no payment needed, just book and pick up.",
+    cta: "Get Started",
+    href: "/products",
+  },
+];
+
 const Hero = () => {
+  const [current, setCurrent] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const navigate = useNavigate();
+
+  // Auto-slide
+  useEffect(() => {
+    const timer = setInterval(() => goTo((current + 1) % slides.length), 5000);
+    return () => clearInterval(timer);
+  }, [current]);
+
+  const goTo = (index: number) => {
+    if (animating) return;
+    setAnimating(true);
+    setTimeout(() => {
+      setCurrent(index);
+      setAnimating(false);
+    }, 400);
+  };
+
+  const slide = slides[current];
+
   return (
-    <div>
-      <main className="flex flex-col md:flex-row items-center max-md:text-center justify-between mt-16 pb-16 px-6 sm:px-10 md:px-24 max-w-7xl mx-auto w-full">
-        <div className="flex flex-col items-center md:items-start">
-          <button
-            className="mt-16 mb-6 flex items-center space-x-2 border border-secondary text-secondary text-xs rounded-full px-4 pr-1.5 py-1.5 hover:bg-indigo-50 transition"
-            type="button"
-          >
-            <span>Explore how we help grow brands.</span>
-            <span className="flex items-center justify-center size-6 p-1 rounded-full bg-secondary">
-              <img src={assets.arrowRight} alt="arrow" width={18} />
-            </span>
-          </button>
-          <h1 className="text-gray-900 font-semibold text-3xl sm:text-4xl md:text-5xl max-w-xl">
-            Preferred choice of leaders in
-            <span className="text-secondary">every industry</span>
-          </h1>
-          <p className="mt-4 text-secondary max-w-md text-sm sm:text-base leading-relaxed">
-            Learn why professionals trust our solution to complete their
-            customer journey.
-          </p>
-          <div className="flex flex-col md:flex-row items-center mt-8 gap-3">
-            <button
-              className="bg-primary text-white px-6 pr-2.5 py-2.5 rounded-full text-sm font-medium flex items-center space-x-2 transition cursor-pointer"
-              type="button"
-            >
-              <span>Read Success Stories</span>
-              <img src={assets.arrowRight} alt="arrow" width={18} />
-            </button>
-            <a
-              className="text-secondary bg-indigo-100 px-5 py-2 rounded-full text-sm font-medium hover:bg-secondary/10 transition cursor-pointer"
-              href="#"
-            >
-              Get Started
-            </a>
-          </div>
-        </div>
-        <div
-          aria-label="Photos of leaders"
-          className="mt-12 grid grid-cols-2 gap-6 pb-6"
+    <div className="relative w-full h-[520px] md:h-[600px] overflow-hidden">
+      {/* Background image */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-500 ${animating ? "opacity-0" : "opacity-100"
+          }`}
+      >
+        <img
+          src={slide.image}
+          alt={slide.title}
+          className="w-full h-full object-cover"
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/50" />
+      </div>
+
+      {/* Content */}
+      <div
+        className={`relative z-10 h-full flex flex-col items-center justify-center text-center px-6 transition-all duration-500 ${animating
+            ? "opacity-0 translate-y-4"
+            : "opacity-100 translate-y-0"
+          }`}
+      >
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/60 mb-3">
+          🌾 Farmer Cafe
+        </p>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white max-w-2xl leading-tight">
+          {slide.title}
+        </h1>
+        <p className="mt-4 text-white/70 text-sm sm:text-base max-w-xl leading-relaxed">
+          {slide.subtitle}
+        </p>
+        <button
+          onClick={() => navigate(slide.href)}
+          className="mt-8 px-7 py-3 bg-primary text-white text-sm font-semibold rounded-full hover:bg-primary/90 active:scale-95 transition-all duration-200 flex items-center gap-2"
         >
-          <img
-            alt=""
-            className="w-36 h-44 rounded-lg hover:scale-105 transition duration-300 object-cover flex-shrink-0 shadow-lg"
-            height="140"
-            src="https://images.unsplash.com/flagged/photo-1573740144655-bbb6e88fb18a?q=80&w=735&auto=format&fit=crop"
-            width="120"
+          {slide.cta}
+          <img src={assets.arrowRight} alt="arrow" width={16} />
+        </button>
+      </div>
+
+      {/* Dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            className={`rounded-full transition-all duration-300 ${i === current
+                ? "w-6 h-2 bg-white"
+                : "w-2 h-2 bg-white/40 hover:bg-white/70"
+              }`}
           />
-          <img
-            alt=""
-            className="w-36 h-44 rounded-lg hover:scale-105 transition duration-300 object-cover flex-shrink-0 shadow-lg"
-            height="140"
-            src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=687&auto=format&fit=crop"
-            width="120"
-          />
-          <img
-            alt=""
-            className="w-36 h-44 rounded-lg hover:scale-105 transition duration-300 object-cover flex-shrink-0 shadow-lg"
-            height="140"
-            src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=687&auto=format&fit=crop"
-            width="120"
-          />
-          <img
-            alt=""
-            className="w-36 h-44 rounded-lg hover:scale-105 transition duration-300 object-cover flex-shrink-0 shadow-lg"
-            height="140"
-            src="https://images.unsplash.com/photo-1546961329-78bef0414d7c?q=80&w=687&auto=format&fit=crop"
-            width="120"
-          />
-        </div>
-      </main>
+        ))}
+      </div>
+
+      {/* Arrows */}
+      <button
+        onClick={() => goTo((current - 1 + slides.length) % slides.length)}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition backdrop-blur-sm"
+      >
+        ‹
+      </button>
+      <button
+        onClick={() => goTo((current + 1) % slides.length)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition backdrop-blur-sm"
+      >
+        ›
+      </button>
     </div>
   );
 };

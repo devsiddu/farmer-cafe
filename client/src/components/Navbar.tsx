@@ -1,8 +1,10 @@
 import React from "react";
 import { assets } from "../assets/assets";
+import { useNavigate } from "react-router-dom";
 // import assets from '../assets/assets.';
 const Navbar = () => {
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 text-primary bg-white relative transition-all">
       <a href="/">
@@ -24,14 +26,10 @@ const Navbar = () => {
           <img src={assets.search} width={16} alt="search" />
         </div>
 
-        <div className="relative cursor-pointer">
-          <img src={assets.cart} width={18} alt="cart" />
-          <button className="absolute -top-2 -right-3 text-xs text-white bg-primary w-[18px] h-[18px] rounded-full">
-            3
-          </button>
-        </div>
-
-        <button className="cursor-pointer px-8 py-2 bg-primary hover:bg-primary transition text-white rounded-full">
+        <button onClick={() => navigate('/cart')}>
+          <img src={assets.cart} alt="" className="size-5 cursor-pointer" />
+        </button>
+        <button onClick={() => navigate("/login")} className="cursor-pointer px-8 py-2 bg-primary hover:bg-primary transition text-white rounded-full">
           Login
         </button>
       </div>
@@ -52,7 +50,7 @@ const Navbar = () => {
         <a href="/" className="block">Home</a>
         <a href="/products" className="block">Products</a>
         <a href="/shops" className="block">Shops</a>
-        <button className="cursor-pointer px-6 py-2 mt-2 bg-secondary hover:bg-primary transition text-white rounded-full text-sm">
+        <button onClick={() => navigate("/login")} className="cursor-pointer px-6 py-2 mt-2 bg-secondary hover:bg-primary transition text-white rounded-full text-sm">
           Login
         </button>
       </div>
