@@ -1,0 +1,37 @@
+import { LogOut } from "lucide-react";
+import { assets } from "../../assets/assets";
+import { useApp } from "../../context/AppContext";
+// import assets from '../assets/assets.';
+const Navbar = () => {
+  const { user, logout } = useApp()
+
+  return (
+    <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 text-primary bg-white relative transition-all">
+      <a href="/">
+        <img src={assets.logoLight} alt="logo" width={157} />
+      </a>
+
+      <div className="sm:flex items-center gap-8 text-primary">
+        <div className="relative group">
+
+          <button>
+            <img src={user?.imageUrl} alt="profile" className="size-9 rounded-full cursor-pointer" />
+          </button>
+
+          <div className="absolute right-0 top-13 hidden group-focus-within:block text-sm w-35 p-1 bg-white border border-gray-300/30 text-gray-500 rounded-md font-medium">
+            <ul className="flex flex-col gap-2">
+              <li className="flex items-center gap-3 cursor-pointer px-3 py-2 rounded hover:bg-red-300/40 hover:text-red-500 transition">
+                <LogOut size={15} />
+                <button onClick={logout} >Logout</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;

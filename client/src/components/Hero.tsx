@@ -55,7 +55,7 @@ const Hero = () => {
   const slide = slides[current];
 
   return (
-    <div className="relative w-full h-[520px] md:h-[600px] overflow-hidden">
+    <div className="relative w-full h-130 md:h-150 -z-10 overflow-hidden">
       {/* Background image */}
       <div
         className={`absolute inset-0 transition-opacity duration-500 ${animating ? "opacity-0" : "opacity-100"

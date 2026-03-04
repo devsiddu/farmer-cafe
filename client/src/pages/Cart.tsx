@@ -1,7 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { assets } from "../assets/assets";
-
 const Cart = () => {
     const { cartItems, removeFromCart, updateQty, clearCart, totalItems, totalPrice } = useCart();
     const navigate = useNavigate();
@@ -122,7 +120,7 @@ const Cart = () => {
                         <div className="flex flex-col gap-2 text-sm">
                             {cartItems.map(({ product, qty }) => (
                                 <div key={product._id} className="flex justify-between text-gray-500">
-                                    <span className="truncate max-w-[160px]">{product.name} × {qty}</span>
+                                    <span className="truncate max-w-40">{product.name} × {qty}</span>
                                     <span className="font-medium text-gray-700 shrink-0 ml-2">₹{product.price * qty}</span>
                                 </div>
                             ))}

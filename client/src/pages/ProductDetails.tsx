@@ -50,7 +50,7 @@ const ProductDetails = () => {
     confirmStyle?: string;
   }) => (
     <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/20 z-50">
-      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-[340px] flex flex-col items-center">
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 w-85 flex flex-col items-center">
         <h2 className="text-lg font-bold text-gray-800">Select Quantity</h2>
         <p className="text-xs text-gray-400 mt-1">Available: {maxQty} units</p>
 

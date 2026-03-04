@@ -11,14 +11,20 @@ import ShopDetails from "./pages/ShopDetails";
 import Login from "./pages/Login";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import Cart from "./pages/Cart";
-
+import Layout from "./pages/admin/Layout";
+import Users from "./pages/admin/Users";
+import Dashboard from "./pages/admin/Dashboard";
+import ShopsList from "./pages/admin/ShopsList";
 const App = () => {
   const { pathname } = useLocation();
-  const hideLayout = ["/login"].includes(pathname);
+
+  const hideLayout = pathname === "/login";
+  const isAdminPath = pathname.startsWith("/admin-dashboard");
 
   return (
     <div>
-      {!hideLayout && <Navbar />}
+      {!hideLayout && !isAdminPath && <Navbar />}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -30,8 +36,15 @@ const App = () => {
         <Route path="/shop/:id" element={<ShopDetails />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+
+        <Route path="/admin-dashboard" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="users" element={<Users />} />
+          <Route path="shops" element={<ShopsList />} />
+        </Route>
       </Routes>
-      {!hideLayout && <Footer />}
+
+      {!hideLayout && !isAdminPath && <Footer />}
     </div>
   );
 };
