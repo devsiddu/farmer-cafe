@@ -44,6 +44,13 @@ export interface UserType {
   createdAt: string;
 }
 
+export interface OrderType {
+  orderId: string;
+  product: ProductType;
+  qty: number;
+  status: "confirmed" | "cancelled" | "pending";
+  bookedAt: Date;
+}
 
 export interface AppContext {
   user: UserType | null;

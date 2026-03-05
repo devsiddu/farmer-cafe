@@ -1,29 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { assets, dummyProducts } from "../assets/assets";
-import type { ProductType } from "../types";
+import { assets, dummyBookings } from "../assets/assets";
+import type { OrderType } from "../types";
 import Title from "../components/Title";
 
-interface Order {
-    orderId: string;
-    product: ProductType;
-    qty: number;
-    status: "confirmed" | "cancelled" | "pending";
-    bookedAt: string;
-}
+
 
 // Mock orders from dummyProducts
-const mockOrders: Order[] = dummyProducts.slice(0, 6).map((product, i) => ({
-    orderId: `ORD${100 + i}`,
-    product,
-    qty: Math.ceil(Math.random() * 4) + 1,
-    status: i % 3 === 2 ? "cancelled" : i % 3 === 1 ? "pending" : "confirmed",
-    bookedAt: new Date(Date.now() - i * 86400000 * 2).toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-    }),
-}));
+const bookings: OrderType[] = dummyBookings;
 
 const statusStyles = {
     confirmed: "bg-green-50 text-green-600",
@@ -38,7 +22,7 @@ const statusLabels = {
 };
 
 const BookingConfirmation = () => {
-    const [orders, setOrders] = useState<Order[]>(mockOrders);
+    const [orders, setOrders] = useState<OrderType[]>(bookings);
     const [cancelConfirm, setCancelConfirm] = useState<string | null>(null);
     const navigate = useNavigate();
 
@@ -123,7 +107,7 @@ const BookingConfirmation = () => {
                                 <div className="flex flex-col items-end shrink-0 min-w-17.5">
                                     <p className="text-base font-bold text-primary">₹{total}</p>
                                     <p className="text-[10px] text-gray-400">₹{product.price} × {qty}</p>
-                                    <p className="text-[10px] text-gray-400 mt-0.5">{bookedAt}</p>
+                                    <p className="text-[10px] text-gray-400 mt-0.5">{bookedAt.toLocaleDateString()}</p>
                                 </div>
 
                                 {/* Status + Cancel */}

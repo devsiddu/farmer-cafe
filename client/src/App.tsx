@@ -18,6 +18,7 @@ import ShopsList from "./pages/admin/ShopsList";
 import ShopLayout from "./pages/shop/ShopLayout";
 import ShopDashboard from "./pages/shop/ShopDashboard";
 import ShopProducts from "./pages/shop/ShopProducts";
+import ShopBookings from "./pages/shop/ShopBookings";
 const App = () => {
   const { pathname } = useLocation();
 
@@ -49,12 +50,12 @@ const App = () => {
 
         <Route path="/shop-dashboard" element={<ShopLayout />}>
           <Route index element={<ShopDashboard />} />
-          <Route path="users" element={<ShopProducts />} />
-          <Route path="shops" element={<ShopsList />} />
+          <Route path="products" element={<ShopProducts />} />
+          <Route path="bookings" element={<ShopBookings />} />
         </Route>
       </Routes>
 
-      {!hideLayout && !isAdminPath && <Footer />}
+      {!hideLayout && !isAdminPath && !isShopPath && <Footer />}
     </div>
   );
 };

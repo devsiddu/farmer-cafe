@@ -10,7 +10,7 @@ const Card = ({ product }: cardProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="group w-72 bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+    <div className="group w-72 shrink-0 bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       {/* Image */}
       <div
         className="relative h-48 overflow-hidden cursor-pointer"
