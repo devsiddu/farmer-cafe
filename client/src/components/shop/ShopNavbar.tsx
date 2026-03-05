@@ -3,7 +3,7 @@ import { assets } from "../../assets/assets";
 import { useApp } from "../../context/AppContext";
 import { Link } from "react-router-dom";
 // import assets from '../assets/assets.';
-const Navbar = () => {
+const ShopNavbar = () => {
   const { user, logout } = useApp()
 
   return (
@@ -35,4 +35,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default ShopNavbar;

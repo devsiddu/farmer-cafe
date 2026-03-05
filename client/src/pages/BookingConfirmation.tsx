@@ -1,135 +1,182 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { assets } from "../assets/assets";
-import type { Product } from "../types/product";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { assets, dummyProducts } from "../assets/assets";
+import type { ProductType } from "../types";
+import Title from "../components/Title";
 
-interface LocationState {
-    product: Product;
+interface Order {
+    orderId: string;
+    product: ProductType;
     qty: number;
+    status: "confirmed" | "cancelled" | "pending";
+    bookedAt: string;
 }
 
+// Mock orders from dummyProducts
+const mockOrders: Order[] = dummyProducts.slice(0, 6).map((product, i) => ({
+    orderId: `ORD${100 + i}`,
+    product,
+    qty: Math.ceil(Math.random() * 4) + 1,
+    status: i % 3 === 2 ? "cancelled" : i % 3 === 1 ? "pending" : "confirmed",
+    bookedAt: new Date(Date.now() - i * 86400000 * 2).toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+    }),
+}));
+
+const statusStyles = {
+    confirmed: "bg-green-50 text-green-600",
+    pending: "bg-amber-50 text-amber-600",
+    cancelled: "bg-red-50 text-red-400",
+};
+
+const statusLabels = {
+    confirmed: "✓ Confirmed",
+    pending: "⏳ Pending",
+    cancelled: "✕ Cancelled",
+};
+
 const BookingConfirmation = () => {
-    const { state } = useLocation();
+    const [orders, setOrders] = useState<Order[]>(mockOrders);
+    const [cancelConfirm, setCancelConfirm] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    const locationState = state as LocationState | null;
-    const product = locationState?.product;
-    const qty = locationState?.qty;
-
-    // Guard — if someone visits directly without state
-    if (!product || !qty) {
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
-                <p className="text-4xl mb-4">📦</p>
-                <h2 className="text-lg font-semibold text-gray-700">No booking data found</h2>
-                <p className="text-sm text-gray-400 mt-1 mb-6">
-                    It looks like you reached this page directly.
-                </p>
-                <button
-                    onClick={() => navigate("/products")}
-                    className="px-6 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition"
-                >
-                    Browse Products
-                </button>
-            </div>
+    const cancelOrder = (orderId: string) => {
+        setOrders((prev) =>
+            prev.map((o) => (o.orderId === orderId ? { ...o, status: "cancelled" } : o))
         );
-    }
+        setCancelConfirm(null);
+    };
 
-    const totalPrice = product.price * qty;
+    const cancelTarget = orders.find((o) => o.orderId === cancelConfirm);
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
-            <div className="w-full max-w-md bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-
-                {/* Success header */}
-                <div className="bg-primary px-8 py-8 text-center">
-                    <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <span className="text-white text-2xl">✓</span>
-                    </div>
-                    <h1 className="text-xl font-bold text-white">Booking Confirmed!</h1>
-                    <p className="text-white/70 text-sm mt-1">
-                        Your order has been placed successfully
-                    </p>
-                </div>
-
-                {/* Product summary */}
-                <div className="p-6">
-                    <div className="flex gap-4 items-start">
-                        <img
-                            src={product.images[0]}
-                            alt={product.name}
-                            className="w-20 h-20 rounded-xl object-cover border border-gray-100 shrink-0"
-                        />
-                        <div>
-                            <h2 className="font-semibold text-gray-800 text-base leading-snug">
-                                {product.name}
-                            </h2>
-                            <p className="text-xs text-gray-400 mt-0.5">{product.category}</p>
-                            <p className="text-primary font-bold mt-1">₹{product.price} / unit</p>
-                        </div>
-                    </div>
-
-                    <div className="h-px bg-gray-100 my-5" />
-
-                    {/* Booking details */}
-                    <div className="flex flex-col gap-3 text-sm">
-                        <div className="flex justify-between">
-                            <span className="text-gray-400">Quantity</span>
-                            <span className="font-semibold text-gray-700">{qty} units</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-400">Total Amount</span>
-                            <span className="font-bold text-primary text-base">₹{totalPrice}</span>
-                        </div>
-                    </div>
-
-                    <div className="h-px bg-gray-100 my-5" />
-
-                    {/* Shop info */}
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
-                        Pickup From
-                    </p>
-                    <div className="bg-gray-50 rounded-xl p-4 flex flex-col gap-2 text-sm">
-                        <div className="flex items-center gap-2 text-secondary">
-                            <img src={assets.store} width={14} alt="" />
-                            <span className="font-medium">{product.shop.shopName}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-500">
-                            <img src={assets.location} width={14} alt="" />
-                            <span>{product.shop.location}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-500">
-                            <img src={assets.phone} width={12} alt="" />
-                            <a
-                                href={`tel:${product.shop.phone}`}
-                                className="hover:text-primary transition"
-                            >
-                                {product.shop.phone}
-                            </a>
-                        </div>
-                    </div>
-
-                    {/* Note */}
-                    <div className="mt-4 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 text-xs text-amber-700 leading-relaxed">
-                        💡 No payment required. Visit the shop and show this booking to collect your items.
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex gap-3 mt-6">
-                        <button
-                            onClick={() => navigate("/products")}
-                            className="flex-1 py-2.5 rounded-xl text-sm font-semibold border border-gray-200 text-gray-500 hover:bg-gray-50 transition"
-                        >
-                            Browse More
-                        </button>
-                        <button
-                            onClick={() => navigate("/")}
-                            className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-primary text-white hover:bg-primary/90 active:scale-95 transition-all duration-200"
-                        >
-                            Go Home
-                        </button>
-                    </div>
-                </div>
+        <div className="max-w-5xl ml-40 px-4">
+            {/* Header */}
+            <div className="mb-6">
+                <Title title="My Bookings" />
+                <p className="text-sm text-gray-400">{orders.length} booking{orders.length !== 1 ? "s" : ""} placed</p>
             </div>
+
+            {orders.length === 0 ? (
+                <div className="text-center py-20 text-gray-400">
+                    <div className="text-5xl mb-3">📦</div>
+                    <p className="font-semibold text-gray-600">No orders yet</p>
+                    <p className="text-sm mt-1 mb-6">You haven't booked any products.</p>
+                    <button
+                        onClick={() => navigate("/products")}
+                        className="px-6 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition"
+                    >
+                        Browse Products
+                    </button>
+                </div>
+            ) : (
+                <div className="flex flex-col gap-3">
+                    {orders.map((order) => {
+                        const { product, qty, status, bookedAt, orderId } = order;
+                        const total = product.price * qty;
+                        const isCancellable = status !== "cancelled";
+
+                        return (
+                            <div
+                                key={orderId}
+                                className="bg-white border border-gray-100 rounded-2xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-4 px-5 py-4"
+                            >
+                                {/* Product Image */}
+                                <img
+                                    src={product.images?.[0]}
+                                    alt={product.name}
+                                    onClick={() => navigate(`/products/${product._id}`)}
+                                    className="w-16 h-16 rounded-xl object-cover border border-gray-100 shrink-0 cursor-pointer"
+                                />
+
+                                {/* Product Info */}
+                                <div className="flex-1 min-w-0">
+                                    <p
+                                        className="font-semibold text-gray-800 text-sm truncate cursor-pointer hover:text-primary transition"
+                                        onClick={() => navigate(`/products/${product._id}`)}
+                                    >
+                                        {product.name}
+                                    </p>
+                                    <p className="text-xs text-gray-400 mt-0.5">{product.category}</p>
+                                    <p className="text-xs text-gray-400 mt-0.5">Qty: {qty} units</p>
+                                </div>
+
+                                {/* Shop Info */}
+                                <div className="flex flex-col gap-1 text-xs text-gray-500 shrink-0 min-w-32.5">
+                                    <div className="flex items-center gap-1.5">
+                                        <img src={assets.store} width={11} alt="" />
+                                        <span className="font-medium text-secondary truncate">{product.shop?.shopName}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <img src={assets.location} width={11} alt="" />
+                                        <span className="truncate">{product.shop?.location}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <img src={assets.phone} width={10} alt="" />
+                                        <span>{product.shop?.phone}</span>
+                                    </div>
+                                </div>
+
+                                {/* Price */}
+                                <div className="flex flex-col items-end shrink-0 min-w-17.5">
+                                    <p className="text-base font-bold text-primary">₹{total}</p>
+                                    <p className="text-[10px] text-gray-400">₹{product.price} × {qty}</p>
+                                    <p className="text-[10px] text-gray-400 mt-0.5">{bookedAt}</p>
+                                </div>
+
+                                {/* Status + Cancel */}
+                                <div className="flex flex-col items-end gap-2 shrink-0">
+                                    <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg ${statusStyles[status]}`}>
+                                        {statusLabels[status]}
+                                    </span>
+                                    {isCancellable && (
+                                        <button
+                                            onClick={() => setCancelConfirm(orderId)}
+                                            className="text-[11px] font-semibold text-gray-400 hover:text-red-500 border border-gray-200 hover:border-red-200 px-2.5 py-1 rounded-lg transition"
+                                        >
+                                            Cancel
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+
+            {/* Cancel Confirm Modal */}
+            {cancelConfirm && cancelTarget && (
+                <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/20 z-50">
+                    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-7 w-[320px] flex flex-col items-center text-center">
+                        <img
+                            src={cancelTarget.product.images?.[0]}
+                            alt={cancelTarget.product.name}
+                            className="w-16 h-16 rounded-2xl object-cover border border-gray-100 mb-3"
+                        />
+                        <h2 className="text-base font-bold text-gray-800">Cancel Booking?</h2>
+                        <p className="text-sm text-gray-600 font-medium mt-1">{cancelTarget.product.name}</p>
+                        <p className="text-xs text-gray-400 mt-1 mb-6">
+                            Are you sure you want to cancel this booking? This cannot be undone.
+                        </p>
+                        <div className="flex gap-3 w-full">
+                            <button
+                                onClick={() => setCancelConfirm(null)}
+                                className="flex-1 py-2.5 rounded-xl text-sm font-semibold border border-gray-200 text-gray-500 hover:bg-gray-50 transition"
+                            >
+                                Keep It
+                            </button>
+                            <button
+                                onClick={() => cancelOrder(cancelConfirm)}
+                                className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-red-500 text-white hover:bg-red-600 transition active:scale-95"
+                            >
+                                Yes, Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

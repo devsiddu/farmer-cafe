@@ -12,7 +12,7 @@ import location from "./map-pin.svg";
 import store from "./store.svg";
 import phone from "./phone.svg";
 import shop from "./shops.png";
-import type { UserType } from "../types";
+import type { ProductType, ShopType, UserType } from "../types";
 
 export const assets = {
   logoDark,
@@ -31,107 +31,107 @@ export const assets = {
   shop,
 };
 
-export const dummyShops = [
+export const dummyShops: ShopType[] = [
   {
-    shopId: "1",
+    _id: "698198hdweh343c913f84d13f4",
     shopName: "Kisan Agro Center",
-    ownerName: "Ramesh Patil",
+    ownerId: "69819801a343c913f84d13f4",
     image:
       "https://images.unsplash.com/photo-1592204854823-934e16967bb5?w=400&auto=format&fit=crop",
     location: "Gokak, Belagavi",
     rating: 4.6,
     isOpen: true,
-    phone: "+91 98765 43210",
+    phone: 9876543210,
   },
   {
-    shopId: "2",
+    _id: "698198hdweh343c913f84d13fd",
     shopName: "Green Field Supplies",
-    ownerName: "Suresh Kulkarni",
+    ownerId: "69819801a343c913f84d13f4",
     image:
       "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&auto=format&fit=crop",
     location: "Belagavi",
     rating: 4.4,
     isOpen: true,
-    phone: "+91 91234 56789",
+    phone: 9123456789,
   },
   {
-    shopId: "3",
+    _id: "698198hdweheww3c913f84d13f4",
     shopName: "Krishi Bhandar",
-    ownerName: "Mahesh Naik",
+    ownerId: "69819801a872c913f84d13f4",
     image:
       "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&auto=format&fit=crop",
     location: "Hubballi",
     rating: 4.2,
     isOpen: false,
-    phone: "+91 99887 66554",
+    phone: 9988766554,
   },
   {
-    shopId: "4",
+    _id: "4d54f5s4s545f544w45f45e",
     shopName: "Farmer's Choice Store",
-    ownerName: "Prakash Desai",
+    ownerId: "69819801a872c913f84d13f4",
     image:
       "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=400&auto=format&fit=crop",
     location: "Dharwad",
     rating: 4.1,
     isOpen: true,
-    phone: "+91 90123 45678",
+    phone: 9012345678,
   },
   {
-    shopId: "5",
+    _id: "645545fg5t56y6y677u77uu7",
     shopName: "Soil & Seed Mart",
-    ownerName: "Amit Hegde",
+    ownerId: "69819801a343c913f84d13f4",
     image:
       "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&auto=format&fit=crop",
     location: "Bengaluru Rural",
     rating: 4.8,
     isOpen: true,
-    phone: "+91 98700 11223",
+    phone: 9870011223,
   },
   {
-    shopId: "6",
+    _id: "6dgu3e73g7363f35r63f63",
     shopName: "Agri Plus",
-    ownerName: "Naveen Kumar",
+    ownerId: "69819801a872c913f84d13f1",
     image:
       "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=400&auto=format&fit=crop",
     location: "Mysuru",
     rating: 4.3,
     isOpen: false,
-    phone: "+91 93456 77889",
+    phone: 9345677889,
   },
   {
-    shopId: "7",
+    _id: "6vyd73yh7dy73h7d3t7",
     shopName: "Rural Krishi Store",
-    ownerName: "Vikram Rao",
+    ownerId: "69819801a343c913f84d13f4",
     image:
       "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&auto=format&fit=crop",
     location: "Shivamogga",
     rating: 4.5,
     isOpen: true,
-    phone: "+91 98876 55443",
+    phone: 9887655443,
   },
   {
-    shopId: "8",
+    _id: "87378y7y7e3yndy73ye7",
     shopName: "Nandini Agro Supplies",
-    ownerName: "Kiran Joshi",
+    ownerId: "69819801a872c913f84d13f1",
     image:
       "https://images.unsplash.com/photo-1560493676-04071185765b?w=400&auto=format&fit=crop",
     location: "Davangere",
     rating: 4.0,
     isOpen: true,
-    phone: "+91 97654 33221",
+    phone: 9765433221,
   },
 ];
 
-export const dummyProducts = [
+export const dummyProducts: ProductType[] = [
   {
-    _id: 1,
+    _id: "698198hdweh343c913f84hyer6",
     name: "Urea Fertilizer (50kg)",
     category: "Fertilizer",
     price: 320,
     rating: 4.5,
     quantity: 40,
+    shopId: "698198hdweh343c913f84d13f4",
     shop: {
-      shopId: "1",
       shopName: "Kisan Agro Center",
       location: "Gokak, Belagavi",
       phone: 9876543210,
@@ -146,17 +146,17 @@ export const dummyProducts = [
       "High nitrogen content urea fertilizer suitable for all crops. Improves soil fertility and boosts plant growth effectively.",
   },
   {
-    _id: 2,
+    _id: '698198hdweh343c913fi337',
     name: "DAP Fertilizer (50kg)",
     category: "Fertilizer",
     price: 1350,
     rating: 4.7,
     quantity: 0,
+    shopId: "698198hdweh343c913f84d13f4",
     shop: {
-      shopId: "2",
-      shopName: "Green Field Supplies",
-      location: "Belagavi",
-      phone: 9123456789,
+      shopName: "Kisan Agro Center",
+      location: "Gokak, Belagavi",
+      phone: 9876543210,
     },
     images: [
       "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&auto=format&fit=crop",
@@ -168,17 +168,17 @@ export const dummyProducts = [
       "Di-Ammonium Phosphate fertilizer rich in phosphorus and nitrogen. Best for root development and early plant growth.",
   },
   {
-    _id: 3,
+    _id: '73673huye7yh73y7',
     name: "Potash (MOP) 50kg",
     category: "Fertilizer",
     price: 920,
     quantity: 25,
     rating: 4.2,
+    shopId: "698198hdweh343c913f84d13f4",
     shop: {
-      shopId: "3",
-      shopName: "Krishi Bhandar",
-      location: "Hubballi",
-      phone: 9988766554,
+      shopName: "Kisan Agro Center",
+      location: "Gokak, Belagavi",
+      phone: 9876543210,
     },
     images: [
       "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop",
@@ -190,17 +190,17 @@ export const dummyProducts = [
       "Muriate of Potash improves crop quality, disease resistance, and water regulation in plants. Ideal for sugarcane and vegetables.",
   },
   {
-    _id: 4,
+    _id: "j7d3yy27887ye73y7y7",
     name: "Neem Cake Organic Fertilizer (25kg)",
     category: "Organic",
     price: 450,
     quantity: 60,
     rating: 4.0,
+    shopId: "698198hdweh343c913f84d13f4",
     shop: {
-      shopId: "4",
-      shopName: "Farmer's Choice Store",
-      location: "Dharwad",
-      phone: 9012345678,
+      shopName: "Kisan Agro Center",
+      location: "Gokak, Belagavi",
+      phone: 9876543210,
     },
     images: [
       "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop",
@@ -212,17 +212,17 @@ export const dummyProducts = [
       "100% organic neem cake acts as both fertilizer and natural pesticide. Safe for soil, crops, and environment.",
   },
   {
-    _id: 5,
+    _id: "88738uhed6736t6e36t",
     name: "NPK 19-19-19 (25kg)",
     category: "Fertilizer",
     price: 1100,
     quantity: 15,
     rating: 4.6,
+    shopId: "698198hdweh343c913f84d13f4",
     shop: {
-      shopId: "5",
-      shopName: "Soil & Seed Mart",
-      location: "Bengaluru Rural",
-      phone: 9870011223,
+      shopName: "Kisan Agro Center",
+      location: "Gokak, Belagavi",
+      phone: 9876543210,
     },
     images: [
       "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&auto=format&fit=crop",
@@ -234,17 +234,17 @@ export const dummyProducts = [
       "Balanced NPK water-soluble fertilizer suitable for drip irrigation and foliar spray. Promotes healthy all-round growth.",
   },
   {
-    _id: 6,
+    _id: "7y3h7ey7hd73h7d3y7",
     name: "Vermicompost (30kg)",
     category: "Organic",
     price: 380,
     quantity: 80,
     rating: 4.4,
+    shopId: "698198hdweh343c913f84d13f4",
     shop: {
-      shopId: "6",
-      shopName: "Agri Plus",
-      location: "Mysuru",
-      phone: 9345677889,
+      shopName: "Kisan Agro Center",
+      location: "Gokak, Belagavi",
+      phone: 9876543210,
     },
     images: [
       "https://images.unsplash.com/photo-1560493676-04071185765b?w=600&auto=format&fit=crop",
@@ -256,17 +256,17 @@ export const dummyProducts = [
       "Rich organic vermicompost made from earthworm castings. Improves soil texture, moisture retention, and microbial activity.",
   },
   {
-    _id: 7,
+    _id: "uye73676376723e",
     name: "SSP Fertilizer (50kg)",
     category: "Fertilizer",
     price: 480,
     quantity: 35,
     rating: 4.1,
+    shopId: "698198hdweh343c913f84d13f4",
     shop: {
-      shopId: "7",
-      shopName: "Rural Krishi Store",
-      location: "Shivamogga",
-      phone: 9887655443,
+      shopName: "Kisan Agro Center",
+      location: "Gokak, Belagavi",
+      phone: 9876543210,
     },
     images: [
       "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&auto=format&fit=crop",
@@ -278,17 +278,17 @@ export const dummyProducts = [
       "Single Super Phosphate fertilizer provides phosphorus and sulphur. Beneficial for oilseeds, pulses, and vegetables.",
   },
   {
-    _id: 8,
+    _id: "7y37y7ey37736762",
     name: "Bio Fertilizer Rhizobium (1L)",
     category: "Bio Fertilizer",
     price: 120,
     quantity: 0,
     rating: 4.3,
+    shopId: "698198hdweh343c913f84d13f4",
     shop: {
-      shopId: "8",
-      shopName: "Nandini Agro Supplies",
-      location: "Davangere",
-      phone: 9765433221,
+      shopName: "Kisan Agro Center",
+      location: "Gokak, Belagavi",
+      phone: 9876543210,
     },
     images: [
       "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&auto=format&fit=crop",
@@ -309,7 +309,7 @@ export const dummyUsers: UserType[] = [
     lastName: "Sharma",
     email: "arjun.sharma@gmail.com",
     imageUrl: "https://api.dicebear.com/7.x/thumbs/svg?seed=Arjun",
-    role: "admin",
+    role: "shop",
     password: "test",
     phone: 9876543210,
     isBlocked: false,
@@ -348,7 +348,7 @@ export const dummyUsers: UserType[] = [
     lastName: "Doe",
     email: "john@example.com",
     imageUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=240",
-    role: "admin",
+    role: "shop",
     password: "test",
     phone: 1234567890,
     isBlocked: false,

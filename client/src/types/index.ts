@@ -1,28 +1,29 @@
 import type React from "react";
 
-export interface Shop {
-  shopId: string;
+export interface ShopType {
+  _id: string;
   shopName: string;
-  ownerName: string;
+  ownerId: string;
+  ownerName?: string;
   image: string;
   location: string;
   rating: number;
   isOpen: boolean;
-  phone: string;
+  phone: number;
 }
 
-export interface Product {
-  _id: number;
+export interface ProductType {
+  _id: string;
   name: string;
   category: string;
   quantity: number;
   price: number;
   rating: number;
-  shop: {
-    shopId: string;
-    shopName: string;
-    location: string;
-    phone: number;
+  shopId: string,
+  shop?: {
+    shopName: string,
+    location: string,
+    phone: number,
   };
   images: string[];
   description: string;
@@ -49,6 +50,9 @@ export interface AppContext {
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  logout: () => void,
-  farmerSignUp: () => void
+  logout: () => void;
+  farmerSignUp: () => void;
+  products: ProductType[] | null;
+  shops: ShopType[] | null;
+  fetchProductById: (id: string) => ProductType | undefined;
 }

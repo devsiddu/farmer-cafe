@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import { assets } from "../assets/assets";
-import type { Shop } from "../types/shop";
+import type { ShopType } from "../types";
 
 interface ShopCardProps {
-  shop: Shop;
+  shop: ShopType;
   onView?: (shopId: string) => void;
 }
 
@@ -17,13 +18,13 @@ const ShopCard = ({ shop, onView }: ShopCardProps) => {
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent" />
 
         {/* Status badge — floated over image */}
         <span
           className={`absolute top-3 right-3 text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm border ${shop.isOpen
-              ? "bg-green-50/80 border-green-200 text-green-700"
-              : "bg-red-50/80 border-red-200 text-red-600"
+            ? "bg-green-50/80 border-green-200 text-green-700"
+            : "bg-red-50/80 border-red-200 text-red-600"
             }`}
         >
           <span
@@ -62,15 +63,15 @@ const ShopCard = ({ shop, onView }: ShopCardProps) => {
 
         {/* Footer Buttons */}
         <div className="mt-4 flex gap-2">
-          <a
-            href={`tel:${shop.phone}`}
+          <Link
+            to={`tel:${shop.phone}`}
             className="flex-1 text-center py-2.5 rounded-xl text-sm font-semibold bg-light text-secondary border border-secondary/20 hover:bg-secondary hover:text-white transition-all duration-200"
           >
             📞 Call
-          </a>
+          </Link>
 
           <button
-            onClick={() => onView?.(shop.shopId)}
+            onClick={() => onView?.(shop._id)}
             className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-primary text-white hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30 transition-all duration-200 active:scale-95"
           >
             View Shop →

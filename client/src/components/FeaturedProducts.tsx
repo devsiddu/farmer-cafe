@@ -1,24 +1,10 @@
-import { useEffect, useState } from "react";
-import { dummyProducts } from "../assets/assets";
+
 import Card from "./Card";
 import Title from "./Title";
-import type { Product } from "../types";
-// import type { Product } from "../types/product";
+import { useApp } from "../context/AppContext";
 
 const FeaturedProducts = () => {
-  // 2. Initialize state using the Interface and the imported data
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    setProducts(dummyProducts);
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    fetchProducts();
-  }, [])
+  const { products, loading } = useApp();
   if (loading) {
     return (
       <div>
@@ -31,7 +17,7 @@ const FeaturedProducts = () => {
       <div className="max-w-7xl w-full px-6">
         <Title title="Featured Products" />
         <div className="flex flex-wrap items-start justify-start gap-6">
-          {products.slice(0, 4).map((product) => (
+          {products?.map((product) => (
             <Card product={product} key={product._id} />
           ))}
         </div>

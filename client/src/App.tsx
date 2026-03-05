@@ -15,15 +15,19 @@ import Layout from "./pages/admin/Layout";
 import Users from "./pages/admin/Users";
 import Dashboard from "./pages/admin/Dashboard";
 import ShopsList from "./pages/admin/ShopsList";
+import ShopLayout from "./pages/shop/ShopLayout";
+import ShopDashboard from "./pages/shop/ShopDashboard";
+import ShopProducts from "./pages/shop/ShopProducts";
 const App = () => {
   const { pathname } = useLocation();
 
   const hideLayout = pathname === "/login";
   const isAdminPath = pathname.startsWith("/admin-dashboard");
+  const isShopPath = pathname.startsWith("/shop-dashboard");
 
   return (
     <div>
-      {!hideLayout && !isAdminPath && <Navbar />}
+      {!hideLayout && !isAdminPath && !isShopPath && <Navbar />}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -32,7 +36,7 @@ const App = () => {
         <Route path="/shops" element={<Shops />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/shop/:id" element={<ShopDetails />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/booking-confirmation" element={<BookingConfirmation />} />
@@ -40,6 +44,12 @@ const App = () => {
         <Route path="/admin-dashboard" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="users" element={<Users />} />
+          <Route path="shops" element={<ShopsList />} />
+        </Route>
+
+        <Route path="/shop-dashboard" element={<ShopLayout />}>
+          <Route index element={<ShopDashboard />} />
+          <Route path="users" element={<ShopProducts />} />
           <Route path="shops" element={<ShopsList />} />
         </Route>
       </Routes>

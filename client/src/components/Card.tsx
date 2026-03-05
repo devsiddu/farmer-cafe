@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import type { Product } from "../types/product";
 import { assets } from "../assets/assets";
+import type { ProductType } from "../types";
 
 interface cardProps {
-  product: Product;
+  product: ProductType;
 }
 
 const Card = ({ product }: cardProps) => {
@@ -14,7 +14,7 @@ const Card = ({ product }: cardProps) => {
       {/* Image */}
       <div
         className="relative h-48 overflow-hidden cursor-pointer"
-        onClick={() => navigate(`/product/${product._id}`)}
+        onClick={() => navigate(`/products/${product._id}`)}
       >
         <img
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -22,7 +22,7 @@ const Card = ({ product }: cardProps) => {
           alt={product.name}
         />
         {/* Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
 
         {/* Price badge */}
         <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm text-secondary text-sm font-bold px-3 py-1 rounded-full shadow">
@@ -35,7 +35,7 @@ const Card = ({ product }: cardProps) => {
         {/* Product name */}
         <h3
           className="text-primary font-bold text-base leading-snug line-clamp-1 cursor-pointer hover:underline underline-offset-2"
-          onClick={() => navigate(`/product/${product._id}`)}
+          onClick={() => navigate(`/products/${product._id}`)}
         >
           {product.name}
         </h3>
@@ -47,11 +47,11 @@ const Card = ({ product }: cardProps) => {
         <div className="flex flex-col gap-1.5 text-xs text-gray-500">
           <div className="flex items-center gap-1.5">
             <img src={assets.store} alt="store" width={13} className="opacity-60 shrink-0" />
-            <span className="line-clamp-1 font-medium">{product.shop.shopName}</span>
+            <span className="line-clamp-1 font-medium">{product.shop?.shopName}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <img src={assets.location} alt="location" width={13} className="opacity-60 shrink-0" />
-            <span className="line-clamp-1">{product.shop.location}</span>
+            <span className="line-clamp-1">{product.shop?.location}</span>
           </div>
         </div>
 
@@ -59,7 +59,7 @@ const Card = ({ product }: cardProps) => {
         <div className="mt-2">
 
           <button
-            onClick={() => navigate(`/product/${product._id}`)}
+            onClick={() => navigate(`/products/${product._id}`)}
             className="py-2.5 rounded-xl text-sm font-semibold bg-primary text-white hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30 transition-all duration-200 active:scale-95 w-full"
           >
             View →

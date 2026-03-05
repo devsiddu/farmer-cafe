@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { assets } from "../assets/assets";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import { useApp } from "../context/AppContext";
 // import assets from '../assets/assets.';
@@ -16,19 +16,19 @@ const Navbar = () => {
 
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 text-primary bg-white relative transition-all">
-      <a href="/">
+      <Link to="/">
         <img src={assets.logoLight} alt="logo" width={157} />
-      </a>
+      </Link>
 
       {/* Desktop Menu */}
       <div className="hidden sm:flex items-center gap-8 text-primary">
-        <a href="/">Home</a>
-        <a href="/products">Products</a>
-        <a href="/shops">Shops</a>
+        <Link to="/">Home</Link>
+        <Link to="/products">Products</Link>
+        <Link to="/shops">Shops</Link>
 
-        {user && <a href="/booking-confirmation">Bookings</a>}
-        {user && user.role === 'admin' && <a href="/admin-dashboard" className="items-center text-sm border border-gray-300 px-3 py-1 rounded-full">Dashboard</a>}
-        {user && user.role === 'shop' && <a href="/shop-dashboard" className="items-center text-sm border border-gray-300 px-3 py-1 rounded-full">Dashboard</a>}
+        {user && <Link to="/booking-confirmation">Bookings</Link>}
+        {user && user.role === 'admin' && <Link to="/admin-dashboard" className="items-center text-sm border border-gray-300 px-3 py-1 rounded-full">Dashboard</Link>}
+        {user && user.role === 'shop' && <Link to="/shop-dashboard" className="items-center text-sm border border-gray-300 px-3 py-1 rounded-full">Dashboard</Link>}
         <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
           <input
             className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
@@ -78,9 +78,9 @@ const Navbar = () => {
       <div
         className={`${open ? "flex" : "hidden"} absolute top-15 left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden z-50`}
       >
-        <a href="/" className="block">Home</a>
-        <a href="/products" className="block">Products</a>
-        <a href="/shops" className="block">Shops</a>
+        <Link to="/" className="block">Home</Link>
+        <Link to="/products" className="block">Products</Link>
+        <Link to="/shops" className="block">Shops</Link>
         <button onClick={() => navigate("/login")} className="cursor-pointer px-6 py-2 mt-2 bg-secondary hover:bg-primary transition text-white rounded-full text-sm">
           Login
         </button>

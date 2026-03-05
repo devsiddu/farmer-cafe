@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { assets, dummyProducts } from "../assets/assets";
-import type { Product } from "../types/product";
 import { useCart } from "../context/CartContext";
+import { useApp } from "../context/AppContext";
+import type { ProductType } from "../types";
+import { assets } from "../assets/assets";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart, cartItems } = useCart();
+  const { fetchProductById } = useApp();
 
+  const [product, setProduct] = useState<ProductType | null>(null)
   const [qty, setQty] = useState<number>(1);
   const [selectQty, setSelectQty] = useState(false);
   const [cartQtyModal, setCartQtyModal] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [thumbnail, setThumbnail] = React.useState<string | undefined>();
 
-  const product = dummyProducts.find((item: Product) => item._id === Number(id));
-  const [thumbnail, setThumbnail] = React.useState(product?.images[0]);
   const maxQty = product?.quantity ?? 0;
   const outOfStock = product?.quantity === 0;
 
@@ -38,6 +40,17 @@ const ProductDetails = () => {
     setTimeout(() => setAddedToCart(false), 2000);
   };
 
+  useEffect(() => {
+    if (!id) return;
+
+    const data = fetchProductById(id);
+    if (data) {
+      setProduct(data);
+      setThumbnail(data.images[0])
+    }
+  }, [id])
+
+
   const QtyModal = ({
     onConfirm,
     onCancel,
@@ -59,8 +72,8 @@ const ProductDetails = () => {
             disabled={qty <= 1}
             onClick={() => setQty((prev) => Math.max(1, prev - 1))}
             className={`w-9 h-9 rounded-full text-xl font-medium flex items-center justify-center transition ${qty <= 1
-                ? "bg-gray-100 text-gray-300 cursor-not-allowed"
-                : "bg-light text-secondary hover:bg-secondary hover:text-white cursor-pointer"
+              ? "bg-gray-100 text-gray-300 cursor-not-allowed"
+              : "bg-light text-secondary hover:bg-secondary hover:text-white cursor-pointer"
               }`}
           >
             −
@@ -70,8 +83,8 @@ const ProductDetails = () => {
             disabled={qty >= maxQty - inCartQty}
             onClick={() => setQty((prev) => Math.min(maxQty - inCartQty, prev + 1))}
             className={`w-9 h-9 rounded-full text-xl font-medium flex items-center justify-center transition ${qty >= maxQty - inCartQty
-                ? "bg-gray-100 text-gray-300 cursor-not-allowed"
-                : "bg-light text-secondary hover:bg-secondary hover:text-white cursor-pointer"
+              ? "bg-gray-100 text-gray-300 cursor-not-allowed"
+              : "bg-light text-secondary hover:bg-secondary hover:text-white cursor-pointer"
               }`}
           >
             +
@@ -93,8 +106,8 @@ const ProductDetails = () => {
             onClick={onConfirm}
             disabled={qty < 1 || qty > maxQty}
             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition active:scale-95 ${qty < 1 || qty > maxQty
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : confirmStyle ?? "bg-primary text-white hover:bg-primary/90 cursor-pointer"
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : confirmStyle ?? "bg-primary text-white hover:bg-primary/90 cursor-pointer"
               }`}
           >
             {confirmLabel}
@@ -124,8 +137,8 @@ const ProductDetails = () => {
                   key={index}
                   onClick={() => setThumbnail(image)}
                   className={`w-16 h-16 rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-200 ${thumbnail === image
-                      ? "border-primary"
-                      : "border-transparent hover:border-gray-200"
+                    ? "border-primary"
+                    : "border-transparent hover:border-gray-200"
                     }`}
                 >
                   <img src={image} alt={`Thumb ${index + 1}`} className="w-full h-full object-cover" />
@@ -184,15 +197,15 @@ const ProductDetails = () => {
             <div className="bg-gray-50 rounded-xl p-4 flex flex-wrap gap-4 text-sm">
               <div className="flex items-center gap-2 text-secondary">
                 <img src={assets.store} width={14} alt="" />
-                <span>{product.shop.shopName}</span>
+                <span>{product.shop?.shopName}</span>
               </div>
               <div className="flex items-center gap-2 text-secondary">
                 <img src={assets.location} width={14} alt="" />
-                <span>{product.shop.location}</span>
+                <span>{product.shop?.location}</span>
               </div>
               <div className="flex items-center gap-2 text-secondary">
                 <img src={assets.phone} width={12} alt="" />
-                <span>{product.shop.phone}</span>
+                <span>{product.shop?.phone}</span>
               </div>
             </div>
 
@@ -206,10 +219,10 @@ const ProductDetails = () => {
                   setCartQtyModal(true);
                 }}
                 className={`flex-1 py-3 rounded-xl text-sm font-semibold border-2 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 ${outOfStock || inCartQty >= maxQty
-                    ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
-                    : addedToCart
-                      ? "border-green-400 text-green-600 bg-green-50 cursor-pointer"
-                      : "border-primary text-primary hover:bg-primary/5 cursor-pointer"
+                  ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
+                  : addedToCart
+                    ? "border-green-400 text-green-600 bg-green-50 cursor-pointer"
+                    : "border-primary text-primary hover:bg-primary/5 cursor-pointer"
                   }`}
               >
                 {addedToCart ? "✓ Added!" : "🛒 Add to Cart"}
@@ -223,8 +236,8 @@ const ProductDetails = () => {
                   setSelectQty(true);
                 }}
                 className={`flex-1 py-3 rounded-xl text-sm font-semibold transition-all duration-200 active:scale-95 ${outOfStock
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-primary text-white hover:bg-primary/90 cursor-pointer"
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-primary text-white hover:bg-primary/90 cursor-pointer"
                   }`}
               >
                 Book Now

@@ -1,14 +1,13 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { assets, dummyProducts, dummyShops } from "../assets/assets";
-import type { Shop } from "../types/shop";
-import type { Product } from "../types/product";
 import Card from "../components/Card";
+import type { ProductType, ShopType } from "../types";
 
 const ShopDetails = () => {
   const { id } = useParams<{ id: string }>();
 
-  const shop = dummyShops.find((s: Shop) => s.shopId === id);
-  const products = dummyProducts.filter((p: Product) => p.shop.shopId === id);
+  const shop = dummyShops.find((s: ShopType) => s._id === id);
+  const products = dummyProducts.filter((p: ProductType) => p.shopId === id);
 
   if (!shop) {
     return (
@@ -31,8 +30,8 @@ const ShopDetails = () => {
             <h1 className="text-2xl font-bold text-primary">{shop.shopName}</h1>
             <span
               className={`text-xs font-medium px-2.5 py-1 rounded-full border ${shop.isOpen
-                  ? "bg-green-50 text-green-600 border-green-200"
-                  : "bg-red-50 text-red-500 border-red-200"
+                ? "bg-green-50 text-green-600 border-green-200"
+                : "bg-red-50 text-red-500 border-red-200"
                 }`}
             >
               {shop.isOpen ? "Open" : "Closed"}
@@ -44,20 +43,20 @@ const ShopDetails = () => {
           <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-500">
             <span>📍 {shop.location}</span>
             <span>★ {shop.rating}</span>
-            <a href={`tel:${shop.phone}`} className="text-primary hover:underline">
+            <Link to={`tel:${shop.phone}`} className="text-primary hover:underline">
               📞 {shop.phone}
-            </a>
+            </Link>
           </div>
         </div>
 
         {/* Actions */}
         <div className="flex gap-3 shrink-0">
-          <a
-            href={`tel:${shop.phone}`}
+          <Link
+            to={`tel:${shop.phone}`}
             className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-light text-secondary border border-secondary/20 hover:bg-secondary hover:text-white transition-all duration-200"
           >
             Call
-          </a>
+          </Link>
           <button className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-primary text-white hover:bg-primary/90 transition-all duration-200 active:scale-95">
             View All
           </button>

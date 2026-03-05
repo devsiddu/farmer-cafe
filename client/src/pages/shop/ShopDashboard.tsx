@@ -15,7 +15,7 @@ interface StatCard {
   suffix?: string;
 }
 
-const Dashboard = () => {
+const ShopDashboard = () => {
   const { user } = useApp();
   const navigate = useNavigate();
 
@@ -248,4 +248,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default ShopDashboard;
