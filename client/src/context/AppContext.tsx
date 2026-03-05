@@ -14,7 +14,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchUser = async () => {
         try {
             setLoading(true);
-            setUser(dummyUsers[4]);
+            setUser(null);
         } catch (error: any) {
             console.log(error.message);
         } finally {

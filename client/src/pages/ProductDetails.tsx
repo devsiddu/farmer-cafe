@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useApp } from "../context/AppContext";
 import type { ProductType } from "../types";
 import { assets } from "../assets/assets";
+import Card from "../components/Card";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart, cartItems } = useCart();
-  const { fetchProductById } = useApp();
+  const { fetchProductById, products } = useApp();
 
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const scrollLeft = () => {
+    scrollRef.current?.scrollBy({ left: -300, behavior: "smooth" });
+  };
+
+  const scrollRight = () => {
+    scrollRef.current?.scrollBy({ left: 300, behavior: "smooth" });
+  };
   const [product, setProduct] = useState<ProductType | null>(null)
   const [qty, setQty] = useState<number>(1);
   const [selectQty, setSelectQty] = useState(false);
@@ -117,8 +126,9 @@ const ProductDetails = () => {
     </div>
   );
 
-  return (
-    product && (
+  return (<>
+
+    {product && (
       <div className="max-w-6xl mx-auto px-6 py-10">
         {/* Breadcrumb */}
         <p className="text-xs text-gray-400 mb-6">
@@ -275,7 +285,35 @@ const ProductDetails = () => {
           />
         )}
       </div>
-    )
+    )}
+
+    <div className="relative max-w-6xl mx-auto">
+      {/* <div
+        className="absolute top-1/2 -translate-y-1/2 z-10 w-14 h-full rounded-l-xl bg-linear-to-r from-white to-transparent flex items-center justify-center "
+      /> */}
+      <button
+        onClick={scrollLeft}
+        className="absolute -left-20 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-primary border border-white/20 text-white flex items-center justify-center hover:bg-primary/90 transition"
+      >
+        <img src={assets.arrowRight} alt="" className="rotate-180" />
+      </button>
+
+      <div ref={scrollRef} className="flex gap-4 overflow-x-auto " style={{ scrollbarWidth: "none" }}>
+        {[...(products || [])]?.sort(() => Math.random() - 0.5).slice(0, 8).map(item => (
+          <Card product={item} key={item._id} />
+        ))}
+      </div>
+      {/* <div
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-full rounded-l-xl bg-linear-to-l from-white to-transparent flex items-center justify-center "
+      /> */}
+      <button
+        onClick={scrollRight}
+        className="absolute -right-20 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-primary border border-white/20 text flex items-center justify-center hover:bg-primary/90 transition backdrop-blur-sm"
+      >
+        <img src={assets.arrowRight} alt="" />
+      </button>
+    </div>
+  </>
   );
 };
 

@@ -1,9 +1,9 @@
-import { LayoutDashboard, List, Store } from "lucide-react";
+import { LayoutDashboard, List, ShoppingBag } from "lucide-react";
 import { NavLink } from "react-router-dom";
 const navLinks = [
-  { to: "/shop-dashboard", label: "Dashboard", icon: <LayoutDashboard />, end: true },
-  { to: "/shop-dashboard/users", label: "Users", icon: <List /> },
-  { to: "/shop-dashboard/shops", label: "Shops", icon: <Store /> },
+  { to: "/shop-dashboard", label: "Dashboard", icon: <LayoutDashboard size={20} />, end: true },
+  { to: "/shop-dashboard/products", label: "Products", icon: <List size={20} /> },
+  { to: "/shop-dashboard/bookings", label: "Bookings", icon: <ShoppingBag size={20} /> },
 ];
 
 const ShopSidebar = () => {

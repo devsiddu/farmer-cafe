@@ -12,7 +12,7 @@ import location from "./map-pin.svg";
 import store from "./store.svg";
 import phone from "./phone.svg";
 import shop from "./shops.png";
-import type { ProductType, ShopType, UserType } from "../types";
+import type { OrderType, ProductType, ShopType, UserType } from "../types";
 
 export const assets = {
   logoDark,
@@ -37,7 +37,7 @@ export const dummyShops: ShopType[] = [
     shopName: "Kisan Agro Center",
     ownerId: "69819801a343c913f84d13f4",
     image:
-      "https://images.unsplash.com/photo-1592204854823-934e16967bb5?w=400&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&auto=format&fit=crop",
     location: "Gokak, Belagavi",
     rating: 4.6,
     isOpen: true,
@@ -447,3 +447,90 @@ export const dummyUsers: UserType[] = [
     createdAt: "2024-06-28",
   },
 ];
+
+export const dummyBookings: OrderType[] = [
+  {
+    orderId: "4er4578er7845w4",
+    product: {
+      _id: '73673huye7yh73y7',
+      name: "Potash (MOP) 50kg",
+      category: "Fertilizer",
+      price: 920,
+      quantity: 25,
+      rating: 4.2,
+      shopId: "698198hdweh343c913f84d13f4",
+      shop: {
+        shopName: "Kisan Agro Center",
+        location: "Gokak, Belagavi",
+        phone: 9876543210,
+      },
+      images: [
+        "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop",
+      ],
+      description:
+        "Muriate of Potash improves crop quality, disease resistance, and water regulation in plants. Ideal for sugarcane and vegetables.",
+    },
+    qty: 2,
+    status: "confirmed",
+    bookedAt: new Date(),
+  },
+  {
+    orderId: "54r78ew845ws",
+    product: {
+      _id: "698198hdweh343c913f84hyer6",
+      name: "Urea Fertilizer (50kg)",
+      category: "Fertilizer",
+      price: 320,
+      rating: 4.5,
+      quantity: 40,
+      shopId: "698198hdweh343c913f84d13f4",
+      shop: {
+        shopName: "Kisan Agro Center",
+        location: "Gokak, Belagavi",
+        phone: 9876543210,
+      },
+      images: [
+        "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop",
+      ],
+      description:
+        "High nitrogen content urea fertilizer suitable for all crops. Improves soil fertility and boosts plant growth effectively.",
+    },
+    qty: 3,
+    status: "cancelled",
+    bookedAt: new Date(),
+  },
+  {
+    orderId: "485e78w7rwe",
+    product: {
+      _id: "88738uhed6736t6e36t",
+      name: "NPK 19-19-19 (25kg)",
+      category: "Fertilizer",
+      price: 1100,
+      quantity: 15,
+      rating: 4.6,
+      shopId: "698198hdweh343c913f84d13f4",
+      shop: {
+        shopName: "Kisan Agro Center",
+        location: "Gokak, Belagavi",
+        phone: 9876543210,
+      },
+      images: [
+        "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1560493676-04071185765b?w=600&auto=format&fit=crop",
+      ],
+      description:
+        "Balanced NPK water-soluble fertilizer suitable for drip irrigation and foliar spray. Promotes healthy all-round growth.",
+    },
+    qty: 5,
+    status: "pending",
+    bookedAt: new Date(),
+  }
+]
