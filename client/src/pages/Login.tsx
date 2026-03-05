@@ -1,20 +1,16 @@
 import { useState } from "react";
 
 type Mode = "login" | "register";
-type Role = "farmer" | "owner";
 
 const Login = () => {
     const [mode, setMode] = useState<Mode>("login");
-    const [role, setRole] = useState<Role>("farmer");
 
     const [form, setForm] = useState({
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
-        phone: "",
-        // owner only
-        shopName: "",
-        location: "",
+        phone: ""
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,11 +20,10 @@ const Login = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // TODO: connect to backend
-        console.log({ mode, role, form });
+        console.log({ mode, form });
     };
 
     const isRegister = mode === "register";
-    const isOwner = role === "owner";
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -42,45 +37,39 @@ const Login = () => {
                     </p>
                 </div>
 
-                {/* Role Toggle */}
-                <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
-                    <button
-                        onClick={() => setRole("farmer")}
-                        className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${role === "farmer"
-                                ? "bg-white text-primary shadow-sm"
-                                : "text-gray-400 hover:text-gray-600"
-                            }`}
-                    >
-                        🌾 Farmer
-                    </button>
-                    <button
-                        onClick={() => setRole("owner")}
-                        className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${role === "owner"
-                                ? "bg-white text-primary shadow-sm"
-                                : "text-gray-400 hover:text-gray-600"
-                            }`}
-                    >
-                        🏪 Shop Owner
-                    </button>
-                </div>
-
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="flex flex-col gap-3">
 
                     {isRegister && (
-                        <div>
-                            <label className="text-xs font-medium text-gray-500 mb-1 block">
-                                Full Name
-                            </label>
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="John Doe"
-                                value={form.name}
-                                onChange={handleChange}
-                                required
-                                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
-                            />
+                        <div className="flex gap-4">
+                            <div>
+                                <label className="text-xs font-medium text-gray-500 mb-1 block">
+                                    First Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="John"
+                                    value={form.firstName}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs font-medium text-gray-500 mb-1 block">
+                                    Last Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Doe"
+                                    value={form.lastName}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
+                                />
+                            </div>
                         </div>
                     )}
 
@@ -129,46 +118,6 @@ const Login = () => {
                                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
                             />
                         </div>
-                    )}
-
-                    {/* Owner-only fields */}
-                    {isRegister && isOwner && (
-                        <>
-                            <div className="h-px bg-gray-100 my-1" />
-                            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
-                                Shop Details
-                            </p>
-
-                            <div>
-                                <label className="text-xs font-medium text-gray-500 mb-1 block">
-                                    Shop Name
-                                </label>
-                                <input
-                                    type="text"
-                                    name="shopName"
-                                    placeholder="Green Fields Store"
-                                    value={form.shopName}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="text-xs font-medium text-gray-500 mb-1 block">
-                                    Location
-                                </label>
-                                <input
-                                    type="text"
-                                    name="location"
-                                    placeholder="Village, District"
-                                    value={form.location}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
-                                />
-                            </div>
-                        </>
                     )}
 
                     <button
