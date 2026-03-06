@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IUser } from "../types";
+import { IUser } from "../types/index.js";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema<IUser>(
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: Number, required: true },
-    location: { type: String, required: true },
+    location: { type: String },
     password: { type: String, required: true },
     imageUrl: { type: String, required: true },
     role: { type: String, enum: ["admin", "shop", "user"], default: "user" },
