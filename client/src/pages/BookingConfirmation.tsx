@@ -5,10 +5,6 @@ import type { OrderType } from "../types";
 import Title from "../components/Title";
 
 
-
-// Mock orders from dummyProducts
-const bookings: OrderType[] = dummyBookings;
-
 const statusStyles = {
     confirmed: "bg-green-50 text-green-600",
     pending: "bg-amber-50 text-amber-600",
@@ -22,31 +18,31 @@ const statusLabels = {
 };
 
 const BookingConfirmation = () => {
-    const [orders, setOrders] = useState<OrderType[]>(bookings);
+    const [bookings, setBookings] = useState<OrderType[]>(dummyBookings);
     const [cancelConfirm, setCancelConfirm] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    const cancelOrder = (orderId: string) => {
-        setOrders((prev) =>
-            prev.map((o) => (o.orderId === orderId ? { ...o, status: "cancelled" } : o))
+    const cancelOrder = (bookingId: string) => {
+        setBookings((prev) =>
+            prev.map((o) => (o._id === bookingId ? { ...o, status: "cancelled" } : o))
         );
         setCancelConfirm(null);
     };
 
-    const cancelTarget = orders.find((o) => o.orderId === cancelConfirm);
+    const cancelTarget = bookings.find((o) => o._id === cancelConfirm);
 
     return (
         <div className="max-w-5xl ml-40 px-4">
             {/* Header */}
             <div className="mb-6">
                 <Title title="My Bookings" />
-                <p className="text-sm text-gray-400">{orders.length} booking{orders.length !== 1 ? "s" : ""} placed</p>
+                <p className="text-sm text-gray-400">{bookings.length} booking{bookings.length !== 1 ? "s" : ""} placed</p>
             </div>
 
-            {orders.length === 0 ? (
+            {bookings.length === 0 ? (
                 <div className="text-center py-20 text-gray-400">
                     <div className="text-5xl mb-3">📦</div>
-                    <p className="font-semibold text-gray-600">No orders yet</p>
+                    <p className="font-semibold text-gray-600">No bookings yet</p>
                     <p className="text-sm mt-1 mb-6">You haven't booked any products.</p>
                     <button
                         onClick={() => navigate("/products")}
@@ -57,14 +53,14 @@ const BookingConfirmation = () => {
                 </div>
             ) : (
                 <div className="flex flex-col gap-3">
-                    {orders.map((order) => {
-                        const { product, qty, status, bookedAt, orderId } = order;
+                    {bookings.map((booking) => {
+                        const { product, qty, status, bookedAt, _id } = booking;
                         const total = product.price * qty;
                         const isCancellable = status !== "cancelled";
 
                         return (
                             <div
-                                key={orderId}
+                                key={_id}
                                 className="bg-white border border-gray-100 rounded-2xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-4 px-5 py-4"
                             >
                                 {/* Product Image */}
@@ -117,7 +113,7 @@ const BookingConfirmation = () => {
                                     </span>
                                     {isCancellable && (
                                         <button
-                                            onClick={() => setCancelConfirm(orderId)}
+                                            onClick={() => setCancelConfirm(_id)}
                                             className="text-[11px] font-semibold text-gray-400 hover:text-red-500 border border-gray-200 hover:border-red-200 px-2.5 py-1 rounded-lg transition"
                                         >
                                             Cancel

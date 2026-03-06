@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { AppContext as AppContextType, ProductType, ShopType, UserType } from "../types";
-import { dummyProducts, dummyShops, dummyUsers } from "../assets/assets";
+import { dummyProducts, dummyShops } from "../assets/assets";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -11,10 +14,57 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const [products, setProducts] = useState<ProductType[] | null>(null);
     const [shops, setShops] = useState<ShopType[] | null>(null);
 
+    const navigate = useNavigate();
+    axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+    axios.defaults.withCredentials = true;
+
+    const register = async (firstName: string, lastName: string, email: string, password: string, phone: string) => {
+        try {
+
+            const response = axios.post("/api/user/register", { firstName, lastName, email, password, phone })
+
+            toast.promise(response, {
+                loading: "Creating account..",
+                success: (res) => {
+                    setUser(res.data.user);
+                    navigate("/", { replace: true });
+                    return res.data.message;
+                },
+                error: (await response).data.message
+            })
+
+        } catch (error: any) {
+            console.error("server register error: " + error.message)
+        }
+    }
+
+    const login = async (email: string, password: string) => {
+        try {
+            const request = axios.post("/api/user/login", { email, password });
+
+            toast.promise(request, {
+                loading: "Logging in...",
+                success: (res) => {
+                    setUser(res.data.user);
+                    navigate("/", { replace: true })
+                    return res.data.message;
+                },
+                error: "Login failed",
+            });
+        } catch (error: any) {
+            console.log("Server Error : " + error.message)
+            toast.error(error.message);
+        }
+    }
+
     const fetchUser = async () => {
         try {
             setLoading(true);
-            setUser(null);
+            const { data } = await axios.get("/api/user/auth");
+            if (data.success) {
+                setUser(data.user)
+            }
+
         } catch (error: any) {
             console.log(error.message);
         } finally {
@@ -22,22 +72,21 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const logout = () => {
+    const logout = async () => {
         try {
             setLoading(true);
-            setUser(null);
+            const { data } = await axios.get("/api/user/logout");
+            if (data.success) {
+                setUser(null);
+                toast.success(data.message)
+            } else {
+                toast.error(data.message);
+            }
             setLoading(false)
 
         } catch (error: any) {
             console.error(error.message)
-        }
-    }
-
-    const farmerSignUp = async () => {
-        try {
-
-        } catch (error) {
-
+            toast.error(error.message);
         }
     }
 
@@ -50,6 +99,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             console.error("Failed to fetch products : " + error.message);
         }
     }
+
     const fetchProductById = (id: string): ProductType | undefined => {
         const product = dummyProducts.find((item) => item._id === id);
 
@@ -57,6 +107,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
         return product
     };
+
     const fetchShops = async () => {
         try {
             setLoading(true)
@@ -74,7 +125,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AppContext.Provider value={{ user, setUser, loading, setLoading, logout, farmerSignUp, products, shops, fetchProductById }}>
+        <AppContext.Provider value={{ axios, navigate, user, setUser, loading, setLoading, logout, login, products, shops, fetchProductById, register }}>
             {children}
         </AppContext.Provider>
     );

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Search, Trash2, ChevronDown, Star, Phone, MapPin, Store, ToggleLeft, ToggleRight } from "lucide-react";
-import type { Shop } from "../../types";
 import { dummyShops } from "../../assets/assets";
+import type { ShopType } from "../../types";
 
 
 type StatusFilter = "all" | "open" | "closed";
 
 const ShopsList = () => {
-  const [shops, setShops] = useState<Shop[]>(dummyShops);
+  const [shops, setShops] = useState<ShopType[]>(dummyShops);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [sortBy, setSortBy] = useState<"rating" | "name">("rating");
@@ -17,11 +17,11 @@ const ShopsList = () => {
   // --- Actions ---
   const toggleOpen = (shopId: string) =>
     setShops((prev) =>
-      prev.map((s) => (s.shopId === shopId ? { ...s, isOpen: !s.isOpen } : s))
+      prev.map((s) => (s._id === shopId ? { ...s, isOpen: !s.isOpen } : s))
     );
 
   const deleteShop = (shopId: string) => {
-    setShops((prev) => prev.filter((s) => s.shopId !== shopId));
+    setShops((prev) => prev.filter((s) => s._id !== shopId));
     setDeleteConfirm(null);
   };
 
@@ -30,7 +30,7 @@ const ShopsList = () => {
     .filter((s) => {
       const matchSearch =
         s.shopName.toLowerCase().includes(search.toLowerCase()) ||
-        s.ownerName.toLowerCase().includes(search.toLowerCase()) ||
+        s.ownerName?.toLowerCase().includes(search.toLowerCase()) ||
         s.location.toLowerCase().includes(search.toLowerCase());
       const matchStatus =
         statusFilter === "all" ||
@@ -46,7 +46,7 @@ const ShopsList = () => {
   const closedCount = shops.filter((s) => !s.isOpen).length;
   const avgRating = (shops.reduce((sum, s) => sum + s.rating, 0) / shops.length).toFixed(1);
 
-  const deleteTarget = shops.find((s) => s.shopId === deleteConfirm);
+  const deleteTarget = shops.find((s) => s._id === deleteConfirm);
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -154,7 +154,7 @@ const ShopsList = () => {
           ) : (
             filtered.map((shop) => (
               <div
-                key={shop.shopId}
+                key={shop._id}
                 className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden flex flex-col"
               >
                 {/* Shop Image */}
@@ -198,7 +198,7 @@ const ShopsList = () => {
                 {/* Actions */}
                 <div className="px-4 pb-4 flex gap-2">
                   <button
-                    onClick={() => toggleOpen(shop.shopId)}
+                    onClick={() => toggleOpen(shop._id)}
                     className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${
                       shop.isOpen
                         ? "border-amber-200 text-amber-600 hover:bg-amber-50"
@@ -213,7 +213,7 @@ const ShopsList = () => {
                     {shop.isOpen ? "Close" : "Open"}
                   </button>
                   <button
-                    onClick={() => setDeleteConfirm(shop.shopId)}
+                    onClick={() => setDeleteConfirm(shop._id)}
                     className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border border-red-200 text-red-500 hover:bg-red-50 transition"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -250,7 +250,7 @@ const ShopsList = () => {
                 </tr>
               ) : (
                 filtered.map((shop) => (
-                  <tr key={shop.shopId} className="hover:bg-gray-50/60 transition">
+                  <tr key={shop._id} className="hover:bg-gray-50/60 transition">
                     {/* Shop */}
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
@@ -291,7 +291,7 @@ const ShopsList = () => {
                     <td className="px-5 py-3.5">
                       <div className="flex items-center justify-end gap-1">
                         <button
-                          onClick={() => toggleOpen(shop.shopId)}
+                          onClick={() => toggleOpen(shop._id)}
                           title={shop.isOpen ? "Close shop" : "Open shop"}
                           className={`p-2 rounded-lg transition ${
                             shop.isOpen
@@ -306,7 +306,7 @@ const ShopsList = () => {
                           )}
                         </button>
                         <button
-                          onClick={() => setDeleteConfirm(shop.shopId)}
+                          onClick={() => setDeleteConfirm(shop._id)}
                           title="Delete shop"
                           className="p-2 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition"
                         >

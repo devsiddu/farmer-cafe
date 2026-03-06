@@ -20,9 +20,9 @@ const ShopBookings = () => {
   const [cancelConfirm, setCancelConfirm] = useState<string | null>(null);
 
   // --- Actions ---
-  const updateStatus = (orderId: string, status: BookingStatus) => {
+  const updateStatus = (_id: string, status: BookingStatus) => {
     setBookings((prev) =>
-      prev.map((b) => (b.orderId === orderId ? { ...b, status } : b))
+      prev.map((b) => (b._id === _id ? { ...b, status } : b))
     );
     setCancelConfirm(null);
   };
@@ -31,7 +31,7 @@ const ShopBookings = () => {
   const filtered = bookings.filter((b) => {
     const matchSearch =
       b.product.name.toLowerCase().includes(search.toLowerCase()) ||
-      b.orderId.toLowerCase().includes(search.toLowerCase()) ||
+      b._id.toLowerCase().includes(search.toLowerCase()) ||
       b.product.shop?.shopName.toLowerCase().includes(search.toLowerCase()) ||
       b.product.category.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "all" || b.status === statusFilter;
@@ -46,7 +46,7 @@ const ShopBookings = () => {
     .filter((b) => b.status === "confirmed")
     .reduce((sum, b) => sum + b.product.price * b.qty, 0);
 
-  const cancelTarget = bookings.find((b) => b.orderId === cancelConfirm);
+  const cancelTarget = bookings.find((b) => b._id === cancelConfirm);
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -82,7 +82,7 @@ const ShopBookings = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search by product, shop or order ID..."
+            placeholder="Search by product, shop or booking ID..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white"
@@ -139,12 +139,12 @@ const ShopBookings = () => {
                 const status = booking.status as BookingStatus;
 
                 return (
-                  <tr key={booking.orderId} className="hover:bg-gray-50/60 transition">
+                  <tr key={booking._id} className="hover:bg-gray-50/60 transition">
 
                     {/* Order ID */}
                     <td className="px-5 py-3.5">
                       <span className="text-xs font-mono font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">
-                        #{booking.orderId.slice(0, 10)}
+                        #{booking._id.slice(0, 10)}
                       </span>
                     </td>
 
@@ -157,7 +157,7 @@ const ShopBookings = () => {
                           className="w-9 h-9 rounded-xl object-cover border border-gray-100 shrink-0"
                         />
                         <div>
-                          <p className="font-semibold text-gray-800 text-sm truncate max-w-[150px]">
+                          <p className="font-semibold text-gray-800 text-sm truncate max-w-37.5">
                             {booking.product.name}
                           </p>
                           <p className="text-xs text-gray-400">{booking.product.category}</p>
@@ -167,7 +167,7 @@ const ShopBookings = () => {
 
                     {/* Shop */}
                     <td className="px-5 py-3.5">
-                      <p className="text-sm font-medium text-secondary truncate max-w-[130px]">
+                      <p className="text-sm font-medium text-secondary truncate max-w-32.5">
                         {booking.product.shop?.shopName}
                       </p>
                       <p className="text-xs text-gray-400">{booking.product.shop?.location}</p>
@@ -200,7 +200,7 @@ const ShopBookings = () => {
                       <div className="flex items-center justify-end gap-1">
                         {status === "pending" && (
                           <button
-                            onClick={() => updateStatus(booking.orderId, "confirmed")}
+                            onClick={() => updateStatus(booking._id, "confirmed")}
                             className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-green-50 text-green-600 hover:bg-green-100 transition"
                           >
                             Confirm
@@ -208,7 +208,7 @@ const ShopBookings = () => {
                         )}
                         {status !== "cancelled" && (
                           <button
-                            onClick={() => setCancelConfirm(booking.orderId)}
+                            onClick={() => setCancelConfirm(booking._id)}
                             className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-500 hover:bg-red-100 transition"
                           >
                             Cancel
@@ -243,12 +243,12 @@ const ShopBookings = () => {
             const status = booking.status as BookingStatus;
 
             return (
-              <div key={booking.orderId} className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+              <div key={booking._id} className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
 
                 {/* Card Header */}
                 <div
                   className="flex items-center gap-3 px-4 py-3 cursor-pointer"
-                  onClick={() => setExpandedId(expandedId === booking.orderId ? null : booking.orderId)}
+                  onClick={() => setExpandedId(expandedId === booking._id ? null : booking._id)}
                 >
                   <img
                     src={booking.product.images[0]}
@@ -264,16 +264,16 @@ const ShopBookings = () => {
                       {status.charAt(0).toUpperCase() + status.slice(1)}
                     </span>
                     <ChevronDown
-                      className={`w-4 h-4 text-gray-400 transition-transform ${expandedId === booking.orderId ? "rotate-180" : ""}`}
+                      className={`w-4 h-4 text-gray-400 transition-transform ${expandedId === booking._id ? "rotate-180" : ""}`}
                     />
                   </div>
                 </div>
 
                 {/* Expanded */}
-                {expandedId === booking.orderId && (
+                {expandedId === booking._id && (
                   <div className="border-t border-gray-100 px-4 py-3 bg-gray-50">
                     <div className="flex flex-col gap-1.5 text-xs text-gray-500 mb-4">
-                      <p>🔖 Order ID: <span className="font-mono font-semibold text-gray-700">#{booking.orderId.slice(0, 10)}</span></p>
+                      <p>🔖 Order ID: <span className="font-mono font-semibold text-gray-700">#{booking._id.slice(0, 10)}</span></p>
                       <p>📦 Category: {booking.product.category}</p>
                       <p>💰 Unit Price: ₹{booking.product.price}</p>
                       <p>🔢 Qty: <span className="font-semibold text-gray-700">{booking.qty} units</span></p>
@@ -287,7 +287,7 @@ const ShopBookings = () => {
                     <div className="flex gap-2">
                       {status === "pending" && (
                         <button
-                          onClick={() => updateStatus(booking.orderId, "confirmed")}
+                          onClick={() => updateStatus(booking._id, "confirmed")}
                           className="flex-1 py-2 rounded-xl text-xs font-semibold border border-green-200 text-green-600 hover:bg-green-50 transition"
                         >
                           ✓ Confirm
@@ -295,7 +295,7 @@ const ShopBookings = () => {
                       )}
                       {status !== "cancelled" && (
                         <button
-                          onClick={() => setCancelConfirm(booking.orderId)}
+                          onClick={() => setCancelConfirm(booking._id)}
                           className="flex-1 py-2 rounded-xl text-xs font-semibold border border-red-200 text-red-500 hover:bg-red-50 transition"
                         >
                           <X className="w-3 h-3 inline mr-1" />Cancel
@@ -326,7 +326,7 @@ const ShopBookings = () => {
             <p className="text-sm text-gray-600 font-medium mt-1">{cancelTarget.product.name}</p>
             <p className="text-xs text-gray-400 mt-0.5 mb-1">{cancelTarget.product.shop?.shopName}</p>
             <p className="text-xs text-gray-400 mb-6">
-              Order <span className="font-mono font-semibold">#{cancelTarget.orderId.slice(0, 10)}</span> will be permanently cancelled.
+              Order <span className="font-mono font-semibold">#{cancelTarget._id.slice(0, 10)}</span> will be permanently cancelled.
             </p>
             <div className="flex gap-3 w-full">
               <button

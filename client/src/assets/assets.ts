@@ -41,7 +41,7 @@ export const dummyShops: ShopType[] = [
     location: "Gokak, Belagavi",
     rating: 4.6,
     isOpen: true,
-    phone: 9876543210,
+    phone: "9876543210",
   },
   {
     _id: "698198hdweh343c913f84d13fd",
@@ -52,7 +52,7 @@ export const dummyShops: ShopType[] = [
     location: "Belagavi",
     rating: 4.4,
     isOpen: true,
-    phone: 9123456789,
+    phone: "9123456789",
   },
   {
     _id: "698198hdweheww3c913f84d13f4",
@@ -63,7 +63,7 @@ export const dummyShops: ShopType[] = [
     location: "Hubballi",
     rating: 4.2,
     isOpen: false,
-    phone: 9988766554,
+    phone: "9988766554",
   },
   {
     _id: "4d54f5s4s545f544w45f45e",
@@ -74,7 +74,7 @@ export const dummyShops: ShopType[] = [
     location: "Dharwad",
     rating: 4.1,
     isOpen: true,
-    phone: 9012345678,
+    phone: "9012345678",
   },
   {
     _id: "645545fg5t56y6y677u77uu7",
@@ -85,7 +85,7 @@ export const dummyShops: ShopType[] = [
     location: "Bengaluru Rural",
     rating: 4.8,
     isOpen: true,
-    phone: 9870011223,
+    phone: "9870011223",
   },
   {
     _id: "6dgu3e73g7363f35r63f63",
@@ -96,7 +96,7 @@ export const dummyShops: ShopType[] = [
     location: "Mysuru",
     rating: 4.3,
     isOpen: false,
-    phone: 9345677889,
+    phone: "9345677889",
   },
   {
     _id: "6vyd73yh7dy73h7d3t7",
@@ -107,7 +107,7 @@ export const dummyShops: ShopType[] = [
     location: "Shivamogga",
     rating: 4.5,
     isOpen: true,
-    phone: 9887655443,
+    phone: "9887655443",
   },
   {
     _id: "87378y7y7e3yndy73ye7",
@@ -118,7 +118,7 @@ export const dummyShops: ShopType[] = [
     location: "Davangere",
     rating: 4.0,
     isOpen: true,
-    phone: 9765433221,
+    phone: "9765433221",
   },
 ];
 
@@ -134,7 +134,7 @@ export const dummyProducts: ProductType[] = [
     shop: {
       shopName: "Kisan Agro Center",
       location: "Gokak, Belagavi",
-      phone: 9876543210,
+      phone: "9876543210",
     },
     images: [
       "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&auto=format&fit=crop",
@@ -156,7 +156,7 @@ export const dummyProducts: ProductType[] = [
     shop: {
       shopName: "Kisan Agro Center",
       location: "Gokak, Belagavi",
-      phone: 9876543210,
+      phone: "9876543210",
     },
     images: [
       "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&auto=format&fit=crop",
@@ -178,7 +178,7 @@ export const dummyProducts: ProductType[] = [
     shop: {
       shopName: "Kisan Agro Center",
       location: "Gokak, Belagavi",
-      phone: 9876543210,
+      phone: "9876543210",
     },
     images: [
       "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop",
@@ -200,7 +200,7 @@ export const dummyProducts: ProductType[] = [
     shop: {
       shopName: "Kisan Agro Center",
       location: "Gokak, Belagavi",
-      phone: 9876543210,
+      phone: "9876543210",
     },
     images: [
       "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop",
@@ -222,7 +222,7 @@ export const dummyProducts: ProductType[] = [
     shop: {
       shopName: "Kisan Agro Center",
       location: "Gokak, Belagavi",
-      phone: 9876543210,
+      phone: "9876543210",
     },
     images: [
       "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&auto=format&fit=crop",
@@ -244,7 +244,7 @@ export const dummyProducts: ProductType[] = [
     shop: {
       shopName: "Kisan Agro Center",
       location: "Gokak, Belagavi",
-      phone: 9876543210,
+      phone: "9876543210",
     },
     images: [
       "https://images.unsplash.com/photo-1560493676-04071185765b?w=600&auto=format&fit=crop",
@@ -266,7 +266,7 @@ export const dummyProducts: ProductType[] = [
     shop: {
       shopName: "Kisan Agro Center",
       location: "Gokak, Belagavi",
-      phone: 9876543210,
+      phone: "9876543210",
     },
     images: [
       "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&auto=format&fit=crop",
@@ -288,7 +288,7 @@ export const dummyProducts: ProductType[] = [
     shop: {
       shopName: "Kisan Agro Center",
       location: "Gokak, Belagavi",
-      phone: 9876543210,
+      phone: "9876543210",
     },
     images: [
       "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&auto=format&fit=crop",
@@ -311,7 +311,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://api.dicebear.com/7.x/thumbs/svg?seed=Arjun",
     role: "shop",
     password: "test",
-    phone: 9876543210,
+    phone: "9876543210",
     isBlocked: false,
     location: "Bengaluru, Karnataka",
     createdAt: "2024-01-15",
@@ -324,7 +324,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://api.dicebear.com/7.x/thumbs/svg?seed=Priya",
     role: "user",
     password: "test",
-    phone: 9123456789,
+    phone: "9123456789",
     isBlocked: false,
     location: "Kochi, Kerala",
     createdAt: "2024-02-20",
@@ -337,7 +337,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://api.dicebear.com/7.x/thumbs/svg?seed=Ravi",
     role: "user",
     password: "test",
-    phone: 8765432109,
+    phone: "8765432109",
     isBlocked: true,
     location: "Chennai, Tamil Nadu",
     createdAt: "2024-03-05",
@@ -350,7 +350,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=240",
     role: "shop",
     password: "test",
-    phone: 1234567890,
+    phone: "1234567890",
     isBlocked: false,
     location: "Mumbai, Maharashtra",
     createdAt: "2024-03-18",
@@ -363,7 +363,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=240",
     role: "shop",
     password: "test",
-    phone: 1234567890,
+    phone: "1234567890",
     isBlocked: false,
     location: "Mumbai, Maharashtra",
     createdAt: "2024-03-18",
@@ -376,7 +376,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://api.dicebear.com/7.x/thumbs/svg?seed=Irfan",
     role: "user",
     password: "test",
-    phone: 9345678901,
+    phone: "9345678901",
     isBlocked: false,
     location: "Hyderabad, Telangana",
     createdAt: "2024-04-02",
@@ -389,7 +389,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://api.dicebear.com/7.x/thumbs/svg?seed=Deepa",
     role: "user",
     password: "test",
-    phone: 9632154870,
+    phone: "9632154870",
     isBlocked: false,
     location: "Vijayawada, Andhra Pradesh",
     createdAt: "2024-04-14",
@@ -402,7 +402,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://api.dicebear.com/7.x/thumbs/svg?seed=Vikram",
     role: "user",
     password: "test",
-    phone: 8800123456,
+    phone: "8800123456",
     isBlocked: true,
     location: "Jaipur, Rajasthan",
     createdAt: "2024-05-01",
@@ -415,7 +415,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://api.dicebear.com/7.x/thumbs/svg?seed=Anita",
     role: "user",
     password: "test",
-    phone: 9753124680,
+    phone: "9753124680",
     isBlocked: false,
     location: "Surat, Gujarat",
     createdAt: "2024-05-22",
@@ -428,7 +428,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://api.dicebear.com/7.x/thumbs/svg?seed=Karthik",
     role: "user",
     password: "test",
-    phone: 9440011223,
+    phone: "9440011223",
     isBlocked: false,
     location: "Kozhikode, Kerala",
     createdAt: "2024-06-10",
@@ -441,7 +441,7 @@ export const dummyUsers: UserType[] = [
     imageUrl: "https://api.dicebear.com/7.x/thumbs/svg?seed=Pooja",
     role: "admin",
     password: "test",
-    phone: 9110022334,
+    phone: "9110022334",
     isBlocked: false,
     location: "Coimbatore, Tamil Nadu",
     createdAt: "2024-06-28",
@@ -450,7 +450,7 @@ export const dummyUsers: UserType[] = [
 
 export const dummyBookings: OrderType[] = [
   {
-    orderId: "4er4578er7845w4",
+    _id: "4er4578er7845w4",
     product: {
       _id: '73673huye7yh73y7',
       name: "Potash (MOP) 50kg",
@@ -462,7 +462,7 @@ export const dummyBookings: OrderType[] = [
       shop: {
         shopName: "Kisan Agro Center",
         location: "Gokak, Belagavi",
-        phone: 9876543210,
+        phone: "9876543210",
       },
       images: [
         "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop",
@@ -478,7 +478,7 @@ export const dummyBookings: OrderType[] = [
     bookedAt: new Date(),
   },
   {
-    orderId: "54r78ew845ws",
+    _id: "54r78ew845ws",
     product: {
       _id: "698198hdweh343c913f84hyer6",
       name: "Urea Fertilizer (50kg)",
@@ -490,7 +490,7 @@ export const dummyBookings: OrderType[] = [
       shop: {
         shopName: "Kisan Agro Center",
         location: "Gokak, Belagavi",
-        phone: 9876543210,
+        phone: "9876543210",
       },
       images: [
         "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&auto=format&fit=crop",
@@ -506,7 +506,7 @@ export const dummyBookings: OrderType[] = [
     bookedAt: new Date(),
   },
   {
-    orderId: "485e78w7rwe",
+    _id: "485e78w7rwe",
     product: {
       _id: "88738uhed6736t6e36t",
       name: "NPK 19-19-19 (25kg)",
@@ -518,7 +518,7 @@ export const dummyBookings: OrderType[] = [
       shop: {
         shopName: "Kisan Agro Center",
         location: "Gokak, Belagavi",
-        phone: 9876543210,
+        phone: "9876543210",
       },
       images: [
         "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&auto=format&fit=crop",

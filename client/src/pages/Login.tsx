@@ -1,11 +1,19 @@
 import { useState } from "react";
+import { useApp } from "../context/AppContext";
+import type { FormType } from "../types";
 
 type Mode = "login" | "register";
 
 const Login = () => {
+
+    const { login, register, user, navigate } = useApp();
+
+    if (user) {
+        navigate("/", { replace: true });
+    }
     const [mode, setMode] = useState<Mode>("login");
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<FormType>({
         firstName: "",
         lastName: "",
         email: "",
@@ -13,14 +21,19 @@ const Login = () => {
         phone: ""
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // TODO: connect to backend
-        console.log({ mode, form });
+
+        try {
+            if (mode === "login") {
+                login(form.email, form.password);
+            } else {
+                register(form.firstName, form.lastName, form.email, form.password, form.phone);
+            }
+        } catch (error: any) {
+            console.error(mode + "failed : " + error.message);
+
+        }
     };
 
     const isRegister = mode === "register";
@@ -51,7 +64,7 @@ const Login = () => {
                                     name="name"
                                     placeholder="John"
                                     value={form.firstName}
-                                    onChange={handleChange}
+                                    onChange={(e) => setForm({ ...form, firstName: e.target.value })}
                                     required
                                     className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
                                 />
@@ -65,7 +78,7 @@ const Login = () => {
                                     name="name"
                                     placeholder="Doe"
                                     value={form.lastName}
-                                    onChange={handleChange}
+                                    onChange={(e) => setForm({ ...form, lastName: e.target.value })}
                                     required
                                     className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
                                 />
@@ -82,7 +95,7 @@ const Login = () => {
                             name="email"
                             placeholder="you@example.com"
                             value={form.email}
-                            onChange={handleChange}
+                            onChange={(e) => setForm({ ...form, email: e.target.value })}
                             required
                             className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
                         />
@@ -97,7 +110,7 @@ const Login = () => {
                             name="password"
                             placeholder="••••••••"
                             value={form.password}
-                            onChange={handleChange}
+                            onChange={(e) => setForm({ ...form, password: e.target.value })}
                             required
                             className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
                         />
@@ -113,7 +126,7 @@ const Login = () => {
                                 name="phone"
                                 placeholder="+91 98765 43210"
                                 value={form.phone}
-                                onChange={handleChange}
+                                onChange={(e) => setForm({ ...form, phone: e.target.value })}
                                 required
                                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
                             />

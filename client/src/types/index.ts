@@ -1,4 +1,6 @@
+import type { AxiosInstance } from "axios";
 import type React from "react";
+import type { NavigateFunction } from "react-router-dom";
 
 export interface ShopType {
   _id: string;
@@ -9,7 +11,7 @@ export interface ShopType {
   location: string;
   rating: number;
   isOpen: boolean;
-  phone: number;
+  phone: string;
 }
 
 export interface ProductType {
@@ -23,7 +25,7 @@ export interface ProductType {
   shop?: {
     shopName: string,
     location: string,
-    phone: number,
+    phone: string,
   };
   images: string[];
   description: string;
@@ -37,7 +39,7 @@ export interface UserType {
   imageUrl: string;
   role: string;
   password: string;
-  phone: number;
+  phone: string;
   // Admin-managed fields
   isBlocked: boolean;
   location: string;
@@ -45,7 +47,7 @@ export interface UserType {
 }
 
 export interface OrderType {
-  orderId: string;
+  _id: string;
   product: ProductType;
   qty: number;
   status: "confirmed" | "cancelled" | "pending";
@@ -53,13 +55,30 @@ export interface OrderType {
 }
 
 export interface AppContext {
+  axios: AxiosInstance;
+  navigate: NavigateFunction;
   user: UserType | null;
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   logout: () => void;
-  farmerSignUp: () => void;
+  login: (email: string, password: string) => void;
+  register: (firstName: string, lastName: string, email: string, password: string, phone: string) => void;
   products: ProductType[] | null;
   shops: ShopType[] | null;
   fetchProductById: (id: string) => ProductType | undefined;
+}
+
+export interface ResponseType {
+  success: boolean,
+  message?: string,
+  user?: any
+}
+
+export interface FormType {
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string,
+  phone: string
 }
