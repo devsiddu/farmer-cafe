@@ -19,6 +19,10 @@ import ShopLayout from "./pages/shop/ShopLayout";
 import ShopDashboard from "./pages/shop/ShopDashboard";
 import ShopProducts from "./pages/shop/ShopProducts";
 import ShopBookings from "./pages/shop/ShopBookings";
+import { Toaster } from "react-hot-toast";
+import ProtectRoute from "./middleware/ProtectRoute";
+import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 const App = () => {
   const { pathname } = useLocation();
 
@@ -28,6 +32,7 @@ const App = () => {
 
   return (
     <div>
+      <Toaster position="top-right" />
       {!hideLayout && !isAdminPath && !isShopPath && <Navbar />}
 
       <Routes>
@@ -40,19 +45,26 @@ const App = () => {
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/shop/:id" element={<ShopDetails />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-
-        <Route path="/admin-dashboard" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="users" element={<Users />} />
-          <Route path="shops" element={<ShopsList />} />
+        <Route path="/bookings" element={<BookingConfirmation />} />
+        <Route path="/profile" element={<Profile />} />
+        
+        <Route element={<ProtectRoute allowedRoles={['admin']} />}>
+          <Route path="/admin-dashboard" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="users" element={<Users />} />
+            <Route path="shops" element={<ShopsList />} />
+          </Route>
         </Route>
 
-        <Route path="/shop-dashboard" element={<ShopLayout />}>
-          <Route index element={<ShopDashboard />} />
-          <Route path="products" element={<ShopProducts />} />
-          <Route path="bookings" element={<ShopBookings />} />
+        <Route element={<ProtectRoute allowedRoles={['shop']} />}>
+          <Route path="/shop-dashboard" element={<ShopLayout />}>
+            <Route index element={<ShopDashboard />} />
+            <Route path="products" element={<ShopProducts />} />
+            <Route path="bookings" element={<ShopBookings />} />
+          </Route>
         </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       {!hideLayout && !isAdminPath && !isShopPath && <Footer />}

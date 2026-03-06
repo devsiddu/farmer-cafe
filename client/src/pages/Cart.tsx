@@ -143,7 +143,7 @@ const Cart = () => {
 
                         <button
                             onClick={() =>
-                                navigate("/booking-confirmation", {
+                                navigate("/bookings", {
                                     state: { cartItems, totalPrice },
                                 })
                             }

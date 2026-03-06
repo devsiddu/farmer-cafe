@@ -35,7 +35,7 @@ const ProductDetails = () => {
 
   const handleConfirmBookNow = () => {
     setSelectQty(false);
-    navigate("/booking-confirmation", {
+    navigate("/bookings", {
       state: { product, qty },
     });
   };

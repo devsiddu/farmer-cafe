@@ -35,7 +35,7 @@ export interface IUser {
   imageUrl: string;
   role: string;
   password: string;
-  phone: number;
+  phone: string;
   // Admin-managed fields
   isBlocked: boolean;
   location: string;
