@@ -34,3 +34,21 @@ export const getShopById = async (req: Request, res: Response) => {
     }
 }
 
+export const getShopByUser = async (req: Request, res: Response) => {
+    try {
+        const user = req.user;
+        if (!user) {
+            res.json({ success: false, message: "Unauthorized!" })
+        }
+
+        const shop = await Shop.findOne({ ownerId: user._id });
+        if (!shop) {
+            return res.json({ success: false, message: "Shop not found" });
+        }
+
+        return res.json({ success: true, shop });
+
+    } catch (error: any) {
+        return res.json({ success: false, message: error.message })
+    }
+}

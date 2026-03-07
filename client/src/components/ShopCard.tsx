@@ -13,7 +13,7 @@ const ShopCard = ({ shop, onView }: ShopCardProps) => {
       {/* Image Container */}
       <div className="relative overflow-hidden h-44">
         <img
-          src={shop.image ? shop.image : assets.shop}
+          src={shop.image && shop.image !== "" ? shop.image : assets.shop}
           alt={shop.shopName}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />

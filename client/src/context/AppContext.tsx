@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { AppContext as AppContextType, ProductType, ShopType, UserType } from "../types";
-import { dummyProducts, dummyShops } from "../assets/assets";
+import { dummyProducts } from "../assets/assets";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -108,12 +108,19 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchShops = async () => {
         try {
             setLoading(true)
-            setShops(dummyShops.filter(s=> s.status === "approved"));
+            const { data } = await axios.get("/api/shop");
+            if (data.success) {
+                setShops(data.shops)
+            } else {
+                toast.error(data.message);
+            }
             setLoading(false);
         } catch (error: any) {
             console.error("Failed to fetch shops : " + error.message);
         }
     }
+
+
 
     useEffect(() => {
         fetchUser();
@@ -122,7 +129,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AppContext.Provider value={{ axios, navigate, user, setUser, loading, setLoading, logout, login, products, shops, fetchProductById, register,authLoading }}>
+        <AppContext.Provider value={{ axios, navigate, user, setUser, loading, setLoading, logout, login, products, shops, fetchProductById, register, authLoading, fetchUser }}>
             {children}
         </AppContext.Provider>
     );

@@ -1,12 +1,35 @@
 import { Link, useParams } from "react-router-dom";
-import { assets, dummyProducts, dummyShops } from "../assets/assets";
+import { assets, dummyProducts } from "../assets/assets";
 import Card from "../components/Card";
 import type { ProductType, ShopType } from "../types";
+import { useEffect, useState } from "react";
+import { useApp } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const ShopDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const { axios, setLoading } = useApp();
+  const [shop, setShop] = useState<ShopType | null>(null)
 
-  const shop = dummyShops.find((s: ShopType) => s._id === id);
+  const fetchShopById = async (id: string) => {
+    try {
+      setLoading(true)
+      const { data } = await axios.get(`/api/shop/${id}`);
+      if (data.success) {
+        setShop(data.shop)
+      } else {
+        toast.error(data.message);
+      }
+      setLoading(false);
+    } catch (error: any) {
+      console.error("Failed to fetch shops : " + error.message);
+    }
+  }
+
+  useEffect(() => {
+    fetchShopById(id as string);
+  }, [id])
+
   const products = dummyProducts.filter((p: ProductType) => p.shopId === id);
 
   if (!shop) {
