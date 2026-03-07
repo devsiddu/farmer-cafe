@@ -11,6 +11,7 @@ export interface ShopType {
   location: string;
   rating: number;
   isOpen: boolean;
+  status: "approved" | "cancelled" | "pending";
   phone: string;
 }
 
@@ -60,6 +61,7 @@ export interface AppContext {
   user: UserType | null;
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   loading: boolean;
+  authLoading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   logout: () => void;
   login: (email: string, password: string) => void;

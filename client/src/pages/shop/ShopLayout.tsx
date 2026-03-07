@@ -1,8 +1,14 @@
 import { Outlet } from "react-router-dom";
 import ShopNavbar from "../../components/shop/ShopNavbar";
 import ShopSidebar from "../../components/shop/ShopSidebar";
+import { useApp } from "../../context/AppContext";
+import ApprovalLoader from "../../components/ApprovalLoader";
 
 const ShopLayout = () => {
+  const { user } = useApp();
+  if (user?.role === "shop" && !user.isApproved) {
+    return <ApprovalLoader />
+  }
   return (
     <div className="min-h-screen">
       <ShopNavbar />

@@ -10,7 +10,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [user, setUser] = useState<UserType | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [authLoading, setAuthLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [products, setProducts] = useState<ProductType[] | null>(null);
     const [shops, setShops] = useState<ShopType[] | null>(null);
 
@@ -53,16 +54,18 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
     const fetchUser = async () => {
         try {
-            setLoading(true);
+            setAuthLoading(true);
+
             const { data } = await axios.get("/api/user/auth");
+
             if (data.success) {
-                setUser(data.user)
+                setUser(data.user);
             }
 
         } catch (error: any) {
             console.log(error.message);
         } finally {
-            setLoading(false);
+            setAuthLoading(false);
         }
     };
 
@@ -105,7 +108,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchShops = async () => {
         try {
             setLoading(true)
-            setShops(dummyShops);
+            setShops(dummyShops.filter(s=> s.status === "approved"));
             setLoading(false);
         } catch (error: any) {
             console.error("Failed to fetch shops : " + error.message);
@@ -119,7 +122,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AppContext.Provider value={{ axios, navigate, user, setUser, loading, setLoading, logout, login, products, shops, fetchProductById, register }}>
+        <AppContext.Provider value={{ axios, navigate, user, setUser, loading, setLoading, logout, login, products, shops, fetchProductById, register,authLoading }}>
             {children}
         </AppContext.Provider>
     );
