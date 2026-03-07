@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema<IUser>(
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
-    location: { type: String },
+    location: { type: String, required: true },
     password: { type: String, required: true },
     imageUrl: { type: String, required: true },
     role: { type: String, enum: ["admin", "shop", "user"], default: "user" },

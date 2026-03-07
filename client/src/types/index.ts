@@ -65,7 +65,7 @@ export interface AppContext {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   logout: () => void;
   login: (email: string, password: string) => void;
-  register: (firstName: string, lastName: string, email: string, password: string, phone: string) => void;
+  register: (firstName: string, lastName: string, email: string, password: string, phone: string,location:string) => void;
   products: ProductType[] | null;
   shops: ShopType[] | null;
   fetchProductById: (id: string) => ProductType | undefined;
@@ -84,4 +84,5 @@ export interface FormType {
   email: string,
   password: string,
   phone: string
+  location: string
 }

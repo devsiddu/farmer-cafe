@@ -1,34 +1,59 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Shield, ShieldOff, Trash2, UserCog, ChevronDown } from "lucide-react";
 import type { UserType } from "../../types";
-import { dummyUsers } from "../../assets/assets";
+import { useApp } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 type RoleFilter = "all" | "admin" | "user";
 type StatusFilter = "all" | "active" | "blocked";
 
 const Users = () => {
-  const [users, setUsers] = useState<UserType[]>(dummyUsers);
+  const { axios, user } = useApp();
+  const [users, setUsers] = useState<UserType[] | null>(null);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [expandedUser, setExpandedUser] = useState<string | null>(null);
 
+
+  const fetchUser = async () => {
+    try {
+      const { data } = await axios.get("/api/admin/users");
+      if (data.success) {
+        const filtered = data.users.filter((u) => u._id !== user!._id);
+
+        setUsers(filtered);
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message);
+    }
+  }
+
+  useEffect(() => {
+    fetchUser();
+  }, [])
+
+  if (!users) return users;
+
   // --- Actions ---
   const toggleBlock = (id: string) =>
     setUsers((prev) =>
-      prev.map((u) => (u._id === id ? { ...u, isBlocked: !u.isBlocked } : u))
+      (prev || []).map((u) => (u._id === id ? { ...u, isBlocked: !u.isBlocked } : u))
     );
 
   const toggleRole = (id: string) =>
     setUsers((prev) =>
-      prev.map((u) =>
+      (prev || []).map((u) =>
         u._id === id ? { ...u, role: u.role === "admin" ? "user" : "admin" } : u
       )
     );
 
   const deleteUser = (id: string) => {
-    setUsers((prev) => prev.filter((u) => u._id !== id));
+    setUsers((prev) => (prev || []).filter((u) => u._id !== id));
     setDeleteConfirm(null);
   };
 
@@ -186,11 +211,10 @@ const Users = () => {
                   {/* Role */}
                   <td className="px-5 py-3.5">
                     <span
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${
-                        user.role === "admin"
-                          ? "bg-violet-50 text-violet-600"
-                          : "bg-gray-100 text-gray-500"
-                      }`}
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${user.role === "admin"
+                        ? "bg-violet-50 text-violet-600"
+                        : "bg-gray-100 text-gray-500"
+                        }`}
                     >
                       {user.role}
                     </span>
@@ -199,11 +223,10 @@ const Users = () => {
                   {/* Status */}
                   <td className="px-5 py-3.5">
                     <span
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${
-                        user.isBlocked
-                          ? "bg-red-50 text-red-500"
-                          : "bg-green-50 text-green-600"
-                      }`}
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${user.isBlocked
+                        ? "bg-red-50 text-red-500"
+                        : "bg-green-50 text-green-600"
+                        }`}
                     >
                       {user.isBlocked ? "Blocked" : "Active"}
                     </span>
@@ -222,11 +245,10 @@ const Users = () => {
                       <button
                         onClick={() => toggleBlock(user._id)}
                         title={user.isBlocked ? "Unblock" : "Block"}
-                        className={`p-2 rounded-lg transition ${
-                          user.isBlocked
-                            ? "hover:bg-green-50 text-green-400 hover:text-green-600"
-                            : "hover:bg-amber-50 text-gray-400 hover:text-amber-500"
-                        }`}
+                        className={`p-2 rounded-lg transition ${user.isBlocked
+                          ? "hover:bg-green-50 text-green-400 hover:text-green-600"
+                          : "hover:bg-amber-50 text-gray-400 hover:text-amber-500"
+                          }`}
                       >
                         {user.isBlocked ? (
                           <Shield className="w-4 h-4" />
@@ -282,16 +304,14 @@ const Users = () => {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${
-                      user.isBlocked ? "bg-red-50 text-red-500" : "bg-green-50 text-green-600"
-                    }`}
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${user.isBlocked ? "bg-red-50 text-red-500" : "bg-green-50 text-green-600"
+                      }`}
                   >
                     {user.isBlocked ? "Blocked" : "Active"}
                   </span>
                   <ChevronDown
-                    className={`w-4 h-4 text-gray-400 transition-transform ${
-                      expandedUser === user._id ? "rotate-180" : ""
-                    }`}
+                    className={`w-4 h-4 text-gray-400 transition-transform ${expandedUser === user._id ? "rotate-180" : ""
+                      }`}
                   />
                 </div>
               </div>
@@ -312,9 +332,8 @@ const Users = () => {
                     <p>
                       🔑 Role:{" "}
                       <span
-                        className={`font-semibold ${
-                          user.role === "admin" ? "text-violet-600" : "text-gray-600"
-                        }`}
+                        className={`font-semibold ${user.role === "admin" ? "text-violet-600" : "text-gray-600"
+                          }`}
                       >
                         {user.role}
                       </span>
@@ -330,11 +349,10 @@ const Users = () => {
                     </button>
                     <button
                       onClick={() => toggleBlock(user._id)}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${
-                        user.isBlocked
-                          ? "border-green-200 text-green-600 hover:bg-green-50"
-                          : "border-amber-200 text-amber-600 hover:bg-amber-50"
-                      }`}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${user.isBlocked
+                        ? "border-green-200 text-green-600 hover:bg-green-50"
+                        : "border-amber-200 text-amber-600 hover:bg-amber-50"
+                        }`}
                     >
                       {user.isBlocked ? (
                         <Shield className="w-3.5 h-3.5" />

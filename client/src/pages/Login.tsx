@@ -20,7 +20,8 @@ const Login = () => {
         lastName: "",
         email: "",
         password: "",
-        phone: ""
+        phone: "",
+        location: ""
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -30,7 +31,7 @@ const Login = () => {
             if (mode === "login") {
                 login(form.email, form.password);
             } else {
-                register(form.firstName, form.lastName, form.email, form.password, form.phone);
+                register(form.firstName, form.lastName, form.email, form.password, form.phone, form.location);
             }
         } catch (error: any) {
             console.error(mode + "failed : " + error.message);
@@ -119,20 +120,36 @@ const Login = () => {
                     </div>
 
                     {isRegister && (
-                        <div>
-                            <label className="text-xs font-medium text-gray-500 mb-1 block">
-                                Phone
-                            </label>
-                            <input
-                                type="tel"
-                                name="phone"
-                                placeholder="+91 98765 43210"
-                                value={form.phone}
-                                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                                required
-                                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
-                            />
-                        </div>
+                        <>
+                            <div>
+                                <label className="text-xs font-medium text-gray-500 mb-1 block">
+                                    Phone
+                                </label>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    placeholder="+91 98765 43210"
+                                    value={form.phone}
+                                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                                    required
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs font-medium text-gray-500 mb-1 block">
+                                    Location
+                                </label>
+                                <input
+                                    type="text"
+                                    name="location"
+                                    placeholder="Gokak, Belgavi"
+                                    value={form.location}
+                                    onChange={(e) => setForm({ ...form, location: e.target.value })}
+                                    required
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary transition"
+                                />
+                            </div>
+                        </>
                     )}
 
                     <button
