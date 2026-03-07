@@ -69,6 +69,7 @@ export interface AppContext {
   products: ProductType[] | null;
   shops: ShopType[] | null;
   fetchProductById: (id: string) => ProductType | undefined;
+  fetchUser: () => void;
 }
 
 export interface ResponseType {
