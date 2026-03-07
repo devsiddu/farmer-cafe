@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useApp } from "../context/AppContext";
 import type { FormType } from "../types";
 
@@ -8,9 +8,11 @@ const Login = () => {
 
     const { login, register, user, navigate } = useApp();
 
-    if (user) {
-        navigate("/", { replace: true });
-    }
+    useEffect(() => {
+        if (user) {
+            navigate("/", { replace: true });
+        }
+    }, [navigate, user])
     const [mode, setMode] = useState<Mode>("login");
 
     const [form, setForm] = useState<FormType>({

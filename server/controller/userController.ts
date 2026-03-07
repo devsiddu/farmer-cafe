@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import User from "../model/User.js";
 import jwt from 'jsonwebtoken'
+import Shop from "../model/Shop.js";
 
 
 export const register = async (req: Request, res: Response) => {
@@ -103,6 +104,57 @@ export const isAuth = async (req: Request, res: Response) => {
             success: true,
             user: req.user
         });
+    } catch (error: any) {
+        return res.json({ success: false, message: error.message })
+    }
+}
+
+export const switchToShop = async (req: Request, res: Response) => {
+    try {
+        const { shopName, location } = req.body;
+        const user = req.user;
+        // const {image} = req.files;
+
+        if (!shopName || !location || shopName === "" || location === "") {
+            return res.json({ success: false, message: "All fields are required!" })
+        }
+
+        if (!user) {
+            return res.json({ success: false, message: "Unauthorized!" })
+        }
+
+        const existUser = await User.findById(user._id);
+
+        if (!existUser) {
+            return res.json({ success: false, message: "User not found" })
+        }
+
+        if (existUser.role === "shop") {
+            return res.json({ success: false, message: "You are already a shop owner" })
+        }
+
+        const existShop = await Shop.findOne({ ownerId: existUser._id });
+
+        if (existShop) {
+            return res.json({ success: false, message: "Shop already exists" })
+        }
+
+        const shop = await Shop.create({
+            shopName,
+            location,
+            ownerId: existUser._id,
+            ownerName: `${existUser.firstName} ${existUser.lastName}`,
+            image: "test",
+            phone: existUser.phone,
+            status: "pending"
+        })
+
+        if (shop) {
+            existUser.role = "shop";
+            await existUser.save();
+        }
+
+        res.json({ success: true, message: "Shop created successfully!", shop })
     } catch (error: any) {
         return res.json({ success: false, message: error.message })
     }

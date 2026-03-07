@@ -1,23 +1,24 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useApp } from "../context/AppContext"
-
-
+import { useApp } from "../context/AppContext";
+import Loader from "../components/Loader";
 
 interface Props {
-    allowedRoles: string[]
+    allowedRoles: string[];
 }
-
 
 const ProtectRoute = ({ allowedRoles }: Props) => {
 
-    const { user } = useApp();
+    const { user, authLoading } = useApp();
 
-    if (!allowedRoles.includes(user?.role!)) {
-        return <Navigate to={"/"} replace />
+    if (authLoading) {
+        return <Loader />;
     }
 
-    return <Outlet />
-}
+    if (!user || !allowedRoles.includes(user.role)) {
+        return <Navigate to="/" replace />;
+    }
 
+    return <Outlet />;
+};
 
-export default ProtectRoute
+export default ProtectRoute;

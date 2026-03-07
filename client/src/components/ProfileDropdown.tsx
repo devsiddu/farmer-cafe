@@ -1,14 +1,17 @@
 import { LogOut, ArrowLeftRight, User, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { useState } from "react";
+import SwitchToShop from "./SwitchToShop";
 
 const ProfileDropdown = () => {
   const { user, logout } = useApp();
+  const [switchToShop, setSwitchToShop] = useState(false);
   const navigate = useNavigate();
 
-  const handleSwitchToShop = () => {
-    navigate("/admin-dashboard");
-  };
+  if (switchToShop) {
+    return <SwitchToShop onClose={() => setSwitchToShop(false)} />
+  }
 
   return (
     <div className="relative group">
@@ -75,7 +78,7 @@ const ProfileDropdown = () => {
           <li>
             {user?.role === "user" && (
               <button
-                onClick={handleSwitchToShop}
+                onClick={() => setSwitchToShop(true)}
                 className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium text-secondary hover:bg-secondary/5 transition"
               >
                 <ArrowLeftRight className="w-3.5 h-3.5" />

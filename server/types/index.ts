@@ -1,23 +1,24 @@
-export interface IShop {
-  _id: string;
+import { Document, Types } from "mongoose";
+
+export interface IShop extends Document {
   shopName: string;
-  ownerId: string;
-  ownerName?: string;
+  ownerId: Types.ObjectId;
+  ownerName: string;
   image: string;
   location: string;
   rating: number;
   isOpen: boolean;
-  phone: number;
+  phone: string;
+  status: "approved" | "rejected" | "pending"
 }
 
 export interface IProduct {
-  _id: string;
   name: string;
   category: string;
   quantity: number;
   price: number;
   rating: number;
-  shopId: string;
+  shopId: Types.ObjectId;
   shop?: {
     shopName: string;
     location: string;
@@ -28,7 +29,6 @@ export interface IProduct {
 }
 
 export interface IUser {
-  _id: string;
   firstName: string;
   lastName: string;
   email: string;

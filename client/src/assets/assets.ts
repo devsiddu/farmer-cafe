@@ -41,6 +41,7 @@ export const dummyShops: ShopType[] = [
     location: "Gokak, Belagavi",
     rating: 4.6,
     isOpen: true,
+    status: "approved",
     phone: "9876543210",
   },
   {
@@ -52,6 +53,7 @@ export const dummyShops: ShopType[] = [
     location: "Belagavi",
     rating: 4.4,
     isOpen: true,
+    status: "approved",
     phone: "9123456789",
   },
   {
@@ -63,6 +65,7 @@ export const dummyShops: ShopType[] = [
     location: "Hubballi",
     rating: 4.2,
     isOpen: false,
+    status: "pending",
     phone: "9988766554",
   },
   {
@@ -74,6 +77,7 @@ export const dummyShops: ShopType[] = [
     location: "Dharwad",
     rating: 4.1,
     isOpen: true,
+    status: "approved",
     phone: "9012345678",
   },
   {
@@ -85,6 +89,7 @@ export const dummyShops: ShopType[] = [
     location: "Bengaluru Rural",
     rating: 4.8,
     isOpen: true,
+    status: "cancelled",
     phone: "9870011223",
   },
   {
@@ -96,6 +101,7 @@ export const dummyShops: ShopType[] = [
     location: "Mysuru",
     rating: 4.3,
     isOpen: false,
+    status: "approved",
     phone: "9345677889",
   },
   {
@@ -107,6 +113,7 @@ export const dummyShops: ShopType[] = [
     location: "Shivamogga",
     rating: 4.5,
     isOpen: true,
+    status: "approved",
     phone: "9887655443",
   },
   {
@@ -118,6 +125,7 @@ export const dummyShops: ShopType[] = [
     location: "Davangere",
     rating: 4.0,
     isOpen: true,
+    status: "approved",
     phone: "9765433221",
   },
 ];
