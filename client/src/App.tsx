@@ -32,7 +32,9 @@ const App = () => {
 
   return (
     <div>
-      <Toaster position="top-right" />
+      <Toaster toastOptions={{style:{
+        fontSize: "15px"
+      }}} />
       {!hideLayout && !isAdminPath && !isShopPath && <Navbar />}
 
       <Routes>
