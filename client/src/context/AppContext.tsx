@@ -21,18 +21,15 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const register = async (firstName: string, lastName: string, email: string, password: string, phone: string) => {
         try {
 
-            const response = axios.post("/api/user/register", { firstName, lastName, email, password, phone })
+            const { data } = await axios.post("/api/user/register", { firstName, lastName, email, password, phone })
 
-            toast.promise(response, {
-                loading: "Creating account..",
-                success: (res) => {
-                    setUser(res.data.user);
-                    navigate("/", { replace: true });
-                    return res.data.message;
-                },
-                error: (await response).data.message
-            })
-
+            if (data.success) {
+                toast.success(data.message);
+                setUser(data.user)
+                navigate("/", { replace: true })
+            } else {
+                toast.error(data.message)
+            }
         } catch (error: any) {
             console.error("server register error: " + error.message)
         }
@@ -40,17 +37,14 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = async (email: string, password: string) => {
         try {
-            const request = axios.post("/api/user/login", { email, password });
-
-            toast.promise(request, {
-                loading: "Logging in...",
-                success: (res) => {
-                    setUser(res.data.user);
-                    navigate("/", { replace: true })
-                    return res.data.message;
-                },
-                error: "Login failed",
-            });
+            const { data } = await axios.post("/api/user/login", { email, password });
+            if (data.success) {
+                toast.success(data.message);
+                setUser(data.user);
+                navigate("/", { replace: true })
+            } else {
+                toast.error(data.message);
+            }
         } catch (error: any) {
             console.log("Server Error : " + error.message)
             toast.error(error.message);
