@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser"
 import connectDb from "./config/db.js";
 import userRouter from "./route/userRoute.js";
 import shopRouter from "./route/shopRoute.js";
+import adminRouter from "./route/adminRoute.js";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 // routes
 app.use("/api/user", userRouter);
 app.use("/api/shop", shopRouter);
+app.use("/api/admin", adminRouter);
 const port = process.env.PORT || 3000;
 
 app.get("/", (req: Request, res: Response) => {

@@ -7,8 +7,8 @@ import Shop from "../model/Shop.js";
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { firstName, lastName, email, password, phone } = req.body;
-        if (!firstName || !lastName || !email || !password || !phone) {
+        const { firstName, lastName, email, password, phone, location } = req.body;
+        if (!firstName || !lastName || !email || !password || !phone || !location) {
             return res.json({ success: false, message: "All fields are required!" })
         }
 
@@ -27,6 +27,7 @@ export const register = async (req: Request, res: Response) => {
             phone,
             password: hashedPassword,
             imageUrl,
+            location
         })
 
         const token = jwt.sign(

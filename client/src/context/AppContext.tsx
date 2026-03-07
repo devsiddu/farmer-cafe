@@ -19,10 +19,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
     axios.defaults.withCredentials = true;
 
-    const register = async (firstName: string, lastName: string, email: string, password: string, phone: string) => {
+    const register = async (firstName: string, lastName: string, email: string, password: string, phone: string, location: string) => {
         try {
 
-            const { data } = await axios.post("/api/user/register", { firstName, lastName, email, password, phone })
+            const { data } = await axios.post("/api/user/register", { firstName, lastName, email, password, phone, location })
 
             if (data.success) {
                 toast.success(data.message);
