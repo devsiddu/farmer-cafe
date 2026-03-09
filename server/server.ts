@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express, { Request, Response } from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser"
+import cookieParser from "cookie-parser";
 import connectDb from "./config/db.js";
 import userRouter from "./route/userRoute.js";
 import shopRouter from "./route/shopRoute.js";
@@ -12,7 +12,7 @@ const app = express();
 // connect to db
 await connectDb();
 
-const allowedOrigins = ["http://localhost:5173"]
+const allowedOrigins = ["http://localhost:5173"];
 
 // Middleware
 app.use(cors({ origin: allowedOrigins, credentials: true }));

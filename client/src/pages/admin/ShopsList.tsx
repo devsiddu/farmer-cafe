@@ -1,27 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Trash2, ChevronDown, Star, Phone, MapPin, Store, ToggleLeft, ToggleRight } from "lucide-react";
 import { dummyShops } from "../../assets/assets";
 import type { ShopType } from "../../types";
+import { useApp } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 
 type StatusFilter = "all" | "open" | "closed";
 
 const ShopsList = () => {
-  const [shops, setShops] = useState<ShopType[]>(dummyShops);
+  const [shops, setShops] = useState<ShopType[] | null>(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [sortBy, setSortBy] = useState<"rating" | "name">("rating");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
 
+  const { axios } = useApp();
+  const fetchShops = async () => {
+    try {
+      const { data } = await axios.get("/api/admin/shops");
+      if (data) {
+        setShops(data.shops)
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message)
+    }
+  }
+  if (!shops) return;
   // --- Actions ---
   const toggleOpen = (shopId: string) =>
     setShops((prev) =>
-      prev.map((s) => (s._id === shopId ? { ...s, isOpen: !s.isOpen } : s))
+      (prev || []).map((s) => (s._id === shopId ? { ...s, isOpen: !s.isOpen } : s))
     );
 
   const deleteShop = (shopId: string) => {
-    setShops((prev) => prev.filter((s) => s._id !== shopId));
+    setShops((prev) => (prev || []).filter((s) => s._id !== shopId));
     setDeleteConfirm(null);
   };
 
@@ -47,6 +64,11 @@ const ShopsList = () => {
   const avgRating = (shops.reduce((sum, s) => sum + s.rating, 0) / shops.length).toFixed(1);
 
   const deleteTarget = shops.find((s) => s._id === deleteConfirm);
+
+  useEffect(() => {
+    fetchShops();
+  }, [])
+
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -122,17 +144,15 @@ const ShopsList = () => {
         <div className="flex border border-gray-200 rounded-xl overflow-hidden bg-white shrink-0">
           <button
             onClick={() => setViewMode("grid")}
-            className={`px-3 py-2.5 text-xs font-semibold transition ${
-              viewMode === "grid" ? "bg-primary text-white" : "text-gray-400 hover:bg-gray-50"
-            }`}
+            className={`px-3 py-2.5 text-xs font-semibold transition ${viewMode === "grid" ? "bg-primary text-white" : "text-gray-400 hover:bg-gray-50"
+              }`}
           >
             Grid
           </button>
           <button
             onClick={() => setViewMode("table")}
-            className={`px-3 py-2.5 text-xs font-semibold transition ${
-              viewMode === "table" ? "bg-primary text-white" : "text-gray-400 hover:bg-gray-50"
-            }`}
+            className={`px-3 py-2.5 text-xs font-semibold transition ${viewMode === "table" ? "bg-primary text-white" : "text-gray-400 hover:bg-gray-50"
+              }`}
           >
             Table
           </button>
@@ -166,11 +186,10 @@ const ShopsList = () => {
                   />
                   {/* Status Badge */}
                   <span
-                    className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-lg ${
-                      shop.isOpen
-                        ? "bg-green-500 text-white"
-                        : "bg-gray-700/80 text-white"
-                    }`}
+                    className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-lg ${shop.isOpen
+                      ? "bg-green-500 text-white"
+                      : "bg-gray-700/80 text-white"
+                      }`}
                   >
                     {shop.isOpen ? "Open" : "Closed"}
                   </span>
@@ -199,11 +218,10 @@ const ShopsList = () => {
                 <div className="px-4 pb-4 flex gap-2">
                   <button
                     onClick={() => toggleOpen(shop._id)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${
-                      shop.isOpen
-                        ? "border-amber-200 text-amber-600 hover:bg-amber-50"
-                        : "border-green-200 text-green-600 hover:bg-green-50"
-                    }`}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${shop.isOpen
+                      ? "border-amber-200 text-amber-600 hover:bg-amber-50"
+                      : "border-green-200 text-green-600 hover:bg-green-50"
+                      }`}
                   >
                     {shop.isOpen ? (
                       <ToggleRight className="w-3.5 h-3.5" />
@@ -278,11 +296,10 @@ const ShopsList = () => {
                     {/* Status */}
                     <td className="px-5 py-3.5">
                       <span
-                        className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${
-                          shop.isOpen
-                            ? "bg-green-50 text-green-600"
-                            : "bg-gray-100 text-gray-500"
-                        }`}
+                        className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${shop.isOpen
+                          ? "bg-green-50 text-green-600"
+                          : "bg-gray-100 text-gray-500"
+                          }`}
                       >
                         {shop.isOpen ? "Open" : "Closed"}
                       </span>
@@ -293,11 +310,10 @@ const ShopsList = () => {
                         <button
                           onClick={() => toggleOpen(shop._id)}
                           title={shop.isOpen ? "Close shop" : "Open shop"}
-                          className={`p-2 rounded-lg transition ${
-                            shop.isOpen
-                              ? "hover:bg-amber-50 text-gray-400 hover:text-amber-500"
-                              : "hover:bg-green-50 text-gray-400 hover:text-green-500"
-                          }`}
+                          className={`p-2 rounded-lg transition ${shop.isOpen
+                            ? "hover:bg-amber-50 text-gray-400 hover:text-amber-500"
+                            : "hover:bg-green-50 text-gray-400 hover:text-green-500"
+                            }`}
                         >
                           {shop.isOpen ? (
                             <ToggleRight className="w-4 h-4" />
