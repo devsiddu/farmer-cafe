@@ -23,18 +23,23 @@ import { Toaster } from "react-hot-toast";
 import ProtectRoute from "./middleware/ProtectRoute";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
+import { useApp } from "./context/AppContext";
+import NetworkBanner from "./components/NetworkBanner";
 const App = () => {
   const { pathname } = useLocation();
-
+  const { user } = useApp()
   const hideLayout = pathname === "/login";
   const isAdminPath = pathname.startsWith("/admin-dashboard");
   const isShopPath = pathname.startsWith("/shop-dashboard");
 
   return (
     <div>
-      <Toaster toastOptions={{style:{
-        fontSize: "15px"
-      }}} />
+      <Toaster toastOptions={{
+        style: {
+          fontSize: "15px"
+        }
+      }} />
+      <NetworkBanner />
       {!hideLayout && !isAdminPath && !isShopPath && <Navbar />}
 
       <Routes>
@@ -47,9 +52,10 @@ const App = () => {
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/shop/:id" element={<ShopDetails />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/bookings" element={<BookingConfirmation />} />
+        {user && <Route path="/bookings" element={<BookingConfirmation />} />}
+
         <Route path="/profile" element={<Profile />} />
-        
+
         <Route element={<ProtectRoute allowedRoles={['admin']} />}>
           <Route path="/admin-dashboard" element={<Layout />}>
             <Route index element={<Dashboard />} />

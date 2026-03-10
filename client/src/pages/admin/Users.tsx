@@ -3,21 +3,24 @@ import { Search, Shield, ShieldOff, Trash2, UserCog, ChevronDown } from "lucide-
 import type { UserType } from "../../types";
 import { useApp } from "../../context/AppContext";
 import toast from "react-hot-toast";
+import Spinner from "../../components/Spinner";
 
 type RoleFilter = "all" | "admin" | "user";
 type StatusFilter = "all" | "active" | "blocked";
 
 const Users = () => {
   const { axios, user } = useApp();
-  const [users, setUsers] = useState<UserType[] | null>(null);
+  const [users, setUsers] = useState<UserType[]>([]);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [expandedUser, setExpandedUser] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
 
   const fetchUser = async () => {
+    setLoading(true)
     try {
       const { data } = await axios.get("/api/admin/users");
       if (data.success) {
@@ -30,6 +33,8 @@ const Users = () => {
     } catch (error: any) {
       console.error(error);
       toast.error(error.message);
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -37,7 +42,9 @@ const Users = () => {
     fetchUser();
   }, [])
 
-  if (!users) return users;
+  if (loading) {
+    return <Spinner />
+  }
 
   // --- Actions ---
   const toggleBlock = (id: string) =>

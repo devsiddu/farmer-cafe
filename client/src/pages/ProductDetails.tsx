@@ -5,6 +5,7 @@ import { useApp } from "../context/AppContext";
 import type { ProductType } from "../types";
 import { assets } from "../assets/assets";
 import Card from "../components/Card";
+import Spinner from "../components/Spinner";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,6 +27,7 @@ const ProductDetails = () => {
   const [cartQtyModal, setCartQtyModal] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [thumbnail, setThumbnail] = React.useState<string | undefined>();
+  const [loading, setLoading] = useState(false);
 
   const maxQty = product?.quantity ?? 0;
   const outOfStock = product?.quantity === 0;
@@ -50,6 +52,7 @@ const ProductDetails = () => {
   };
 
   useEffect(() => {
+    setLoading(true)
     if (!id) return;
 
     const data = fetchProductById(id);
@@ -57,6 +60,7 @@ const ProductDetails = () => {
       setProduct(data);
       setThumbnail(data.images[0])
     }
+    setLoading(false)
   }, [id])
 
 
@@ -125,6 +129,10 @@ const ProductDetails = () => {
       </div>
     </div>
   );
+
+  if (loading) {
+    return <Spinner />
+  }
 
   return (<>
 
