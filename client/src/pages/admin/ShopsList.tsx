@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { Search, Trash2, ChevronDown, Star, Phone, MapPin, Store, ToggleLeft, ToggleRight } from "lucide-react";
-import { dummyShops } from "../../assets/assets";
 import type { ShopType } from "../../types";
 import { useApp } from "../../context/AppContext";
 import toast from "react-hot-toast";
+import Spinner from "../../components/Spinner";
 
 
 type StatusFilter = "all" | "open" | "closed";
 
 const ShopsList = () => {
-  const [shops, setShops] = useState<ShopType[] | null>(null);
+  const [shops, setShops] = useState<ShopType[]>([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [sortBy, setSortBy] = useState<"rating" | "name">("rating");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
@@ -19,6 +20,7 @@ const ShopsList = () => {
   const { axios } = useApp();
   const fetchShops = async () => {
     try {
+      setLoading(true)
       const { data } = await axios.get("/api/admin/shops");
       if (data) {
         setShops(data.shops)
@@ -28,9 +30,10 @@ const ShopsList = () => {
     } catch (error: any) {
       console.log(error);
       toast.error(error.message)
+    } finally {
+      setLoading(false);
     }
   }
-  if (!shops) return;
   // --- Actions ---
   const toggleOpen = (shopId: string) =>
     setShops((prev) =>
@@ -44,7 +47,7 @@ const ShopsList = () => {
 
   // --- Filters + Sort ---
   const filtered = shops
-    .filter((s) => {
+    ?.filter((s) => {
       const matchSearch =
         s.shopName.toLowerCase().includes(search.toLowerCase()) ||
         s.ownerName?.toLowerCase().includes(search.toLowerCase()) ||
@@ -59,17 +62,23 @@ const ShopsList = () => {
       sortBy === "rating" ? b.rating - a.rating : a.shopName.localeCompare(b.shopName)
     );
 
-  const openCount = shops.filter((s) => s.isOpen).length;
-  const closedCount = shops.filter((s) => !s.isOpen).length;
-  const avgRating = (shops.reduce((sum, s) => sum + s.rating, 0) / shops.length).toFixed(1);
+  const openCount = shops?.filter((s) => s.isOpen).length || 0;
+  const closedCount = shops?.filter((s) => !s.isOpen).length || 0;
 
-  const deleteTarget = shops.find((s) => s._id === deleteConfirm);
+  const avgRating =
+    shops && shops.length > 0
+      ? (shops.reduce((sum, s) => sum + s.rating, 0) / shops.length).toFixed(1)
+      : "0.0";
+
+  const deleteTarget = shops?.find((s) => s._id === deleteConfirm);
 
   useEffect(() => {
     fetchShops();
   }, [])
 
-
+  if (loading) {
+    return <Spinner />
+  }
   return (
     <div className="max-w-6xl mx-auto">
       {/* Header */}
