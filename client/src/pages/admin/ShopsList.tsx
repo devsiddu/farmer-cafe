@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, Trash2, ChevronDown, Star, Phone, MapPin, Store, ToggleLeft, ToggleRight } from "lucide-react";
+import { Search, Trash2, ChevronDown, Star, Phone, MapPin, Store, Check, X } from "lucide-react";
 import type { ShopType } from "../../types";
 import { useApp } from "../../context/AppContext";
 import toast from "react-hot-toast";
@@ -7,6 +7,7 @@ import Spinner from "../../components/Spinner";
 
 
 type StatusFilter = "all" | "open" | "closed";
+type ShopStatus = "pending" | "approved" | "cancelled";
 
 const ShopsList = () => {
   const [shops, setShops] = useState<ShopType[]>([]);
@@ -22,7 +23,7 @@ const ShopsList = () => {
     try {
       setLoading(true)
       const { data } = await axios.get("/api/admin/shops");
-      if (data) {
+      if (data.success) {
         setShops(data.shops)
       } else {
         toast.error(data.message)
@@ -35,11 +36,20 @@ const ShopsList = () => {
     }
   }
   // --- Actions ---
-  const toggleOpen = (shopId: string) =>
-    setShops((prev) =>
-      (prev || []).map((s) => (s._id === shopId ? { ...s, isOpen: !s.isOpen } : s))
-    );
-
+  const toggleShop = async (shopId: string, status: ShopStatus) => {
+    try {
+      const { data } = await axios.patch(`/api/admin/shop/${shopId}/status`, { status });
+      if (data.success) {
+        setShops((prev) => prev.map((s) => s._id === shopId ? { ...s, status: status } : s))
+        toast.success(data.message);
+      }else{
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      console.error(error.message);
+      toast.error(error.message);
+    }
+  }
   const deleteShop = (shopId: string) => {
     setShops((prev) => (prev || []).filter((s) => s._id !== shopId));
     setDeleteConfirm(null);
@@ -225,20 +235,38 @@ const ShopsList = () => {
 
                 {/* Actions */}
                 <div className="px-4 pb-4 flex gap-2">
-                  <button
-                    onClick={() => toggleOpen(shop._id)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${shop.isOpen
-                      ? "border-amber-200 text-amber-600 hover:bg-amber-50"
-                      : "border-green-200 text-green-600 hover:bg-green-50"
-                      }`}
-                  >
-                    {shop.isOpen ? (
-                      <ToggleRight className="w-3.5 h-3.5" />
-                    ) : (
-                      <ToggleLeft className="w-3.5 h-3.5" />
-                    )}
-                    {shop.isOpen ? "Close" : "Open"}
-                  </button>
+                  <div className="flex-col  flex-1 flex gap-1">
+                    <span className={`flex-1 flex items-center justify-center gap-1.5 py-1 px-1 rounded-xl text-xs font-semibold border transition 
+                          ${shop.status === "pending" && "border-amber-200 text-amber-600 hover:bg-amber-50"}
+                          ${shop.status === "approved" && "border-gray-200 text-gray-600 hover:bg-amber-50"}
+                          ${shop.status === "cancelled" && "border-red-200 text-red-600 hover:bg-green-50"
+                      }`}>
+                      {shop.status}
+                    </span>
+                    <div className="flex gap-2 ">
+                      {shop.status === "pending" && <button
+                        onClick={() => toggleShop(shop._id, "approved")}
+                        className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-semibold border transition ${shop.isOpen
+                          ? "border-amber-200 text-amber-600 hover:bg-amber-50"
+                          : "border-green-200 text-green-600 hover:bg-green-50"
+                          }`}
+                      >
+                        <Check className="w-3.5 h-3.5" />
+
+                      </button>}
+                      {shop.status === "pending" && <button
+                        onClick={() => toggleShop(shop._id, "cancelled")}
+                        className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${shop.isOpen
+                          ? "border-amber-200 text-amber-600 hover:bg-amber-50"
+                          : "border-green-200 text-green-600 hover:bg-green-50"
+                          }`}
+                      >
+                        <X className="w-3.5 h-3.5" />
+
+                      </button>}
+                    </div>
+                  </div>
+
                   <button
                     onClick={() => setDeleteConfirm(shop._id)}
                     className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border border-red-200 text-red-500 hover:bg-red-50 transition"
@@ -264,13 +292,14 @@ const ShopsList = () => {
                 <th className="text-left px-5 py-3 font-semibold">Phone</th>
                 <th className="text-left px-5 py-3 font-semibold">Rating</th>
                 <th className="text-left px-5 py-3 font-semibold">Status</th>
+                <th className="text-left px-5 py-3 font-semibold">Verification Status</th>
                 <th className="text-right px-5 py-3 font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-12 text-gray-400">
+                  <td colSpan={8} className="text-center py-12 text-gray-400">
                     <div className="text-3xl mb-2">🏪</div>
                     <p className="text-sm">No shops found</p>
                   </td>
@@ -313,31 +342,46 @@ const ShopsList = () => {
                         {shop.isOpen ? "Open" : "Closed"}
                       </span>
                     </td>
-                    {/* Actions */}
+                    {/* Status */}
                     <td className="px-5 py-3.5">
-                      <div className="flex items-center justify-end gap-1">
-                        <button
-                          onClick={() => toggleOpen(shop._id)}
-                          title={shop.isOpen ? "Close shop" : "Open shop"}
-                          className={`p-2 rounded-lg transition ${shop.isOpen
-                            ? "hover:bg-amber-50 text-gray-400 hover:text-amber-500"
-                            : "hover:bg-green-50 text-gray-400 hover:text-green-500"
+                      <div className="flex items-center justify-center gap-1">
+                        <span
+                          className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${shop.status === "approved"
+                            ? "bg-green-50 text-green-600"
+                            : "bg-red-100 text-red-500"
                             }`}
                         >
-                          {shop.isOpen ? (
-                            <ToggleRight className="w-4 h-4" />
-                          ) : (
-                            <ToggleLeft className="w-4 h-4" />
-                          )}
-                        </button>
-                        <button
-                          onClick={() => setDeleteConfirm(shop._id)}
-                          title="Delete shop"
-                          className="p-2 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                          {shop.status}
+                        </span>
+                        {shop.status === "pending" &&
+                          <button
+                            onClick={() => toggleShop(shop._id, "approved")}
+                            title={"Approve shop"}
+                            className={`p-2 rounded-lg transition hover:bg-green-50 text-gray-400 hover:text-green-500`}
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                        }
+                        {shop.status === "pending" &&
+                          <button
+                            onClick={() => toggleShop(shop._id, "cancelled")}
+                            title={"Cancel shop"}
+                            className={`p-2 rounded-lg transition hover:bg-green-50 text-gray-400 hover:text-green-500`}
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        }
                       </div>
+                    </td>
+                    {/* Actions */}
+                    <td className="px-5 py-3.5 text-center">
+                      <button
+                        onClick={() => setDeleteConfirm(shop._id)}
+                        title="Delete shop"
+                        className="p-2 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </td>
                   </tr>
                 ))
