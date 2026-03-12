@@ -21,11 +21,6 @@ export interface IProduct {
   price: number;
   rating: number;
   shopId: Types.ObjectId;
-  shop?: {
-    shopName: string;
-    location: string;
-    phone: number;
-  };
   images: string[];
   description: string;
 }

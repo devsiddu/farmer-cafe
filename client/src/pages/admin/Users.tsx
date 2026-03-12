@@ -24,7 +24,7 @@ const Users = () => {
     try {
       const { data } = await axios.get("/api/admin/users");
       if (data.success) {
-        const filtered = data.users.filter((u) => u._id !== user!._id);
+        const filtered = data.users.filter((u: UserType) => u._id !== user!._id);
 
         setUsers(filtered);
       } else {

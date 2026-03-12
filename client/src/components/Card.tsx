@@ -8,7 +8,7 @@ interface cardProps {
 
 const Card = ({ product }: cardProps) => {
   const navigate = useNavigate();
-
+  
   return (
     <div className="group w-72 shrink-0 bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       {/* Image */}
@@ -18,7 +18,7 @@ const Card = ({ product }: cardProps) => {
       >
         <img
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          src={product.images.at(1)}
+          src={product.images[0]}
           alt={product.name}
         />
         {/* Gradient */}
@@ -47,11 +47,11 @@ const Card = ({ product }: cardProps) => {
         <div className="flex flex-col gap-1.5 text-xs text-gray-500">
           <div className="flex items-center gap-1.5">
             <img src={assets.store} alt="store" width={13} className="opacity-60 shrink-0" />
-            <span className="line-clamp-1 font-medium">{product.shop?.shopName}</span>
+            <span className="line-clamp-1 font-medium">{product.shopId?.shopName}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <img src={assets.location} alt="location" width={13} className="opacity-60 shrink-0" />
-            <span className="line-clamp-1">{product.shop?.location}</span>
+            <span className="line-clamp-1">{product.shopId?.location}</span>
           </div>
         </div>
 

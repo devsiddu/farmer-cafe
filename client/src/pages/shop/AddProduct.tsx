@@ -1,11 +1,12 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import {
-  Upload, X, Plus, ArrowLeft, Package,
+  Upload, X, Plus, Package,
   Tag, DollarSign, Hash, AlignLeft, Star,
   ImagePlus, Link as LinkIcon, FolderOpen,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const CATEGORIES = [
   "Fertilizer", "Pesticide", "Herbicide",
@@ -38,7 +39,7 @@ interface FormErrors {
 }
 
 const AddProduct = () => {
-  const { user } = useApp();
+  const { user, axios, shop } = useApp();
   const navigate = useNavigate();
 
   const [form, setForm] = useState<FormData>({
@@ -131,15 +132,48 @@ const AddProduct = () => {
   };
 
   // ── Submit ──
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const errs = validate();
-    if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (Object.keys(errs).length) {
+      setErrors(errs);
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSuccess(true);
-      setTimeout(() => navigate("/admin-dashboard/products"), 1500);
-    }, 1200);
+
+    const formData = new FormData();
+
+    formData.append("name", form.name);
+    formData.append("category", form.category);
+    formData.append("price", form.price);
+    formData.append("quantity", form.quantity);
+    formData.append("description", form.description);
+    formData.append("shopId", shop!._id);
+
+    form.images.forEach((img) => {
+      if (img.file) {
+        formData.append("images", img.file);
+      }
+    });
+
+    try {
+      const { data } = await axios.post("/api/shop/add-product", formData);
+
+      if (data.success) {
+        toast.success(data.message);
+        setSuccess(true);
+
+        setTimeout(() => {
+          navigate("/shop-dashboard/products");
+        }, 1500);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Upload failed");
+    }
+
+    setLoading(false);
   };
 
   // ── Success ──
