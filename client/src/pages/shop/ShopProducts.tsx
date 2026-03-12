@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { Search, Trash2, ChevronDown, PackageX, Package, Pencil, Check, X } from "lucide-react";
-import { dummyProducts } from "../../assets/assets";
-import type { Product } from "../../types/product";
+import { dummyProducts, dummyShops } from "../../assets/assets";
+import type { ProductType } from "../../types";
 
 type StockFilter = "all" | "instock" | "outofstock";
 
 const ShopProducts = () => {
-  const [products, setProducts] = useState<Product[]>(dummyProducts);
+  const [products, setProducts] = useState<ProductType[]>(dummyProducts);
   const [search, setSearch] = useState("");
   const [stockFilter, setStockFilter] = useState<StockFilter>("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
-  const [expandedProduct, setExpandedProduct] = useState<number | null>(null);
-  const [editingQty, setEditingQty] = useState<number | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
+  const [editingQty, setEditingQty] = useState<string | null>(null);
   const [qtyInput, setQtyInput] = useState<number>(0);
 
   // --- Derived ---
@@ -22,36 +22,40 @@ const ShopProducts = () => {
   const totalStock = products.reduce((sum, p) => sum + p.quantity, 0);
 
   // --- Actions ---
-  const toggleStock = (id: number) =>
+  const toggleStock = (id: string) =>
     setProducts((prev) =>
       prev.map((p) =>
         p._id === id ? { ...p, quantity: p.quantity === 0 ? 10 : 0 } : p
       )
     );
 
-  const startEditQty = (p: Product) => {
+  const startEditQty = (p: ProductType) => {
     setEditingQty(p._id);
     setQtyInput(p.quantity);
   };
 
-  const confirmQty = (id: number) => {
+  const confirmQty = (id: string) => {
     setProducts((prev) =>
       prev.map((p) => (p._id === id ? { ...p, quantity: Math.max(0, qtyInput) } : p))
     );
     setEditingQty(null);
   };
 
-  const deleteProduct = (id: number) => {
+  const deleteProduct = (id: string) => {
     setProducts((prev) => prev.filter((p) => p._id !== id));
     setDeleteConfirm(null);
   };
 
+  const productsWithShop = products.map((p) => {
+    const shop = dummyShops.find((s) => s._id === p.shopId);
+    return { ...p, shop };
+  });
   // --- Filters ---
-  const filtered = products.filter((p) => {
+  const filtered = productsWithShop.filter((p) => {
     const matchSearch =
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.category.toLowerCase().includes(search.toLowerCase()) ||
-      p.shop.shopName.toLowerCase().includes(search.toLowerCase());
+      p.shop?.shopName.toLowerCase().includes(search.toLowerCase());
     const matchStock =
       stockFilter === "all" ||
       (stockFilter === "instock" && p.quantity > 0) ||
@@ -187,7 +191,7 @@ const ShopProducts = () => {
                   </td>
 
                   {/* Shop */}
-                  <td className="px-5 py-3.5 text-gray-500 text-xs">{product.shop.shopName}</td>
+                  <td className="px-5 py-3.5 text-gray-500 text-xs">{product.shop?.shopName}</td>
 
                   {/* Price */}
                   <td className="px-5 py-3.5 text-primary font-bold text-sm">₹{product.price}</td>
@@ -234,11 +238,10 @@ const ShopProducts = () => {
                   {/* Stock Status */}
                   <td className="px-5 py-3.5">
                     <span
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${
-                        product.quantity > 0
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${product.quantity > 0
                           ? "bg-green-50 text-green-600"
                           : "bg-red-50 text-red-500"
-                      }`}
+                        }`}
                     >
                       {product.quantity > 0 ? "In Stock" : "Out of Stock"}
                     </span>
@@ -251,11 +254,10 @@ const ShopProducts = () => {
                       <button
                         onClick={() => toggleStock(product._id)}
                         title={product.quantity > 0 ? "Mark out of stock" : "Mark in stock"}
-                        className={`p-2 rounded-lg transition ${
-                          product.quantity > 0
+                        className={`p-2 rounded-lg transition ${product.quantity > 0
                             ? "hover:bg-amber-50 text-gray-400 hover:text-amber-500"
                             : "hover:bg-green-50 text-gray-400 hover:text-green-500"
-                        }`}
+                          }`}
                       >
                         {product.quantity > 0 ? (
                           <PackageX className="w-4 h-4" />
@@ -311,18 +313,16 @@ const ShopProducts = () => {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${
-                      product.quantity > 0
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${product.quantity > 0
                         ? "bg-green-50 text-green-600"
                         : "bg-red-50 text-red-500"
-                    }`}
+                      }`}
                   >
                     {product.quantity > 0 ? "In Stock" : "Out of Stock"}
                   </span>
                   <ChevronDown
-                    className={`w-4 h-4 text-gray-400 transition-transform ${
-                      expandedProduct === product._id ? "rotate-180" : ""
-                    }`}
+                    className={`w-4 h-4 text-gray-400 transition-transform ${expandedProduct === product._id ? "rotate-180" : ""
+                      }`}
                   />
                 </div>
               </div>
@@ -331,9 +331,9 @@ const ShopProducts = () => {
               {expandedProduct === product._id && (
                 <div className="border-t border-gray-100 px-4 py-3 bg-gray-50">
                   <div className="flex flex-col gap-1.5 text-xs text-gray-500 mb-4">
-                    <p>🏪 {product.shop.shopName}</p>
-                    <p>📍 {product.shop.location}</p>
-                    <p>📞 {product.shop.phone}</p>
+                    <p>🏪 {product.shop?.shopName}</p>
+                    <p>📍 {product.shop?.location}</p>
+                    <p>📞 {product.shop?.phone}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <span>📦 Quantity:</span>
                       {editingQty === product._id ? (
@@ -377,11 +377,10 @@ const ShopProducts = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={() => toggleStock(product._id)}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${
-                        product.quantity > 0
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${product.quantity > 0
                           ? "border-amber-200 text-amber-600 hover:bg-amber-50"
                           : "border-green-200 text-green-600 hover:bg-green-50"
-                      }`}
+                        }`}
                     >
                       {product.quantity > 0 ? (
                         <PackageX className="w-3.5 h-3.5" />

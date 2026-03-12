@@ -1,7 +1,9 @@
 import { assets } from "../assets/assets";
 import { Link } from "react-router-dom";
+import { useApp } from "../context/AppContext";
 
 const Footer = () => {
+  const {websiteEmail} = useApp();
   return (
     <footer className="px-6 md:px-16 lg:px-24 xl:px-32 pt-10 w-full text-gray-500 bg-light mt-20">
       <div className="flex flex-col md:flex-row justify-between w-full gap-10 border-b border-gray-500/20 pb-8">
@@ -89,8 +91,8 @@ const Footer = () => {
               </p>
               <p className="flex items-center gap-2">
                 <span>✉️</span>
-                <a href="mailto:support@farmerscafe.in" className="hover:text-primary transition">
-                  support@farmerscafe.in
+                <a href={`mailto:${websiteEmail}`} className="hover:text-primary transition">
+                  {websiteEmail}
                 </a>
               </p>
               <p className="flex items-center gap-2">

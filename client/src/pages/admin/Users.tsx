@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, Shield, ShieldOff, Trash2, UserCog, ChevronDown } from "lucide-react";
+import { Search, Shield, ShieldOff, Trash2, ChevronDown } from "lucide-react";
 import type { UserType } from "../../types";
 import { useApp } from "../../context/AppContext";
 import toast from "react-hot-toast";
@@ -24,7 +24,7 @@ const Users = () => {
     try {
       const { data } = await axios.get("/api/admin/users");
       if (data.success) {
-        const filtered = data.users.filter((u) => u._id !== user!._id);
+        const filtered = data.users.filter((u: UserType) => u._id !== user!._id);
 
         setUsers(filtered);
       } else {
@@ -47,19 +47,42 @@ const Users = () => {
   }
 
   // --- Actions ---
-  const toggleBlock = (id: string) =>
-    setUsers((prev) =>
-      (prev || []).map((u) => (u._id === id ? { ...u, isBlocked: !u.isBlocked } : u))
-    );
+  const toggleBlock = async (id: string) => {
 
-  const toggleRole = (id: string) =>
-    setUsers((prev) =>
-      (prev || []).map((u) =>
-        u._id === id ? { ...u, role: u.role === "admin" ? "user" : "admin" } : u
-      )
-    );
+    try {
+      const { data } = await axios.patch(`/api/admin/user/${id}/toggle`);
 
-  const deleteUser = (id: string) => {
+      if (data.success) {
+        setUsers((prev) => prev.map((u) => (u._id === id ? { ...u, isBlocked: !u.isBlocked } : u)))
+        toast.success(data.message)
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch (error: any) {
+      console.error(error.message);
+
+    }
+  }
+
+  // const toggleRole = (id: string) =>
+  //   setUsers((prev) =>
+  //     (prev || []).map((u) =>
+  //       u._id === id ? { ...u, role: u.role === "admin" ? "user" : "admin" } : u
+  //     )
+  //   );
+
+  const deleteUser = async (id: string) => {
+
+    try {
+
+      const { data } = await axios.delete(`/api/admin/user/${id}`);
+    } catch (error: any) {
+      console.error(error.message);
+
+    }
+
+
     setUsers((prev) => (prev || []).filter((u) => u._id !== id));
     setDeleteConfirm(null);
   };
@@ -70,7 +93,7 @@ const Users = () => {
     const matchSearch =
       fullName.includes(search.toLowerCase()) ||
       u.email.toLowerCase().includes(search.toLowerCase()) ||
-      u.location.toLowerCase().includes(search.toLowerCase()) ||
+      u.location?.toLowerCase().includes(search.toLowerCase()) ||
       String(u.phone).includes(search);
     const matchRole = roleFilter === "all" || u.role === roleFilter;
     const matchStatus =
@@ -242,13 +265,13 @@ const Users = () => {
                   {/* Actions */}
                   <td className="px-5 py-3.5">
                     <div className="flex items-center justify-end gap-1">
-                      <button
+                      {/* <button
                         onClick={() => toggleRole(user._id)}
                         title={user.role === "admin" ? "Demote to User" : "Promote to Admin"}
                         className="p-2 rounded-lg hover:bg-violet-50 text-gray-400 hover:text-violet-500 transition"
                       >
                         <UserCog className="w-4 h-4" />
-                      </button>
+                      </button> */}
                       <button
                         onClick={() => toggleBlock(user._id)}
                         title={user.isBlocked ? "Unblock" : "Block"}
@@ -347,13 +370,13 @@ const Users = () => {
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <button
+                    {/* <button
                       onClick={() => toggleRole(user._id)}
                       className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border border-violet-200 text-violet-600 hover:bg-violet-50 transition"
                     >
                       <UserCog className="w-3.5 h-3.5" />
                       {user.role === "admin" ? "Demote" : "Promote"}
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => toggleBlock(user._id)}
                       className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${user.isBlocked

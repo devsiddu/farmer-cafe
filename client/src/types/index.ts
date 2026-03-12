@@ -11,8 +11,10 @@ export interface ShopType {
   location: string;
   rating: number;
   isOpen: boolean;
-  status: "approved" | "cancelled" | "pending";
   phone: string;
+  status: "approved" | "rejected" | "pending" | "closed",
+  isDeleted: boolean,
+  deletedAt: Date | null
 }
 
 export interface ProductType {
@@ -22,12 +24,11 @@ export interface ProductType {
   quantity: number;
   price: number;
   rating: number;
-  shopId: string,
-  shop?: {
+  shopId: {
     shopName: string,
     location: string,
     phone: string,
-  };
+  },
   images: string[];
   description: string;
 }
@@ -57,6 +58,7 @@ export interface OrderType {
 
 export interface AppContext {
   axios: AxiosInstance;
+  websiteEmail: string;
   navigate: NavigateFunction;
   user: UserType | null;
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
@@ -65,10 +67,11 @@ export interface AppContext {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   logout: () => void;
   login: (email: string, password: string) => void;
-  register: (firstName: string, lastName: string, email: string, password: string, phone: string,location:string) => void;
+  register: (firstName: string, lastName: string, email: string, password: string, phone: string, location: string) => void;
   products: ProductType[] | null;
   shops: ShopType[] | null;
-  fetchProductById: (id: string) => ProductType | undefined;
+  shop: ShopType | null;
+  fetchProductById: (id: string) => Promise<ProductType | undefined>;
   fetchUser: () => void;
 }
 

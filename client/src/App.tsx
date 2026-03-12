@@ -25,6 +25,7 @@ import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import { useApp } from "./context/AppContext";
 import NetworkBanner from "./components/NetworkBanner";
+import AddProduct from "./pages/shop/AddProduct";
 const App = () => {
   const { pathname } = useLocation();
   const { user } = useApp()
@@ -67,6 +68,7 @@ const App = () => {
         <Route element={<ProtectRoute allowedRoles={['shop']} />}>
           <Route path="/shop-dashboard" element={<ShopLayout />}>
             <Route index element={<ShopDashboard />} />
+            <Route path="add-product" element={<AddProduct />} />
             <Route path="products" element={<ShopProducts />} />
             <Route path="bookings" element={<ShopBookings />} />
           </Route>

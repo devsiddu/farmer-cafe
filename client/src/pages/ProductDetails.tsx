@@ -52,16 +52,22 @@ const ProductDetails = () => {
   };
 
   useEffect(() => {
-    setLoading(true)
     if (!id) return;
 
-    const data = fetchProductById(id);
-    if (data) {
-      setProduct(data);
-      setThumbnail(data.images[0])
-    }
-    setLoading(false)
-  }, [id])
+    const loadProduct = async () => {
+      setLoading(true);
+
+      const data = await fetchProductById(id);
+      if (data) {
+        setProduct(data);
+        setThumbnail(data.images[0]);
+      }
+
+      setLoading(false);
+    };
+
+    loadProduct();
+  }, [id]);
 
 
   const QtyModal = ({
@@ -215,15 +221,15 @@ const ProductDetails = () => {
             <div className="bg-gray-50 rounded-xl p-4 flex flex-wrap gap-4 text-sm">
               <div className="flex items-center gap-2 text-secondary">
                 <img src={assets.store} width={14} alt="" />
-                <span>{product.shop?.shopName}</span>
+                <span>{product.shopId?.shopName}</span>
               </div>
               <div className="flex items-center gap-2 text-secondary">
                 <img src={assets.location} width={14} alt="" />
-                <span>{product.shop?.location}</span>
+                <span>{product.shopId?.location}</span>
               </div>
               <div className="flex items-center gap-2 text-secondary">
                 <img src={assets.phone} width={12} alt="" />
-                <span>{product.shop?.phone}</span>
+                <span>{product.shopId?.phone}</span>
               </div>
             </div>
 

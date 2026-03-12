@@ -43,6 +43,8 @@ export const dummyShops: ShopType[] = [
     isOpen: true,
     status: "approved",
     phone: "9876543210",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "698198hdweh343c913f84d13fd",
@@ -55,6 +57,8 @@ export const dummyShops: ShopType[] = [
     isOpen: true,
     status: "approved",
     phone: "9123456789",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "698198hdweheww3c913f84d13f4",
@@ -67,6 +71,8 @@ export const dummyShops: ShopType[] = [
     isOpen: false,
     status: "pending",
     phone: "9988766554",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "4d54f5s4s545f544w45f45e",
@@ -79,6 +85,8 @@ export const dummyShops: ShopType[] = [
     isOpen: true,
     status: "approved",
     phone: "9012345678",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "645545fg5t56y6y677u77uu7",
@@ -89,8 +97,10 @@ export const dummyShops: ShopType[] = [
     location: "Bengaluru Rural",
     rating: 4.8,
     isOpen: true,
-    status: "cancelled",
+    status: "rejected",
     phone: "9870011223",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "6dgu3e73g7363f35r63f63",
@@ -103,6 +113,8 @@ export const dummyShops: ShopType[] = [
     isOpen: false,
     status: "approved",
     phone: "9345677889",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "6vyd73yh7dy73h7d3t7",
@@ -115,6 +127,8 @@ export const dummyShops: ShopType[] = [
     isOpen: true,
     status: "approved",
     phone: "9887655443",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "87378y7y7e3yndy73ye7",
@@ -127,6 +141,8 @@ export const dummyShops: ShopType[] = [
     isOpen: true,
     status: "approved",
     phone: "9765433221",
+    deletedAt: null,
+    isDeleted: false,
   },
 ];
 
@@ -139,11 +155,6 @@ export const dummyProducts: ProductType[] = [
     rating: 4.5,
     quantity: 40,
     shopId: "698198hdweh343c913f84d13f4",
-    shop: {
-      shopName: "Kisan Agro Center",
-      location: "Gokak, Belagavi",
-      phone: "9876543210",
-    },
     images: [
       "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&auto=format&fit=crop",
@@ -161,11 +172,7 @@ export const dummyProducts: ProductType[] = [
     rating: 4.7,
     quantity: 0,
     shopId: "698198hdweh343c913f84d13f4",
-    shop: {
-      shopName: "Kisan Agro Center",
-      location: "Gokak, Belagavi",
-      phone: "9876543210",
-    },
+
     images: [
       "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop",
@@ -183,11 +190,7 @@ export const dummyProducts: ProductType[] = [
     quantity: 25,
     rating: 4.2,
     shopId: "698198hdweh343c913f84d13f4",
-    shop: {
-      shopName: "Kisan Agro Center",
-      location: "Gokak, Belagavi",
-      phone: "9876543210",
-    },
+
     images: [
       "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&auto=format&fit=crop",
@@ -205,11 +208,7 @@ export const dummyProducts: ProductType[] = [
     quantity: 60,
     rating: 4.0,
     shopId: "698198hdweh343c913f84d13f4",
-    shop: {
-      shopName: "Kisan Agro Center",
-      location: "Gokak, Belagavi",
-      phone: "9876543210",
-    },
+
     images: [
       "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&auto=format&fit=crop",
@@ -227,11 +226,7 @@ export const dummyProducts: ProductType[] = [
     quantity: 15,
     rating: 4.6,
     shopId: "698198hdweh343c913f84d13f4",
-    shop: {
-      shopName: "Kisan Agro Center",
-      location: "Gokak, Belagavi",
-      phone: "9876543210",
-    },
+
     images: [
       "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop",
@@ -249,11 +244,7 @@ export const dummyProducts: ProductType[] = [
     quantity: 80,
     rating: 4.4,
     shopId: "698198hdweh343c913f84d13f4",
-    shop: {
-      shopName: "Kisan Agro Center",
-      location: "Gokak, Belagavi",
-      phone: "9876543210",
-    },
+
     images: [
       "https://images.unsplash.com/photo-1560493676-04071185765b?w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&auto=format&fit=crop",
@@ -271,11 +262,7 @@ export const dummyProducts: ProductType[] = [
     quantity: 35,
     rating: 4.1,
     shopId: "698198hdweh343c913f84d13f4",
-    shop: {
-      shopName: "Kisan Agro Center",
-      location: "Gokak, Belagavi",
-      phone: "9876543210",
-    },
+
     images: [
       "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop",
@@ -293,11 +280,7 @@ export const dummyProducts: ProductType[] = [
     quantity: 0,
     rating: 4.3,
     shopId: "698198hdweh343c913f84d13f4",
-    shop: {
-      shopName: "Kisan Agro Center",
-      location: "Gokak, Belagavi",
-      phone: "9876543210",
-    },
+
     images: [
       "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1560493676-04071185765b?w=600&auto=format&fit=crop",
@@ -467,11 +450,6 @@ export const dummyBookings: OrderType[] = [
       quantity: 25,
       rating: 4.2,
       shopId: "698198hdweh343c913f84d13f4",
-      shop: {
-        shopName: "Kisan Agro Center",
-        location: "Gokak, Belagavi",
-        phone: "9876543210",
-      },
       images: [
         "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=600&auto=format&fit=crop",
@@ -495,11 +473,6 @@ export const dummyBookings: OrderType[] = [
       rating: 4.5,
       quantity: 40,
       shopId: "698198hdweh343c913f84d13f4",
-      shop: {
-        shopName: "Kisan Agro Center",
-        location: "Gokak, Belagavi",
-        phone: "9876543210",
-      },
       images: [
         "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&auto=format&fit=crop",
@@ -523,11 +496,6 @@ export const dummyBookings: OrderType[] = [
       quantity: 15,
       rating: 4.6,
       shopId: "698198hdweh343c913f84d13f4",
-      shop: {
-        shopName: "Kisan Agro Center",
-        location: "Gokak, Belagavi",
-        phone: "9876543210",
-      },
       images: [
         "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop",

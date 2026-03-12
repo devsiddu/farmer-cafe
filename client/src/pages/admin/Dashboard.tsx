@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ShoppingBag, Users, Store, Package, TrendingUp, ArrowUpRight } from "lucide-react";
-import { dummyProducts } from "../../assets/assets";
+import { dummyProducts, dummyShops } from "../../assets/assets";
 import { useApp } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 
@@ -22,7 +22,7 @@ const Dashboard = () => {
   // --- Derived stats from dummyProducts ---
   const totalProducts = dummyProducts.length;
 
-  const uniqueShops = new Set(dummyProducts.map((p) => p.shop?.shopName)).size;
+  const uniqueShops = new Set(dummyProducts.map((p) => p.shopId)).size;
 
   const totalStock = dummyProducts.reduce((sum, p) => sum + (p.quantity ?? 0), 0);
 
@@ -231,12 +231,12 @@ const Dashboard = () => {
           <div className="px-5 py-4 border-t border-gray-100 mt-1">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Shops</p>
             <div className="flex flex-wrap gap-2">
-              {[...new Set(dummyProducts.map((p) => p.shop?.shopName))].map((shop) => (
+              {dummyShops.map((shop) => (
                 <span
-                  key={shop}
+                  key={shop._id}
                   className="text-xs bg-secondary/10 text-secondary font-medium px-2.5 py-1 rounded-lg"
                 >
-                  {shop}
+                  {shop.shopName}
                 </span>
               ))}
             </div>

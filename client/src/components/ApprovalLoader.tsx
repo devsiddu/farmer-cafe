@@ -7,7 +7,7 @@ const ApprovalLoader = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-gradient-to-b from-amber-50 via-orange-50 to-yellow-50 overflow-hidden px-4">
+    <div className="fixed inset-0 z-200 flex items-center justify-center bg-linear-to-b from-amber-50 via-orange-50 to-yellow-50 overflow-hidden px-4">
 
       <style>{`
         @keyframes float {
@@ -50,7 +50,7 @@ const ApprovalLoader = () => {
       <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-xl overflow-hidden border border-amber-100">
 
         {/* Top accent */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400" />
+        <div className="h-1.5 w-full bg-linear-to-r from-amber-400 via-orange-400 to-amber-400" />
 
         <div className="px-8 py-8 flex flex-col items-center text-center">
 

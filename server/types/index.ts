@@ -9,7 +9,9 @@ export interface IShop extends Document {
   rating: number;
   isOpen: boolean;
   phone: string;
-  status: "approved" | "rejected" | "pending"
+  status: "approved" | "rejected" | "pending" | "closed",
+  isDeleted: boolean,
+  deletedAt: Date | null
 }
 
 export interface IProduct {
@@ -19,11 +21,6 @@ export interface IProduct {
   price: number;
   rating: number;
   shopId: Types.ObjectId;
-  shop?: {
-    shopName: string;
-    location: string;
-    phone: number;
-  };
   images: string[];
   description: string;
 }
