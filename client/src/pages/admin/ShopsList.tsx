@@ -16,7 +16,7 @@ const ShopsList = () => {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [sortBy, setSortBy] = useState<"rating" | "name">("rating");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "table">("table");
 
   const { axios } = useApp();
   const fetchShops = async () => {
@@ -42,7 +42,7 @@ const ShopsList = () => {
       if (data.success) {
         setShops((prev) => prev.map((s) => s._id === shopId ? { ...s, status: status } : s))
         toast.success(data.message);
-      }else{
+      } else {
         toast.error(data.message);
       }
     } catch (error: any) {
@@ -50,9 +50,20 @@ const ShopsList = () => {
       toast.error(error.message);
     }
   }
-  const deleteShop = (shopId: string) => {
-    setShops((prev) => (prev || []).filter((s) => s._id !== shopId));
-    setDeleteConfirm(null);
+  const deleteShop = async (shopId: string) => {
+
+    try {
+      const { data } = await axios.patch(`/api/admin/shop/${shopId}`);
+      if (data.success) {
+        toast.success(data.message)
+        setShops((prev) => prev.map(s => s._id !== shopId ? { ...s, status: "pending" } : s));
+        setDeleteConfirm(null);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      console.error(error.message)
+    }
   };
 
   // --- Filters + Sort ---

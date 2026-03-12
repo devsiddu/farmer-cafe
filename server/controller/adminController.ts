@@ -43,18 +43,68 @@ export const toggleShop = async (req: Request, res: Response) => {
     const { status } = req.body;
 
     if (!id || !status) {
-      return res.json({ success: false, message: "All fields are required" })
+      return res.json({ success: false, message: "All fields are required" });
     }
     const shop = await Shop.findById(id);
 
     if (!shop) {
-      return res.json({ success: false, message: "Shop not found" })
+      return res.json({ success: false, message: "Shop not found" });
     }
 
     shop.status = status;
     await shop.save();
 
-    res.json({ success: true, message: "Updated shop" })
+    res.json({ success: true, message: "Updated shop" });
+  } catch (error: any) {
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+// PATCH: /api/admin/user/:id/toggle
+// toggle user status
+
+export const toggleBlock = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.json({ success: false, message: "Missing id" });
+    }
+
+    const user = await User.findById(id);
+    if (!id) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    user!.isBlocked = !user!.isBlocked;
+    await user?.save();
+
+    return res.json({ success: true, message: "User updated!" });
+  } catch (error: any) {
+    return res.json({ success: false, message: error.message });
+    console.error(error);
+  }
+};
+
+// PATCH: /api/admin/shop/:id
+// delete shop 
+
+export const blockShop = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.json({ success: false, message: "Id not found" })
+    }
+
+    const shop = await Shop.findById(id);
+    if (!shop) {
+      return res.json({ success: false, message: "Shop not found" })
+    }
+
+    shop.status = "pending";
+    await shop.save();
+
+    return res.json({ success: true, message: "Shop blocked!" })
 
   } catch (error: any) {
     return res.json({ success: false, message: error.message })

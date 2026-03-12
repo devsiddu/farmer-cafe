@@ -69,6 +69,11 @@ export const login = async (req: Request, res: Response) => {
             return res.json({ success: false, message: "Wrong password!" })
         }
 
+        if (user.isBlocked) {
+            return res.json({ success: false, message: "Your account is blocked, please contact farmer cafe team!" })
+        }
+
+
         const token = jwt.sign(
             { id: user._id },
             process.env.JWT_SECRET as string,
