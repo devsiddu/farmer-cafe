@@ -6,6 +6,7 @@ import ApprovalLoader from "../../components/ApprovalLoader";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import type { ShopType } from "../../types";
+import ShopDeleted from "../../components/shop/ShopDeleted";
 
 const ShopLayout = () => {
   const { user, axios } = useApp();
@@ -31,6 +32,9 @@ const ShopLayout = () => {
 
   if (user?.role === "shop" && shop?.status !== "approved") {
     return <ApprovalLoader />
+  }
+  if (shop?.isDeleted) {
+    return <ShopDeleted />
   }
   return (
     <div className="min-h-screen">

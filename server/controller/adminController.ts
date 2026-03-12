@@ -89,7 +89,7 @@ export const toggleBlock = async (req: Request, res: Response) => {
 // PATCH: /api/admin/shop/:id
 // delete shop 
 
-export const blockShop = async (req: Request, res: Response) => {
+export const toggleDeleteShop = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     if (!id) {
@@ -101,10 +101,16 @@ export const blockShop = async (req: Request, res: Response) => {
       return res.json({ success: false, message: "Shop not found" })
     }
 
-    shop.status = "pending";
+    shop.isDeleted = !shop.isDeleted;
+    if (shop.isDeleted) {
+      shop.deletedAt = new Date
+    } else {
+      shop.deletedAt = null;
+    }
+
     await shop.save();
 
-    return res.json({ success: true, message: "Shop blocked!" })
+    return res.json({ success: true, message: shop.isDeleted ? "Shop deleted!" : "Shop restored!", isDeleted: shop.isDeleted })
 
   } catch (error: any) {
     return res.json({ success: false, message: error.message })

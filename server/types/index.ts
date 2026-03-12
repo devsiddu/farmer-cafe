@@ -9,7 +9,9 @@ export interface IShop extends Document {
   rating: number;
   isOpen: boolean;
   phone: string;
-  status: "approved" | "rejected" | "pending"
+  status: "approved" | "rejected" | "pending" | "closed",
+  isDeleted: boolean,
+  deletedAt: Date | null
 }
 
 export interface IProduct {

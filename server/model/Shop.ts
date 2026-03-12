@@ -12,7 +12,9 @@ const shopSchema = new mongoose.Schema<IShop>(
         phone: { type: String, required: true },
         rating: { type: Number, default: 2 },
         isOpen: { type: Boolean, default: true },
-        status: { type: String, enum: ["pending", "rejected", "approved"], default: "pending" },
+        status: { type: String, enum: ["pending", "rejected", "approved","closed"], default: "pending" },
+        isDeleted: {type: Boolean, default: false},
+        deletedAt: {type: Date, default: null}
     }, {
     timestamps: true
 }

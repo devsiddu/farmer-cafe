@@ -19,6 +19,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
     axios.defaults.withCredentials = true;
 
+    const websiteEmail = import.meta.env.VITE_WEBSITE_EMAIL;
+
     const register = async (firstName: string, lastName: string, email: string, password: string, phone: string, location: string) => {
         try {
 
@@ -129,7 +131,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AppContext.Provider value={{ axios, navigate, user, setUser, loading, setLoading, logout, login, products, shops, fetchProductById, register, authLoading, fetchUser }}>
+        <AppContext.Provider value={{ axios, websiteEmail,navigate, user, setUser, loading, setLoading, logout, login, products, shops, fetchProductById, register, authLoading, fetchUser }}>
             {children}
         </AppContext.Provider>
     );

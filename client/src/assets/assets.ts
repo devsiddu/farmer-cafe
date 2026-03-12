@@ -43,6 +43,8 @@ export const dummyShops: ShopType[] = [
     isOpen: true,
     status: "approved",
     phone: "9876543210",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "698198hdweh343c913f84d13fd",
@@ -55,6 +57,8 @@ export const dummyShops: ShopType[] = [
     isOpen: true,
     status: "approved",
     phone: "9123456789",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "698198hdweheww3c913f84d13f4",
@@ -67,6 +71,8 @@ export const dummyShops: ShopType[] = [
     isOpen: false,
     status: "pending",
     phone: "9988766554",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "4d54f5s4s545f544w45f45e",
@@ -79,6 +85,8 @@ export const dummyShops: ShopType[] = [
     isOpen: true,
     status: "approved",
     phone: "9012345678",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "645545fg5t56y6y677u77uu7",
@@ -89,8 +97,10 @@ export const dummyShops: ShopType[] = [
     location: "Bengaluru Rural",
     rating: 4.8,
     isOpen: true,
-    status: "cancelled",
+    status: "rejected",
     phone: "9870011223",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "6dgu3e73g7363f35r63f63",
@@ -103,6 +113,8 @@ export const dummyShops: ShopType[] = [
     isOpen: false,
     status: "approved",
     phone: "9345677889",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "6vyd73yh7dy73h7d3t7",
@@ -115,6 +127,8 @@ export const dummyShops: ShopType[] = [
     isOpen: true,
     status: "approved",
     phone: "9887655443",
+    deletedAt: null,
+    isDeleted: false,
   },
   {
     _id: "87378y7y7e3yndy73ye7",
@@ -127,6 +141,8 @@ export const dummyShops: ShopType[] = [
     isOpen: true,
     status: "approved",
     phone: "9765433221",
+    deletedAt: null,
+    isDeleted: false,
   },
 ];
 

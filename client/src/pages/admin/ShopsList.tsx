@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, Trash2, ChevronDown, Star, Phone, MapPin, Store, Check, X } from "lucide-react";
+import { Search, ChevronDown, Star, Phone, MapPin, Store, Check, X, ToggleLeft, ToggleRight } from "lucide-react";
 import type { ShopType } from "../../types";
 import { useApp } from "../../context/AppContext";
 import toast from "react-hot-toast";
@@ -7,7 +7,7 @@ import Spinner from "../../components/Spinner";
 
 
 type StatusFilter = "all" | "open" | "closed";
-type ShopStatus = "pending" | "approved" | "cancelled";
+type ShopStatus = "approved" | "rejected" | "pending" | "closed";
 
 const ShopsList = () => {
   const [shops, setShops] = useState<ShopType[]>([]);
@@ -50,16 +50,21 @@ const ShopsList = () => {
       toast.error(error.message);
     }
   }
-  const deleteShop = async (shopId: string) => {
+  const toggleDeleteShop = async (shopId: string) => {
 
     try {
       const { data } = await axios.patch(`/api/admin/shop/${shopId}`);
+
       if (data.success) {
-        toast.success(data.message)
-        setShops((prev) => prev.map(s => s._id !== shopId ? { ...s, status: "pending" } : s));
+        toast.success(data.message);
+
+        setShops((prev) =>
+          prev.map((s) =>
+            s._id === shopId ? { ...s, isDeleted: data.isDeleted } : s
+          )
+        );
+
         setDeleteConfirm(null);
-      } else {
-        toast.error(data.message);
       }
     } catch (error: any) {
       console.error(error.message)
@@ -216,12 +221,12 @@ const ShopsList = () => {
                   />
                   {/* Status Badge */}
                   <span
-                    className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-lg ${shop.isOpen
+                    className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-lg ${shop.isDeleted
                       ? "bg-green-500 text-white"
                       : "bg-gray-700/80 text-white"
                       }`}
                   >
-                    {shop.isOpen ? "Open" : "Closed"}
+                    {shop.isDeleted ? "Deleted" : "Active"}
                   </span>
                   {/* Rating Badge */}
                   <span className="absolute top-2 right-2 bg-white/90 text-amber-500 text-[10px] font-bold px-2 py-0.5 rounded-lg flex items-center gap-0.5">
@@ -250,7 +255,7 @@ const ShopsList = () => {
                     <span className={`flex-1 flex items-center justify-center gap-1.5 py-1 px-1 rounded-xl text-xs font-semibold border transition 
                           ${shop.status === "pending" && "border-amber-200 text-amber-600 hover:bg-amber-50"}
                           ${shop.status === "approved" && "border-gray-200 text-gray-600 hover:bg-amber-50"}
-                          ${shop.status === "cancelled" && "border-red-200 text-red-600 hover:bg-green-50"
+                          ${shop.status === "rejected" && "border-red-200 text-red-600 hover:bg-green-50"
                       }`}>
                       {shop.status}
                     </span>
@@ -266,7 +271,7 @@ const ShopsList = () => {
 
                       </button>}
                       {shop.status === "pending" && <button
-                        onClick={() => toggleShop(shop._id, "cancelled")}
+                        onClick={() => toggleShop(shop._id, "rejected")}
                         className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${shop.isOpen
                           ? "border-amber-200 text-amber-600 hover:bg-amber-50"
                           : "border-green-200 text-green-600 hover:bg-green-50"
@@ -282,7 +287,11 @@ const ShopsList = () => {
                     onClick={() => setDeleteConfirm(shop._id)}
                     className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border border-red-200 text-red-500 hover:bg-red-50 transition"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    {shop.isDeleted ? (
+                      <ToggleRight className="w-4 h-4" />
+                    ) : (
+                      <ToggleLeft className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -302,8 +311,8 @@ const ShopsList = () => {
                 <th className="text-left px-5 py-3 font-semibold">Location</th>
                 <th className="text-left px-5 py-3 font-semibold">Phone</th>
                 <th className="text-left px-5 py-3 font-semibold">Rating</th>
-                <th className="text-left px-5 py-3 font-semibold">Status</th>
                 <th className="text-left px-5 py-3 font-semibold">Verification Status</th>
+                <th className="text-left px-5 py-3 font-semibold">Status</th>
                 <th className="text-right px-5 py-3 font-semibold">Actions</th>
               </tr>
             </thead>
@@ -344,17 +353,6 @@ const ShopsList = () => {
                     </td>
                     {/* Status */}
                     <td className="px-5 py-3.5">
-                      <span
-                        className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${shop.isOpen
-                          ? "bg-green-50 text-green-600"
-                          : "bg-gray-100 text-gray-500"
-                          }`}
-                      >
-                        {shop.isOpen ? "Open" : "Closed"}
-                      </span>
-                    </td>
-                    {/* Status */}
-                    <td className="px-5 py-3.5">
                       <div className="flex items-center justify-center gap-1">
                         <span
                           className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${shop.status === "approved"
@@ -375,7 +373,7 @@ const ShopsList = () => {
                         }
                         {shop.status === "pending" &&
                           <button
-                            onClick={() => toggleShop(shop._id, "cancelled")}
+                            onClick={() => toggleShop(shop._id, "rejected")}
                             title={"Cancel shop"}
                             className={`p-2 rounded-lg transition hover:bg-green-50 text-gray-400 hover:text-green-500`}
                           >
@@ -384,6 +382,17 @@ const ShopsList = () => {
                         }
                       </div>
                     </td>
+                    {/* Status */}
+                    <td className="px-5 py-3.5">
+                      <span
+                        className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${shop.isDeleted
+                          ? "bg-green-50 text-green-600"
+                          : "bg-gray-100 text-gray-500"
+                          }`}
+                      >
+                        {shop.isDeleted ? "Deleted" : "Active"}
+                      </span>
+                    </td>
                     {/* Actions */}
                     <td className="px-5 py-3.5 text-center">
                       <button
@@ -391,7 +400,11 @@ const ShopsList = () => {
                         title="Delete shop"
                         className="p-2 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        {shop.isDeleted ? (
+                          <ToggleRight className="w-4 h-4" />
+                        ) : (
+                          <ToggleLeft className="w-4 h-4" />
+                        )}
                       </button>
                     </td>
                   </tr>
@@ -411,7 +424,7 @@ const ShopsList = () => {
               alt={deleteTarget.shopName}
               className="w-16 h-16 rounded-2xl object-cover border border-gray-100 mb-3"
             />
-            <h2 className="text-base font-bold text-gray-800">Delete Shop?</h2>
+            <h2 className="text-base font-bold text-gray-800">{deleteTarget.isDeleted ? "Restore" : "Delete"} Shop?</h2>
             <p className="text-sm text-gray-600 mt-1 font-medium">{deleteTarget.shopName}</p>
             <p className="text-xs text-gray-400 mt-1 mb-6">
               This will permanently remove the shop and all its listings. This action cannot be undone.
@@ -424,10 +437,10 @@ const ShopsList = () => {
                 Cancel
               </button>
               <button
-                onClick={() => deleteShop(deleteConfirm)}
+                onClick={() => toggleDeleteShop(deleteConfirm)}
                 className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-red-500 text-white hover:bg-red-600 transition active:scale-95"
               >
-                Delete
+                {deleteTarget.isDeleted ? "Restore" : "Delete"}
               </button>
             </div>
           </div>

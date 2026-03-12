@@ -69,13 +69,13 @@ const mockBookings: Booking[] = [
 
 const statusStyles = {
   confirmed: "bg-green-50 text-green-600",
-  pending:   "bg-amber-50 text-amber-600",
+  pending: "bg-amber-50 text-amber-600",
   cancelled: "bg-red-50 text-red-400",
 };
 
 const statusLabels = {
   confirmed: "Confirmed",
-  pending:   "Pending",
+  pending: "Pending",
   cancelled: "Cancelled",
 };
 
@@ -83,17 +83,17 @@ const ShopOwnerDashboard = () => {
   const { user } = useApp();
   const navigate = useNavigate();
 
-  const myProducts    = dummyProducts;
+  const myProducts = dummyProducts;
   const recentProducts = [...myProducts].slice(-5).reverse();
 
-  const totalProducts  = myProducts.length;
-  const outOfStock     = myProducts.filter((p) => p.quantity === 0).length;
-  const inStock        = myProducts.filter((p) => p.quantity > 0).length;
-  const totalStock     = myProducts.reduce((sum, p) => sum + (p.quantity ?? 0), 0);
-  const totalBookings  = mockBookings.length;
+  const totalProducts = myProducts.length;
+  const outOfStock = myProducts.filter((p) => p.quantity === 0).length;
+  const inStock = myProducts.filter((p) => p.quantity > 0).length;
+  const totalStock = myProducts.reduce((sum, p) => sum + (p.quantity ?? 0), 0);
+  const totalBookings = mockBookings.length;
   const confirmedCount = mockBookings.filter((b) => b.status === "confirmed").length;
-  const pendingCount   = mockBookings.filter((b) => b.status === "pending").length;
-  const totalRevenue   = mockBookings
+  const pendingCount = mockBookings.filter((b) => b.status === "pending").length;
+  const totalRevenue = mockBookings
     .filter((b) => b.status === "confirmed")
     .reduce((sum, b) => sum + b.total, 0);
   const avgRating =
