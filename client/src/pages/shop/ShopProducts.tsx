@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Search, Trash2, ChevronDown, PackageX, Package, Pencil, Check, X } from "lucide-react";
-import { dummyProducts, dummyShops } from "../../assets/assets";
+import { dummyProducts } from "../../assets/assets";
 import type { ProductType } from "../../types";
+import { useApp } from "../../context/AppContext";
 
 type StockFilter = "all" | "instock" | "outofstock";
 
 const ShopProducts = () => {
-  const [products, setProducts] = useState<ProductType[]>(dummyProducts);
+  const { products, setProducts, shop } = useApp();
   const [search, setSearch] = useState("");
   const [stockFilter, setStockFilter] = useState<StockFilter>("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -45,17 +46,13 @@ const ShopProducts = () => {
     setProducts((prev) => prev.filter((p) => p._id !== id));
     setDeleteConfirm(null);
   };
-
-  const productsWithShop = products.map((p) => {
-    const shop = dummyShops.find((s) => s._id === p.shopId);
-    return { ...p, shop };
-  });
+  const shopProducts = products.filter(p => p.shopId?._id === shop?._id)
   // --- Filters ---
-  const filtered = productsWithShop.filter((p) => {
+  const filtered = shopProducts.filter((p) => {
     const matchSearch =
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.category.toLowerCase().includes(search.toLowerCase()) ||
-      p.shop?.shopName.toLowerCase().includes(search.toLowerCase());
+      p.shopId?.shopName.toLowerCase().includes(search.toLowerCase());
     const matchStock =
       stockFilter === "all" ||
       (stockFilter === "instock" && p.quantity > 0) ||
@@ -191,7 +188,7 @@ const ShopProducts = () => {
                   </td>
 
                   {/* Shop */}
-                  <td className="px-5 py-3.5 text-gray-500 text-xs">{product.shop?.shopName}</td>
+                  <td className="px-5 py-3.5 text-gray-500 text-xs">{product.shopId?.shopName}</td>
 
                   {/* Price */}
                   <td className="px-5 py-3.5 text-primary font-bold text-sm">₹{product.price}</td>
@@ -239,8 +236,8 @@ const ShopProducts = () => {
                   <td className="px-5 py-3.5">
                     <span
                       className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${product.quantity > 0
-                          ? "bg-green-50 text-green-600"
-                          : "bg-red-50 text-red-500"
+                        ? "bg-green-50 text-green-600"
+                        : "bg-red-50 text-red-500"
                         }`}
                     >
                       {product.quantity > 0 ? "In Stock" : "Out of Stock"}
@@ -255,8 +252,8 @@ const ShopProducts = () => {
                         onClick={() => toggleStock(product._id)}
                         title={product.quantity > 0 ? "Mark out of stock" : "Mark in stock"}
                         className={`p-2 rounded-lg transition ${product.quantity > 0
-                            ? "hover:bg-amber-50 text-gray-400 hover:text-amber-500"
-                            : "hover:bg-green-50 text-gray-400 hover:text-green-500"
+                          ? "hover:bg-amber-50 text-gray-400 hover:text-amber-500"
+                          : "hover:bg-green-50 text-gray-400 hover:text-green-500"
                           }`}
                       >
                         {product.quantity > 0 ? (
@@ -314,8 +311,8 @@ const ShopProducts = () => {
                 <div className="flex items-center gap-2 shrink-0">
                   <span
                     className={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${product.quantity > 0
-                        ? "bg-green-50 text-green-600"
-                        : "bg-red-50 text-red-500"
+                      ? "bg-green-50 text-green-600"
+                      : "bg-red-50 text-red-500"
                       }`}
                   >
                     {product.quantity > 0 ? "In Stock" : "Out of Stock"}
@@ -331,9 +328,9 @@ const ShopProducts = () => {
               {expandedProduct === product._id && (
                 <div className="border-t border-gray-100 px-4 py-3 bg-gray-50">
                   <div className="flex flex-col gap-1.5 text-xs text-gray-500 mb-4">
-                    <p>🏪 {product.shop?.shopName}</p>
-                    <p>📍 {product.shop?.location}</p>
-                    <p>📞 {product.shop?.phone}</p>
+                    <p>🏪 {product.shopId?.shopName}</p>
+                    <p>📍 {product.shopId?.location}</p>
+                    <p>📞 {product.shopId?.phone}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <span>📦 Quantity:</span>
                       {editingQty === product._id ? (
@@ -378,8 +375,8 @@ const ShopProducts = () => {
                     <button
                       onClick={() => toggleStock(product._id)}
                       className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold border transition ${product.quantity > 0
-                          ? "border-amber-200 text-amber-600 hover:bg-amber-50"
-                          : "border-green-200 text-green-600 hover:bg-green-50"
+                        ? "border-amber-200 text-amber-600 hover:bg-amber-50"
+                        : "border-green-200 text-green-600 hover:bg-green-50"
                         }`}
                     >
                       {product.quantity > 0 ? (
