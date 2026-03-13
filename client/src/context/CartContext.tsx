@@ -1,47 +1,47 @@
 import React, { createContext, useContext, useState } from "react";
 import { useApp } from "./AppContext";
 import toast from "react-hot-toast";
-import type { ProductType } from "../types";
+import type { CartContextType, CartItem, ProductType } from "../types";
 
-export interface CartItem {
-  product: ProductType;
-  qty: number;
-}
-
-interface CartContextType {
-  cartItems: CartItem[];
-  addToCart: (product: ProductType, qty: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateQty: (productId: string, qty: number) => void;
-  clearCart: () => void;
-  totalItems: number;
-  totalPrice: number;
-}
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const {user, navigate} = useApp();
-  
-  
-  const addToCart = (product: ProductType, qty: number) => {
-    if(!user){
+  const { user, navigate, axios } = useApp();
+
+
+  const addToCart = async (product: ProductType, qty: number) => {
+    if (!user) {
       toast.error("Please login to add product to cart");
       navigate("/login");
       return;
-    }  
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.product._id === product._id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product._id === product._id
-            ? { ...item, qty: Math.min(item.qty + qty, product.quantity) }
-            : item
-        );
+    }
+
+    try {
+      const { data } = await axios.post("/api/cart/", { product, qty });
+      if (data.success) {
+        setCartItems((prev) => {
+          const existing = prev.find((item) => item.product._id === product._id);
+          if (existing) {
+            return prev.map((item) =>
+              item.product._id === product._id
+                ? { ...item, qty: Math.min(item.qty + qty, product.quantity) }
+                : item
+            );
+          }
+          return [...prev, { product, qty }];
+        });
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
       }
-      return [...prev, { product, qty }];
-    });
+
+    } catch (error: any) {
+      console.error(error.message);
+      toast.error(error.message)
+
+    }
   };
 
   const removeFromCart = (productId: string) => {
