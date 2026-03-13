@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { assets, dummyProducts } from "../assets/assets";
+import { assets } from "../assets/assets";
 import Card from "../components/Card";
 import type { ProductType, ShopType } from "../types";
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 const ShopDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const { axios, setLoading } = useApp();
+  const { axios, setLoading, products } = useApp();
   const [shop, setShop] = useState<ShopType | null>(null)
 
   const fetchShopById = async (id: string) => {
@@ -30,7 +30,7 @@ const ShopDetails = () => {
     fetchShopById(id as string);
   }, [id])
 
-  const products = dummyProducts.filter((p: ProductType) => p.shopId === id);
+  const filteredProducts = products?.filter((p: ProductType) => p.shopId._id === id);
 
   if (!shop) {
     return (
@@ -91,19 +91,19 @@ const ShopDetails = () => {
         <div className="flex items-center gap-2 mb-5">
           <h2 className="text-lg font-semibold text-gray-700">Products</h2>
           <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
-            {products.length}
+            {filteredProducts.length}
           </span>
         </div>
 
-        {products.length > 0 ? (
+        {filteredProducts.length > 0 ? (
           <div className="flex flex-wrap justify-center md:justify-start gap-5">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <Card product={product} key={product._id} />
             ))}
           </div>
         ) : (
           <p className="text-center text-gray-400 py-16 text-sm">
-            No products listed for this shop yet.
+            No filteredProducts listed for this shop yet.
           </p>
         )}
       </div>

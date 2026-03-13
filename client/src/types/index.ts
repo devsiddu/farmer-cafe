@@ -68,8 +68,9 @@ export interface AppContext {
   logout: () => void;
   login: (email: string, password: string) => void;
   register: (firstName: string, lastName: string, email: string, password: string, phone: string, location: string) => void;
-  products: ProductType[] | null;
-  shops: ShopType[] | null;
+  products: ProductType[] | [];
+  setProducts: React.Dispatch<React.SetStateAction<ProductType[]>>
+  shops: ShopType[] | [];
   shop: ShopType | null;
   fetchProductById: (id: string) => Promise<ProductType | undefined>;
   fetchUser: () => void;

@@ -27,7 +27,7 @@ export const getProductById = async (req: Request, res: Response) => {
         if (!id) {
             return res.json({ success: false, message: "Id not found" })
         }
-        const product = await Product.findById(id);
+        const product = await Product.findById(id).populate("shopId","shopName location phone");
         if (!product) {
             return res.json({ success: false, message: "Product not found" })
         }

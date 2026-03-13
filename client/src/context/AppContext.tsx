@@ -3,7 +3,6 @@ import type { AppContext as AppContextType, ProductType, ShopType, UserType } fr
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { dummyProducts } from "../assets/assets";
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -95,7 +94,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             setLoading(true)
             const { data } = await axios.get("/api/products");
             if (data.success) {
-                setProducts(dummyProducts)
+                setProducts(data.products)
             } else {
                 toast.error(data.message)
                 setProducts([]);
@@ -156,10 +155,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         fetchShops();
         fetchUserShop();
         fetchProducts();
-    }, []);
+    }, [navigate]);
 
     return (
-        <AppContext.Provider value={{ axios, websiteEmail, navigate, user, setUser, loading, setLoading, logout, login, products, shops, fetchProductById, register, authLoading, fetchUser, shop }}>
+        <AppContext.Provider value={{ axios, websiteEmail, navigate, user, setUser, loading, setLoading, logout, login, products,setProducts, shops, fetchProductById, register, authLoading, fetchUser, shop }}>
             {children}
         </AppContext.Provider>
     );
