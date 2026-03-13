@@ -3,18 +3,19 @@ import { Search, Trash2, ChevronDown, PackageX, Package, Pencil, Check, X } from
 import { dummyProducts } from "../../assets/assets";
 import type { ProductType } from "../../types";
 import { useApp } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 type StockFilter = "all" | "instock" | "outofstock";
 
 const ShopProducts = () => {
-  const { products, setProducts, shop } = useApp();
+  const { products, setProducts, shop, axios } = useApp();
   const [search, setSearch] = useState("");
   const [stockFilter, setStockFilter] = useState<StockFilter>("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
   const [editingQty, setEditingQty] = useState<string | null>(null);
-  const [qtyInput, setQtyInput] = useState<number>(0);
+  const [quantity, setQuantity] = useState<number>(0);
 
   // --- Derived ---
   const categories = ["all", ...Array.from(new Set(dummyProducts.map((p) => p.category)))];
@@ -23,30 +24,78 @@ const ShopProducts = () => {
   const totalStock = products.reduce((sum, p) => sum + p.quantity, 0);
 
   // --- Actions ---
-  const toggleStock = (id: string) =>
-    setProducts((prev) =>
-      prev.map((p) =>
-        p._id === id ? { ...p, quantity: p.quantity === 0 ? 10 : 0 } : p
-      )
-    );
+  const toggleStock = async (id: string) => {
+    const product = products.find(p => p._id === id);
+    if (!product) return;
+    const newQty = product.quantity === 0 ? 10 : 0;
+    try {
+      const { data } = await axios.patch(`/api/products/${id}/quantity`, { quantity: newQty });
+      if (data.success) {
+        setProducts((prev) =>
+          prev.map((p) =>
+            p._id === id ? { ...p, quantity: p.quantity === 0 ? 10 : 0 } : p
+          )
+        )
+        toast.success(data.message)
+        setEditingQty(null);
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch (error: any) {
+      console.log(error.message)
+      toast.error(error.message)
+    }
+
+  };
 
   const startEditQty = (p: ProductType) => {
     setEditingQty(p._id);
-    setQtyInput(p.quantity);
+    setQuantity(p.quantity);
   };
 
-  const confirmQty = (id: string) => {
+  const confirmQty = async (id: string) => {
+
+    try {
+      const { data } = await axios.patch(`/api/products/${id}/quantity`, { quantity });
+      if (data.success) {
+        setProducts(prev =>
+          prev.map(p => p._id === id ? { ...p, quantity: Math.max(0, quantity) } : p)
+        )
+        toast.success(data.message)
+        setEditingQty(null);
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch (error: any) {
+      console.log(error.message)
+      toast.error(error.message)
+    }
+
     setProducts((prev) =>
-      prev.map((p) => (p._id === id ? { ...p, quantity: Math.max(0, qtyInput) } : p))
+      prev.map((p) => (p._id === id ? { ...p, quantity: Math.max(0, quantity) } : p))
     );
     setEditingQty(null);
   };
 
-  const deleteProduct = (id: string) => {
-    setProducts((prev) => prev.filter((p) => p._id !== id));
+  const deleteProduct = async (id: string) => {
+
+    try {
+      const { data } = await axios.delete(`/api/products/${id}`);
+      if (data.success) {
+        toast.success(data.message)
+        setProducts((prev) => prev.filter((p) => p._id !== id));
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error: any) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
     setDeleteConfirm(null);
   };
-  const shopProducts = products.filter(p => p.shopId?._id === shop?._id)
+  const shopProducts = products.filter(p => p.shopId._id === shop?._id)
   // --- Filters ---
   const filtered = shopProducts.filter((p) => {
     const matchSearch =
@@ -200,8 +249,8 @@ const ShopProducts = () => {
                         <input
                           type="number"
                           min={0}
-                          value={qtyInput}
-                          onChange={(e) => setQtyInput(Number(e.target.value))}
+                          value={quantity}
+                          onChange={(e) => setQuantity(Number(e.target.value))}
                           className="w-16 px-2 py-1 text-xs border border-primary/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary/30"
                           autoFocus
                         />
@@ -338,8 +387,8 @@ const ShopProducts = () => {
                           <input
                             type="number"
                             min={0}
-                            value={qtyInput}
-                            onChange={(e) => setQtyInput(Number(e.target.value))}
+                            value={quantity}
+                            onChange={(e) => setQuantity(Number(e.target.value))}
                             className="w-16 px-2 py-1 text-xs border border-primary/40 rounded-lg focus:outline-none"
                             autoFocus
                           />

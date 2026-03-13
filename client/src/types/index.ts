@@ -25,6 +25,7 @@ export interface ProductType {
   price: number;
   rating: number;
   shopId: {
+    _id: string,
     shopName: string,
     location: string,
     phone: string,
