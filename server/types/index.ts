@@ -46,3 +46,13 @@ export interface OrderType {
   status: "confirmed" | "cancelled" | "pending";
   bookedAt: Date;
 }
+
+export interface ICartItem {
+  product: Types.ObjectId,
+  qty: number,
+}
+
+export interface ICart {
+  user: Types.ObjectId,
+  items: ICartItem[]
+}

@@ -91,3 +91,18 @@ export interface FormType {
   phone: string
   location: string
 }
+
+export interface CartItem {
+  product: ProductType;
+  qty: number;
+}
+
+export interface CartContextType {
+  cartItems: CartItem[];
+  addToCart: (product: ProductType, qty: number) => void;
+  removeFromCart: (productId: string) => void;
+  updateQty: (productId: string, qty: number) => void;
+  clearCart: () => void;
+  totalItems: number;
+  totalPrice: number;
+}
