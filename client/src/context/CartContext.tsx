@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useApp } from "./AppContext";
 import toast from "react-hot-toast";
 import type { CartContextType, CartItem, ProductType } from "../types";
@@ -10,6 +10,18 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { user, navigate, axios } = useApp();
 
+  // const getCartItems = async () => {
+  //   try {
+  //     const { data } = await axios.get("/api/cart");
+  //     if (data.success) {
+  //       setCartItems(data.cart.items)
+  //     } else {
+  //       setCartItems([])
+  //     }
+  //   } catch (error: any) {
+  //     console.log(error.message)
+  //   }
+  // }
 
   const addToCart = async (product: ProductType, qty: number) => {
     if (!user) {
@@ -19,7 +31,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     try {
-      const { data } = await axios.post("/api/cart/", { product, qty });
+      const { data } = await axios.post("/api/cart/", { product: product._id, qty });
       if (data.success) {
         setCartItems((prev) => {
           const existing = prev.find((item) => item.product._id === product._id);
@@ -32,6 +44,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           }
           return [...prev, { product, qty }];
         });
+        console.log(cartItems)
         toast.success(data.message);
       } else {
         toast.error(data.message);
@@ -67,6 +80,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     (sum, item) => sum + item.product.price * item.qty,
     0
   );
+
+  // useEffect(() => {
+  //   getCartItems();
+  // }, [])
 
   return (
     <CartContext.Provider

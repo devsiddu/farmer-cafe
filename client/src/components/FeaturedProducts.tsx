@@ -4,14 +4,7 @@ import Title from "./Title";
 import { useApp } from "../context/AppContext";
 
 const FeaturedProducts = () => {
-  const { products, loading } = useApp();
-  if (loading) {
-    return (
-      <div>
-        <p>Loading</p>
-      </div>
-    )
-  }
+  const { products } = useApp();
   return (
     <div className="w-full flex justify-center">
       <div className="max-w-7xl w-full px-6">
