@@ -3,14 +3,7 @@ import Title from "../components/Title";
 import { useApp } from "../context/AppContext";
 
 const Products = () => {
-  const { products, loading } = useApp();
-  if (loading) {
-    return (
-      <div>
-        Loading
-      </div>
-    )
-  }
+  const { products } = useApp();
   return (
     <div className="flex w-full justify-center">
       <div className="max-w-7xl w-full px-6">

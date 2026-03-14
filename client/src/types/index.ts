@@ -49,12 +49,15 @@ export interface UserType {
   createdAt: string;
 }
 
-export interface OrderType {
-  _id: string;
-  product: ProductType;
-  qty: number;
-  status: "confirmed" | "cancelled" | "pending";
-  bookedAt: Date;
+
+export interface BookingType {
+  _id: string,
+  user: string,
+  product: ProductType,
+  qty: number,
+  createdAt:Date,
+  totalAmount: number,
+  status: "pending" | "confirmed" | "cancelled"
 }
 
 export interface AppContext {
@@ -99,6 +102,7 @@ export interface CartItem {
 
 export interface CartContextType {
   cartItems: CartItem[];
+  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
   addToCart: (product: ProductType, qty: number) => void;
   removeFromCart: (productId: string) => void;
   updateQty: (productId: string, qty: number) => void;
