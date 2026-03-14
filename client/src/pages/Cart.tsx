@@ -1,8 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useState } from "react";
 const Cart = () => {
     const { cartItems, removeFromCart, updateQty, clearCart, totalItems, totalPrice } = useCart();
     const navigate = useNavigate();
+
+    const [showModal, setShowModal] = useState(false);
+
 
     if (cartItems.length === 0) {
         return (
@@ -31,7 +35,7 @@ const Cart = () => {
                     <p className="text-sm text-gray-400 mt-0.5">{totalItems} item{totalItems > 1 ? "s" : ""} selected</p>
                 </div>
                 <button
-                    onClick={clearCart}
+                    onClick={() => setShowModal(true)}
                     className="text-xs text-red-400 hover:text-red-600 font-medium border border-red-100 hover:border-red-300 px-3 py-1.5 rounded-lg transition"
                 >
                     Clear All
@@ -74,8 +78,8 @@ const Cart = () => {
                                                 disabled={qty <= 1}
                                                 onClick={() => updateQty(product._id, qty - 1)}
                                                 className={`w-7 h-7 rounded-lg text-lg font-medium flex items-center justify-center transition ${qty <= 1
-                                                        ? "text-gray-300 cursor-not-allowed"
-                                                        : "text-secondary hover:bg-secondary hover:text-white cursor-pointer"
+                                                    ? "text-gray-300 cursor-not-allowed"
+                                                    : "text-secondary hover:bg-secondary hover:text-white cursor-pointer"
                                                     }`}
                                             >
                                                 −
@@ -85,8 +89,8 @@ const Cart = () => {
                                                 disabled={qty >= maxQty}
                                                 onClick={() => updateQty(product._id, qty + 1)}
                                                 className={`w-7 h-7 rounded-lg text-lg font-medium flex items-center justify-center transition ${qty >= maxQty
-                                                        ? "text-gray-300 cursor-not-allowed"
-                                                        : "text-secondary hover:bg-secondary hover:text-white cursor-pointer"
+                                                    ? "text-gray-300 cursor-not-allowed"
+                                                    : "text-secondary hover:bg-secondary hover:text-white cursor-pointer"
                                                     }`}
                                             >
                                                 +
@@ -161,6 +165,32 @@ const Cart = () => {
                     </div>
                 </div>
             </div>
+            {showModal && (
+
+                <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/20 z-50">
+                    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-7 w-85 flex flex-col items-center text-center">
+                        <h2 className="text-base font-bold text-gray-800">Are you sure ?</h2>
+                        <p className="text-xs text-gray-400 mt-1 mb-6">
+                            This will permanently remove the cart item. This action cannot be undone.
+                        </p>
+                        <div className="flex gap-3 w-full">
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="flex-1 py-2.5 rounded-xl text-sm font-semibold border border-gray-200 text-gray-500 hover:bg-gray-50 transition"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => { setShowModal(false), clearCart() }}
+                                className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-red-500 text-white hover:bg-red-600 transition active:scale-95"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            )}
         </div>
     );
 };

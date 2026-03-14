@@ -10,18 +10,18 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { user, navigate, axios } = useApp();
 
-  // const getCartItems = async () => {
-  //   try {
-  //     const { data } = await axios.get("/api/cart");
-  //     if (data.success) {
-  //       setCartItems(data.cart.items)
-  //     } else {
-  //       setCartItems([])
-  //     }
-  //   } catch (error: any) {
-  //     console.log(error.message)
-  //   }
-  // }
+  const getCartItems = async () => {
+    try {
+      const { data } = await axios.get("/api/cart");
+      if (data.success) {
+        setCartItems(data.cart)
+      } else {
+        setCartItems([])
+      }
+    } catch (error: any) {
+      console.log(error.message)
+    }
+  }
 
   const addToCart = async (product: ProductType, qty: number) => {
     if (!user) {
@@ -44,7 +44,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           }
           return [...prev, { product, qty }];
         });
-        console.log(cartItems)
         toast.success(data.message);
       } else {
         toast.error(data.message);
@@ -57,23 +56,61 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const removeFromCart = (productId: string) => {
-    setCartItems((prev) => prev.filter((item) => item.product._id !== productId));
+  const removeFromCart = async (productId: string) => {
+    try {
+      const { data } = await axios.delete(`/api/cart/${productId}`);
+      if (data.success) {
+        setCartItems((prev) => prev.filter((item) => item.product._id !== productId));
+        toast.success(data.message)
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error: any) {
+      console.log(error.message)
+      toast.error(error.message)
+    }
   };
 
-  const updateQty = (productId: string, qty: number) => {
+  const updateQty = async (productId: string, qty: number) => {
     if (qty <= 0) {
       removeFromCart(productId);
       return;
     }
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.product._id === productId ? { ...item, qty } : item
-      )
-    );
+
+    try {
+      const { data } = await axios.patch(`/api/cart/${productId}`, { qty })
+      if (data.success) {
+        setCartItems((prev) =>
+          prev.map((item) =>
+            item.product._id === productId ? { ...item, qty } : item
+          )
+        );
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+
+
+    } catch (error) {
+
+    }
   };
 
-  const clearCart = () => setCartItems([]);
+  const clearCart = async () => {
+
+    try {
+      const { data } = await axios.delete("/api/cart");
+      if (data.success) {
+        setCartItems([]);
+        toast.success(data.message);
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error: any) {
+      console.error(error.message);
+      toast.error(error.message);
+    }
+  }
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.qty, 0);
   const totalPrice = cartItems.reduce(
@@ -81,9 +118,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     0
   );
 
-  // useEffect(() => {
-  //   getCartItems();
-  // }, [])
+  useEffect(() => {
+    getCartItems();
+  }, [])
 
   return (
     <CartContext.Provider

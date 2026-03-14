@@ -7,56 +7,120 @@ export const addToCart = async (req: Request, res: Response) => {
     try {
         const { product, qty } = req.body;
         const user = req.user;
+
         if (!user) {
-            return res.json({ success: false, message: "User not found" })
-        }
-        if (!product || !qty) {
-            return res.json({ success: false, message: "All fields required" })
+            return res.json({ success: false, message: "User not found" });
         }
 
-        let cart = await Cart.findOne({ user: user._id });
+        const cart = await Cart.findOne({ user: user._id });
 
-        // if cart does't exist then create
         if (!cart) {
-            cart = await Cart.create({
+            await Cart.create({
                 user: user._id,
                 items: [{ product, qty }]
-            })
+            });
 
-            return res.json({ success: true, message: "Added to cart" })
+            return res.json({ success: true, message: "Added to cart" });
         }
 
-        // if product exist then update product quantity else push new product
-        const existingProduct = cart.items.find((item) => item.product.toString() === product);
+        const item = cart.items.find(
+            (i) => i.product.toString() === product
+        );
 
-        if (existingProduct) {
-            existingProduct.qty += qty
+        if (item) {
+            item.qty += qty;
         } else {
-            cart.items.push({ product, qty })
+            cart.items.push({ product, qty });
         }
 
         await cart.save();
 
-        return res.json({ success: true, message: "Cart updated" })
+        res.json({ success: true, message: "Cart updated" });
 
     } catch (error: any) {
-        return res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
-}
+};
 
-export const getUserCart = async (req: Request, res: Response) => {
+export const getCart = async (req: Request, res: Response) => {
+    try {
+
+        const user = req.user;
+
+        const cart = await Cart.findOne({ user: user._id })
+            .populate("items.product");
+
+        res.json({
+            success: true,
+            cart: cart ? cart.items : []
+        });
+
+    } catch (error: any) {
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export const updateCartQty = async (req: Request, res: Response) => {
+    try {
+
+        const { productId } = req.params;
+        const { qty } = req.body;
+        const user = req.user;
+
+        const cart = await Cart.findOne({ user: user._id });
+
+        if (!cart) {
+            return res.json({ success: false, message: "Cart not found" });
+        }
+
+        const item = cart.items.find(
+            (i) => i.product.toString() === productId
+        );
+
+        if (!item) {
+            return res.json({ success: false, message: "Item not found" });
+        }
+
+        item.qty = qty;
+
+        await cart.save();
+
+        res.json({ success: true, message: "Quantity updated" });
+
+    } catch (error: any) {
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export const removeFromCart = async (req: Request, res: Response) => {
+    try {
+
+        const { productId } = req.params;
+        const user = req.user;
+
+        await Cart.updateOne(
+            { user: user._id },
+            { $pull: { items: { product: productId } } }
+        );
+
+        res.json({ success: true, message: "Product removed" });
+
+    } catch (error: any) {
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export const clearCart = async (req: Request, res: Response) => {
     try {
         const user = req.user;
         if (!user) {
             return res.json({ success: false, message: "User not found" })
         }
+        await Cart.updateOne({ user: user._id }, { $set: { items: [] } });
 
-        const cart = await Cart.find({ user: user._id }).populate("items.product");
-        if (!cart) {
-            return res.json({ success: false, message: "Cart empty" })
-        }
-        return res.json({ success: true, cart })
+        return res.json({ success: true, message: "Cart cleared" })
+
     } catch (error: any) {
-        return res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
 }
