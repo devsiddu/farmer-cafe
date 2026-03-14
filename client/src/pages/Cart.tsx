@@ -1,13 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useState } from "react";
+import { useApp } from "../context/AppContext";
+import toast from "react-hot-toast";
 const Cart = () => {
-    const { cartItems, removeFromCart, updateQty, clearCart, totalItems, totalPrice } = useCart();
+    const { cartItems, setCartItems, removeFromCart, updateQty, clearCart, totalItems, totalPrice } = useCart();
     const navigate = useNavigate();
+    const { axios } = useApp();
 
     const [showModal, setShowModal] = useState(false);
 
-
+    const onBookingHandler = async () => {
+        try {
+            const { data } = await axios.post("/api/bookings");
+            if (data.success) {
+                toast.success(data.message)
+                setCartItems([])
+                navigate("/bookings")
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error: any) {
+            console.error(error.message);
+            toast.error(error.message)
+        }
+    }
     if (cartItems.length === 0) {
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
@@ -146,11 +163,7 @@ const Cart = () => {
                         </div>
 
                         <button
-                            onClick={() =>
-                                navigate("/bookings", {
-                                    state: { cartItems, totalPrice },
-                                })
-                            }
+                            onClick={onBookingHandler}
                             className="w-full mt-5 py-3 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/90 active:scale-95 transition-all duration-200"
                         >
                             Confirm Booking

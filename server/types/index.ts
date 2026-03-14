@@ -56,3 +56,17 @@ export interface ICart {
   user: Types.ObjectId,
   items: ICartItem[]
 }
+
+export interface IBookingItem {
+  product: Types.ObjectId,
+  qty: number,
+  price: number
+  totalAmount: number,
+}
+
+export interface IBooking {
+  user: Types.ObjectId,
+  items: IBookingItem[],
+  totalAmount: number,
+  status: "pending" | "confirmed" | "cancelled"
+}

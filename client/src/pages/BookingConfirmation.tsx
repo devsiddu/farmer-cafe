@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { assets, dummyBookings } from "../assets/assets";
-import type { OrderType } from "../types";
+import { useEffect, useState } from "react";
+import { assets, } from "../assets/assets";
+import type { BookingType } from "../types";
 import Title from "../components/Title";
+import { useApp } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 
 const statusStyles = {
@@ -18,9 +19,9 @@ const statusLabels = {
 };
 
 const BookingConfirmation = () => {
-    const [bookings, setBookings] = useState<OrderType[]>(dummyBookings);
+    const [bookings, setBookings] = useState<BookingType[]>([]);
     const [cancelConfirm, setCancelConfirm] = useState<string | null>(null);
-    const navigate = useNavigate();
+    const { navigate, axios } = useApp();
 
     const cancelOrder = (bookingId: string) => {
         setBookings((prev) =>
@@ -29,8 +30,27 @@ const BookingConfirmation = () => {
         setCancelConfirm(null);
     };
 
+    const getBookings = async () => {
+        try {
+            const { data } = await axios.get("/api/bookings/user");
+            if (data.success) {
+                setBookings(data.bookings);
+            } else {
+                setBookings([])
+                toast.error(data.message)
+            }
+        } catch (error: any) {
+            console.log(error.message);
+            toast.error(error.message);
+        }
+    }
+
     const cancelTarget = bookings.find((o) => o._id === cancelConfirm);
 
+    useEffect(() => {
+        getBookings();
+        console.log(bookings);
+    }, [])
     return (
         <div className="max-w-5xl ml-40 px-4">
             {/* Header */}
@@ -54,7 +74,8 @@ const BookingConfirmation = () => {
             ) : (
                 <div className="flex flex-col gap-3">
                     {bookings.map((booking) => {
-                        const { product, qty, status, bookedAt, _id } = booking;
+                        console.log(booking)
+                        const { product, qty, status, createdAt, _id } = booking;
                         const total = product.price * qty;
                         const isCancellable = status !== "cancelled";
 
@@ -87,15 +108,15 @@ const BookingConfirmation = () => {
                                 <div className="flex flex-col gap-1 text-xs text-gray-500 shrink-0 min-w-32.5">
                                     <div className="flex items-center gap-1.5">
                                         <img src={assets.store} width={11} alt="" />
-                                        <span className="font-medium text-secondary truncate">{product.shop?.shopName}</span>
+                                        <span className="font-medium text-secondary truncate">{product.shopId?.shopName}</span>
                                     </div>
                                     <div className="flex items-center gap-1.5">
                                         <img src={assets.location} width={11} alt="" />
-                                        <span className="truncate">{product.shop?.location}</span>
+                                        <span className="truncate">{product.shopId?.location}</span>
                                     </div>
                                     <div className="flex items-center gap-1.5">
                                         <img src={assets.phone} width={10} alt="" />
-                                        <span>{product.shop?.phone}</span>
+                                        <span>{product.shopId?.phone}</span>
                                     </div>
                                 </div>
 
@@ -103,7 +124,7 @@ const BookingConfirmation = () => {
                                 <div className="flex flex-col items-end shrink-0 min-w-17.5">
                                     <p className="text-base font-bold text-primary">₹{total}</p>
                                     <p className="text-[10px] text-gray-400">₹{product.price} × {qty}</p>
-                                    <p className="text-[10px] text-gray-400 mt-0.5">{bookedAt.toLocaleDateString()}</p>
+                                    <p className="text-[10px] text-gray-400 mt-0.5">{createdAt.toLocaleDateString()}</p>
                                 </div>
 
                                 {/* Status + Cancel */}
