@@ -12,7 +12,7 @@ const Cart = () => {
 
     const onBookingHandler = async () => {
         try {
-            const { data } = await axios.post("/api/bookings");
+            const { data } = await axios.post("/api/bookings/checkout");
             if (data.success) {
                 toast.success(data.message)
                 setCartItems([])

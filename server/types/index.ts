@@ -62,12 +62,11 @@ export interface IBookingItem {
   qty: number,
   price: number
   totalAmount: number,
+  status: "pending" | "confirmed" | "cancelled"
   bookedAt: Date
 }
 
 export interface IBooking {
   user: Types.ObjectId,
   items: IBookingItem[],
-  totalAmount: number,
-  status: "pending" | "confirmed" | "cancelled"
 }

@@ -9,14 +9,13 @@ const bookingSchema = new mongoose.Schema<IBooking>(
             qty: { type: Number, required: true, min: 1 },
             price: { type: Number, required: true, min: 1 },
             totalAmount: { type: Number, required: true, min: 1 },
+            status: { type: String, enum: ["pending", "confirmed", "cancelled"], default: "pending" },
             bookedAt: { type: Date, default: Date.now() }
         }],
-        status: { type: String, enum: ["pending", "confirmed", "cancelled"], default: "pending" },
-        totalAmount: { type: Number, required: true },
     }, {
     timestamps: true
 }
 )
-
-const Booking = mongoose.model("Booking", bookingSchema)
+console.log("Booking schema loaded");
+const Booking = mongoose.models.Booking || mongoose.model<IBooking>("Booking", bookingSchema)
 export default Booking
