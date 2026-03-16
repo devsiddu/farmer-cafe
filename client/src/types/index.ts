@@ -55,7 +55,7 @@ export interface BookingType {
   user: string,
   product: ProductType,
   qty: number,
-  createdAt:Date,
+  bookedAt: Date,
   totalAmount: number,
   status: "pending" | "confirmed" | "cancelled"
 }

@@ -62,6 +62,7 @@ export interface IBookingItem {
   qty: number,
   price: number
   totalAmount: number,
+  bookedAt: Date
 }
 
 export interface IBooking {

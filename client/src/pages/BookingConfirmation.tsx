@@ -21,8 +21,22 @@ const statusLabels = {
 const BookingConfirmation = () => {
     const [bookings, setBookings] = useState<BookingType[]>([]);
     const [cancelConfirm, setCancelConfirm] = useState<string | null>(null);
-    const { navigate, axios } = useApp();
+    const { navigate, axios, shops } = useApp();
 
+    const filteredBookings = bookings.map((booking) => {
+        const itemsWithShop = booking.items.map((item) => {
+            const shop = shops.find((s) => s._id === item.product.shopId);
+            return {
+                ...item,
+                shop
+            };
+        });
+
+        return {
+            ...booking,
+            items: itemsWithShop
+        };
+    });
     const cancelOrder = (bookingId: string) => {
         setBookings((prev) =>
             prev.map((o) => (o._id === bookingId ? { ...o, status: "cancelled" } : o))
@@ -75,7 +89,7 @@ const BookingConfirmation = () => {
                 <div className="flex flex-col gap-3">
                     {bookings.map((booking) => {
                         console.log(booking)
-                        const { product, qty, status, createdAt, _id } = booking;
+                        const { product, qty, status, bookedAt, _id } = booking;
                         const total = product.price * qty;
                         const isCancellable = status !== "cancelled";
 
@@ -124,7 +138,7 @@ const BookingConfirmation = () => {
                                 <div className="flex flex-col items-end shrink-0 min-w-17.5">
                                     <p className="text-base font-bold text-primary">₹{total}</p>
                                     <p className="text-[10px] text-gray-400">₹{product.price} × {qty}</p>
-                                    <p className="text-[10px] text-gray-400 mt-0.5">{createdAt.toLocaleDateString()}</p>
+                                    <p className="text-[10px] text-gray-400 mt-0.5">{new Date(bookedAt).toLocaleDateString()}</p>
                                 </div>
 
                                 {/* Status + Cancel */}
