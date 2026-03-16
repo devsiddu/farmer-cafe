@@ -8,10 +8,11 @@ const bookingSchema = new mongoose.Schema<IBooking>(
             product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
             qty: { type: Number, required: true, min: 1 },
             price: { type: Number, required: true, min: 1 },
-            totalAmount: { type: Number, required: true, min: 1 }
+            totalAmount: { type: Number, required: true, min: 1 },
+            bookedAt: { type: Date, default: Date.now() }
         }],
         status: { type: String, enum: ["pending", "confirmed", "cancelled"], default: "pending" },
-        totalAmount: { type: Number, required: true }
+        totalAmount: { type: Number, required: true },
     }, {
     timestamps: true
 }
