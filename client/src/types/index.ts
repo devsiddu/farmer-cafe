@@ -53,11 +53,16 @@ export interface UserType {
 export interface BookingType {
   _id: string,
   user: string,
-  product: ProductType,
-  qty: number,
-  bookedAt: Date,
-  totalAmount: number,
-  status: "pending" | "confirmed" | "cancelled"
+  items: {
+    _id: string,
+    product: ProductType,
+    qty: number,
+    price: number,
+    totalAmount: number,
+    status: "pending" | "confirmed" | "cancelled"
+    bookedAt: Date,
+
+  }[],
 }
 
 export interface AppContext {

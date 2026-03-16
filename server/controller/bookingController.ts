@@ -44,16 +44,14 @@ export const checkout = async (req: Request, res: Response) => {
                 product: product._id,
                 qty: i.qty,
                 price: product.price,
+                status: "pending",
                 totalAmount: i.qty * product.price
             }
         })
 
-        const totalAmount = bookingItems.reduce((sum, item) => sum + item.totalAmount, 0);
-
         const booking = await Booking.create({
             user: user._id,
-            items: bookingItems,
-            totalAmount
+            items: bookingItems
         })
         if (booking) {
             await Cart.updateOne({ user: user._id }, { $set: { items: [] } })
@@ -74,14 +72,36 @@ export const userBookings = async (req: Request, res: Response) => {
             return res.json({ success: false, message: "user not found" })
         }
 
-        const bookings = await Booking.findOne({ user: user._id }).populate("items.product");
+        const bookings = await Booking.find({ user: user._id })
+            .populate({
+                path: "items.product",
+                select: "name price images shopId",
+                populate: {
+                    path: "shopId",
+                    select: "shopName location image phone"
+                }
+            });
         if (!bookings) {
             return res.json({ success: false, message: "no products booked" })
         }
 
-        return res.json({ success: true, bookings: bookings.items })
+        return res.json({ success: true, bookings: bookings })
     } catch (error: any) {
         console.error(error.message)
         return res.json({ success: false, message: error.message });
+    }
+}
+
+export const cancelBooking = async (req: Request, res: Response) => {
+    try {
+        const { itemId } = req.params;
+        const user = req.user;
+        if (!itemId) {
+            return res.json({ success: false, message: "Id not found" })
+        }
+        const booking = await Booking.find({user: user._id})
+        console.log(booking);
+    } catch (error: any) {
+        return res.json({ success: false, message: error.message })
     }
 }
