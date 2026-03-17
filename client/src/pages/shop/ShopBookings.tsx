@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, ChevronDown, X } from "lucide-react";
 import { dummyBookings } from "../../assets/assets";
 import type { OrderType } from "../../types";
+import { useApp } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 type BookingStatus = "confirmed" | "pending" | "cancelled";
 type StatusFilter = "all" | BookingStatus;
@@ -18,6 +20,28 @@ const ShopBookings = () => {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [cancelConfirm, setCancelConfirm] = useState<string | null>(null);
+
+  const { axios } = useApp();
+
+  const getBookings = async () => {
+    try {
+      const { data } = await axios.get("/api/bookings/shop");
+      if (data.success) {
+        console.log(data.bookings)
+      } else {
+        toast.error(data.message)
+      }
+
+
+    } catch (error: any) {
+      console.log(error.message)
+      toast.error(error.message)
+    }
+  }
+
+  useEffect(() => {
+    getBookings()
+  })
 
   // --- Actions ---
   const updateStatus = (_id: string, status: BookingStatus) => {
