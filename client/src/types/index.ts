@@ -50,20 +50,23 @@ export interface UserType {
 }
 
 
-export interface BookingType {
-  _id: string,
-  user: string,
-  items: {
-    _id: string,
-    product: ProductType,
-    qty: number,
-    price: number,
-    totalAmount: number,
-    status: "pending" | "confirmed" | "cancelled"
-    bookedAt: Date,
+export type BookingItemType = {
+  _id: string;
+  product: ProductType;
+  qty: number;
+  price: number;
+  totalAmount: number;
+  status: "pending" | "confirmed" | "cancelled";
+  bookedAt: string;
+};
 
-  }[],
-}
+export type BookingType = {
+  _id: string;
+  user: string;
+  items: BookingItemType[];
+  createdAt: string;
+  updatedAt: string;
+};
 
 export interface AppContext {
   axios: AxiosInstance;

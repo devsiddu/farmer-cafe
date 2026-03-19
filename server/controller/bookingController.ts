@@ -150,22 +150,28 @@ export const shopBookings = async (req: Request, res: Response) => {
         const user = req.user;
 
         if (!user) {
-            return res.json({ success: false, message: "User not found" })
+            return res.json({ success: false, message: "User not found" });
         }
 
-        const shop = await Shop.find({ ownerId: user._id });
-        if (!shop) {
-            return res.json({ success: false, message: "shop not found" })
+        const shops = await Shop.find({ ownerId: user._id });
+
+        if (!shops.length) {
+            return res.json({ success: false, message: "shop not found" });
         }
+
+        const shopIds = shops.map((s) => s._id.toString());
 
         const bookings = await Booking.find().populate("items.product");
-        bookings.filter((booking) => {
-            booking.items.find((item) => item.product.shopId === shop._id)
-        })
 
-        // console.log(bookings);
-        return res.json({ success: true, bookings })
+        const filteredBookings = bookings.filter((booking) =>
+            booking.items.some((item: any) =>
+                shopIds.includes(item.product.shopId.toString())
+            )
+        );
+
+        return res.json({ success: true, bookings: filteredBookings });
+
     } catch (error: any) {
-        return res.json({ success: false, message: error.message })
+        return res.json({ success: false, message: error.message });
     }
-}
+};
