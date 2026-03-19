@@ -76,6 +76,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             setLoading(true);
             const { data } = await axios.get("/api/user/logout");
             if (data.success) {
+                navigate("/");
                 setUser(null);
                 toast.success(data.message)
             } else {
@@ -158,7 +159,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }, [navigate]);
 
     return (
-        <AppContext.Provider value={{ axios, websiteEmail, navigate, user, setUser, loading, setLoading, logout, login, products,setProducts, shops, fetchProductById, register, authLoading, fetchUser, shop }}>
+        <AppContext.Provider value={{ axios, websiteEmail, navigate, user, setUser, loading, setLoading, logout, login, products, setProducts, shops, fetchProductById, register, authLoading, fetchUser, shop }}>
             {children}
         </AppContext.Provider>
     );

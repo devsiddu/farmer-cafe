@@ -16,6 +16,5 @@ const bookingSchema = new mongoose.Schema<IBooking>(
     timestamps: true
 }
 )
-console.log("Booking schema loaded");
-const Booking = mongoose.models.Booking || mongoose.model<IBooking>("Booking", bookingSchema)
+const Booking = mongoose.model<IBooking>("Booking", bookingSchema)
 export default Booking
